@@ -10,22 +10,22 @@ public static class CreateInputMapAsset
 	{
 		var inputMap = ScriptableObject.CreateInstance< InputMap >();
 
-		var bindings = new List< InputBinding >();
-		var controls = new List< InputControlDescriptor >();
-		var lookBinding = new InputBinding
-		{
-			  name = "Look"
-			, controls = controls
-		};
-		bindings.Add( lookBinding );
-		controls.Add( new InputControlDescriptor
-			{
-				  deviceType = typeof( Pointer )
-				, controlIndex = ( int ) PointerControl.Position
-			}
-		);
+		//var bindings = new List< InputBinding >();
+		//var controls = new List< InputControlDescriptor >();
+		//var lookBinding = new InputBinding
+		//{
+			  //name = "Look"
+			//, controls = controls
+		//};
+		//bindings.Add( lookBinding );
+		//controls.Add( new InputControlDescriptor
+			//{
+				  //deviceType = typeof( Pointer )
+				//, controlIndex = ( int ) PointerControl.Position
+			//}
+		//);
 
-		inputMap.bindings = bindings;
+		//inputMap.bindings = bindings;
 
 		AssetDatabase.CreateAsset( inputMap, "Assets/LookieLookieMap.asset" );
 	}

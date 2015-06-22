@@ -263,6 +263,7 @@ namespace UnityEngine.InputNew
 		Vector2,
 		Vector3,
 		Vector4,
+		Quaternion,
 	}
 	
 	public struct InputControl
@@ -329,15 +330,16 @@ namespace UnityEngine.InputNew
 	[ Serializable ]
 	public struct InputControlDescriptor
 	{
-		public Type deviceType;
+		public string deviceType;
 		public int controlIndex;
 	}
 
+	[ Serializable ]
 	public struct InputControlData
 	{
 		public string name;
 		public InputControlType controlType;
-		public int controlIndex;
+		public int controlIndex; ////TODO: kill this
 		public int[] componentControlIndices;
 	}
 
@@ -367,6 +369,7 @@ namespace UnityEngine.InputNew
 
 		public virtual bool ProcessEvent( InputEvent inputEvent )
 		{
+			lastEventTime = inputEvent.time;
 			return false;
 		}
 
@@ -385,6 +388,8 @@ namespace UnityEngine.InputNew
 			get { return _controls; }
 		}
 
+		public float lastEventTime { get; private set; }
+
 		#endregion
 
 		#region Fields
@@ -399,6 +404,8 @@ namespace UnityEngine.InputNew
 	//	States.
 	// ------------------------------------------------------------------------
 	
+	////REVIEW: we may want to store actual state for compounds such that we can do postprocessing on them (like normalize vectors, for example)
+
 	public class InputState
 	{
 		#region Constructors
@@ -617,6 +624,8 @@ namespace UnityEngine.InputNew
 		#endregion
 	}
 
+	////FIXME: currently compounds go in the same array as primitives and thus lead to allocation of state which is useless for them
+
 	public enum PointerControl
 	{
 		Position,
@@ -640,6 +649,9 @@ namespace UnityEngine.InputNew
 		ForwardButton,
 		BackButton,
 	}
+
+	////REVIEW: have a single Pointer class representing the union of all types of pointer devices or have multiple specific subclasses?
+	////	also: where to keep the state for "the one" pointer
 
 	/// <summary>
 	/// A device that can point at and click on things.
@@ -901,27 +913,52 @@ namespace UnityEngine.InputNew
 	//	Bindings.
 	// ------------------------------------------------------------------------
 	
+	// Three different naming approaches:
+	// 1. ControlMap, ControlMapEntry
+	// 2. InputActionMap, InputAction
+	// 3. InputActivityMap, InputActivity
+	
+	public class ControlMapEntry
+		: ScriptableObject
+	{
+		public InputControlData controlData;
+		// This is one entry for each control scheme (matching indices).
+		public List< ControlBinding > bindings;
+	}
+	
 	////NOTE: this needs to be proper asset stuff; can't be done in script code only
 	
 	[ Serializable ]
-	public class InputBinding
+	public class ButtonAxisSource
 	{
-		public string name;
-		public List< InputControlDescriptor > controls;
-	}
-	
-	public class InputMap
-		: ScriptableObject
-	{
-		public List< InputBinding > bindings;
+    	public InputControlDescriptor negative;
+    	public InputControlDescriptor positive;
 	}
 
-	internal class InputMapInstance
+	[ Serializable ]
+	public class ControlBinding
+	{
+		public List< InputControlDescriptor > sources;
+		public float deadZone = 0.3f;
+    	public List< ButtonAxisSource > buttonAxisSources;
+    	public float gravity = 1000;
+    	public float sensitivity = 1000;
+    	public bool snap = true;
+	}
+
+	public class ControlMap
+		: ScriptableObject
+	{
+		public List< ControlMapEntry > entries;
+		public List< string > schemes;
+	}
+
+	public class ControlMapInstance
 		: InputControlProvider
 	{
 		#region Constructors
 
-		public InputMapInstance
+		public InputActivityMapInstance
 			(
 			 	  InputMap inputMap
 				, List< InputControlData > controls
@@ -936,9 +973,17 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
+		public void Activate()
+		{
+			////TODO: somehow insert at some place in tree
+		}
+		
 		public override bool ProcessEvent( InputEvent inputEvent )
 		{
-			////TODO
+			foreach ( var state in _deviceStates )
+				if ( state.controlProvider.ProcessEvent( inputEvent ) )
+					return true;
+
 			return false;
 		}
 
@@ -988,6 +1033,11 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
+		public static InputDevice LookupDevice( Type deviceType, int deviceIndex )
+		{
+			throw new NotImplementedException();
+		}
+
 		public static void QueueEvent( InputEvent inputEvent )
 		{
 			_eventQueue.Queue( inputEvent );
@@ -1008,49 +1058,14 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static InputControlProvider BindInputs( InputMap inputMap )
+		public static IEnumerable< InputActivityMapInstance > BindInputs( InputMap inputMap )
 		{
-			// Gather a mapping of device types to list of bindings that use the given type.
-			var perDeviceTypeBindings = new Dictionary< Type, List< InputBinding > >();
-			foreach ( var binding in inputMap.bindings )
-			{
-				foreach ( var control in binding.controls )
-				{
-					List< InputBinding > bindings;
-					if ( !perDeviceTypeBindings.TryGetValue( control.deviceType, out bindings ) )
-					{
-						bindings = new List< InputBinding >();
-						perDeviceTypeBindings[ control.deviceType ] = bindings;
-					}
+			// iterate over schemes
+			//   use list of device types used by scheme to match to available devices
+			//   shortest list of available devices for a single type determines how many types the control scheme can be satisfied
+			//   create InputActivityMapInstance for each control scheme
 
-					bindings.Add( binding );
-				}
-			}
-
-			// Map the device types to actual devices we have available and create
-			// InputStates for each of them.
-			var deviceStates = new List< InputState >();
-			foreach ( var deviceType in perDeviceTypeBindings.Keys )
-			{
-				var device = _devices.LookupDevice( deviceType, 0 ); ////TODO: needs to be more flexible
-				if ( device != null )
-					deviceStates.Add( new InputState( device ) );
-			}
-
-			// Create list of controls from InputMap.
-			var controls = new List< InputControlData >();
-			foreach ( var binding in inputMap.bindings )
-			{
-				var control = new InputControlData
-				{
-					  name = binding.name
-					, controlType = InputControlType.Button ////TODO
-					, controlIndex = controls.Count
-				};
-				controls.Add( control );
-			}
-
-			return new InputMapInstance( inputMap, controls, deviceStates );
+			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -1083,6 +1098,11 @@ namespace UnityEngine.InputNew
 			get { return _eventTree; }
 		}
 
+		public static Pointer pointer
+		{
+			get { return _devices.pointer; }
+		}
+
 		public static Keyboard keyboard
 		{
 			get { return _devices.keyboard; }
@@ -1096,6 +1116,11 @@ namespace UnityEngine.InputNew
 		public static Touchscreen touchscreen
 		{
 			get { return _devices.touchscreen; }
+		}
+
+		public static IEnumerable< InputDevice > devices
+		{
+			get { return _devices.devices; }
 		}
 
 		#endregion

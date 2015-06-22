@@ -4,4 +4,5 @@ Library
 Temp
 *.csproj
 *.sln
-*.userpref
+*.userprefs
+
