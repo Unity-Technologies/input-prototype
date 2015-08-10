@@ -65,6 +65,7 @@ public static class CreateInputMapAsset
 		entries.Add( look );
 	
 		controlMap.entries = entries;
+		controlMap.schemes = new List< string > { "default" };
 
 		const string path = "Assets/LookieLookieMap.asset";
 		AssetDatabase.CreateAsset( controlMap, path );

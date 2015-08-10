@@ -118,9 +118,7 @@ namespace UnityEngine.InputNew
 				{
 					var availableDevicesOfType = _devices.GetDevicesOfType( deviceType );
 					if ( availableDevicesOfType != null )
-					{
 						deviceTypesToAvailableDevices[ deviceType ] = availableDevicesOfType;
-					}
 
 					minDeviceCountOfType = Mathf.Min( minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0 );
 				}

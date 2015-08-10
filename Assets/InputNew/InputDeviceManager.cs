@@ -16,31 +16,18 @@ namespace UnityEngine.InputNew
 			var keyboard = Keyboard.CreateDefault();
 			var touchscreen = Touchscreen.CreateDefault();
 
-			RegisterDevice( typeof( Mouse ), mouse );
-			RegisterDevice( typeof( Keyboard ), keyboard );
-			RegisterDevice( typeof( Touchscreen ), touchscreen );
+			RegisterDevice( mouse );
+			RegisterDevice( keyboard );
+			RegisterDevice( touchscreen );
 		}
 
 		#endregion
 
 		#region Public Methods
 
-		public void RegisterDevice( Type deviceType, InputDevice device )
+		public void RegisterDevice( InputDevice device )
 		{
-			////TODO: typecheck device
-
-			List< InputDevice > list;
-			if ( !_devices.TryGetValue( deviceType, out list ) )
-			{
-				list = new List< InputDevice >();
-				_devices[ deviceType ] = list;
-			}
-
-			list.Add( device );
-
-			var baseType = deviceType.BaseType;
-			if ( baseType != typeof( InputDevice ) )
-				RegisterDevice( baseType, device );
+			RegisterDeviceInternal( device.GetType(), device );
 		}
 
 		public InputDevice GetMostRecentlyUsedDevice( Type deviceType )
@@ -119,6 +106,27 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		#region Non-Public Methods
+		
+		private void RegisterDeviceInternal( Type deviceType, InputDevice device )
+		{
+			List< InputDevice > list;
+			if ( !_devices.TryGetValue( deviceType, out list ) )
+			{
+				list = new List< InputDevice >();
+				_devices[ deviceType ] = list;
+			}
+
+			list.Add( device );
+			_leastToMostRecentlyUsedDevices.Add( device );
+
+			var baseType = deviceType.BaseType;
+			if ( baseType != typeof( InputDevice ) )
+				RegisterDeviceInternal( baseType, device );
+		}
+
+		#endregion
+
 		#region Public Properties
 
 		public Pointer pointer
@@ -156,7 +164,6 @@ namespace UnityEngine.InputNew
 		#region Fields
 
 		private Dictionary< Type, List< InputDevice > > _devices = new Dictionary< Type, List< InputDevice > >();
-		//private Dictionary< Type, InputDevice > _mostRecentlyUsedDevice = new Dictionary< Type, InputDevice >(); 
 		private List< InputDevice > _leastToMostRecentlyUsedDevices = new List< InputDevice >();
 
 		#endregion
