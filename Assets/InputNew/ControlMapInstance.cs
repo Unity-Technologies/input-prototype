@@ -11,11 +11,13 @@ namespace UnityEngine.InputNew
 		public ControlMapInstance
 			(
 				  ControlMap controlMap
+			    , int controlSchemeIndex
 				, List< InputControlData > controls
 				, List< InputState > deviceStates
 			)
 			: base( controls )
 		{
+			this.controlSchemeIndex = controlSchemeIndex;
 			_deviceStates = deviceStates;
 			_controlMap = controlMap;
 		}
@@ -50,7 +52,8 @@ namespace UnityEngine.InputNew
 			if ( !consumed )
 				return false;
 
-			//
+			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
+			// Synchronize the ControlMapInstance's own state.
 			for ( var entryIndex = 0; entryIndex < _controlMap.entries.Count; ++ entryIndex)
 			{
 				var entry = _controlMap.entries[ entryIndex ];
@@ -93,17 +96,13 @@ namespace UnityEngine.InputNew
 
 		#region Public Properties
 
-		public int controlSchemeIndex
-		{
-			///TODO: proper control scheme support
-			get { return 0; }	
-		}
+		public int controlSchemeIndex { get; private set; }
 
 		public InputControl this[ ControlMapEntry entry ]
 		{
 			get
 			{
-				return state[ entry.name ];
+				return state[ entry.controlIndex ];
 			}
 		}
 		

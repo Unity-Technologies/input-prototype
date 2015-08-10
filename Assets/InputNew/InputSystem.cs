@@ -136,11 +136,13 @@ namespace UnityEngine.InputNew
 						deviceStates.Add( state );
 					}
 					
-					yield return new ControlMapInstance( controlMap, controls, deviceStates );
+					yield return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
 				}
 			}
 			else
 			{
+				////TODO: make ControlMapInstance hook into MRU device change event and respond by updating its device states
+
 				var deviceStates = new List< InputState >();
 
 				// Create device states for most recently used device of given types.
@@ -154,12 +156,12 @@ namespace UnityEngine.InputNew
 					deviceStates.Add( state );
 				}
 				
-				yield return new ControlMapInstance( controlMap, controls, deviceStates );
+				yield return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
 			}
 		}
 
 		// This is for having explicit control over what devices go into a ControlMapInstance.
-		public static ControlMapInstance BindInputs( ControlMap controlMap, string controlScheme, IEnumerable< InputDevice > devices )
+		public static ControlMapInstance BindInputs( ControlMap controlMap, int controlSchemeIndex, IEnumerable< InputDevice > devices )
 		{
 			// Create state for every device.
 			var deviceStates = new List< InputState >();
@@ -179,7 +181,7 @@ namespace UnityEngine.InputNew
 			}
 
 			// Create map instance.
-			return new ControlMapInstance( controlMap, controls, deviceStates );
+			return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
 		}
 
 		#endregion

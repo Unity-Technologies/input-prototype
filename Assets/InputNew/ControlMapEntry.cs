@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace UnityEngine.InputNew
@@ -5,6 +6,8 @@ namespace UnityEngine.InputNew
 	public class ControlMapEntry
 		: ScriptableObject
 	{
+		#region Public Properties
+
 		public InputControlData controlData
 		{
 			get { return _controlData; }
@@ -14,9 +17,20 @@ namespace UnityEngine.InputNew
 				name = _controlData.name;
 			}
 		}
+
 		// This is one entry for each control scheme (matching indices).
 		public List< ControlBinding > bindings;
+
+		[ NonSerialized ]
+		public int controlIndex;
+
+		#endregion
+
+		#region Fields
+
 		[ SerializeField ]
 		private InputControlData _controlData;
+
+		#endregion
 	}
 }

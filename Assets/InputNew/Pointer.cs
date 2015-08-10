@@ -48,11 +48,12 @@ namespace UnityEngine.InputNew
 			var controls = new List< InputControlData >();
 
 			// Compounds.
-			controls.Add( new InputControlData {
-				                                   name = "Position"
-				                                   , controlType = InputControlType.Vector3
-				                                   , componentControlIndices = new int[ 3 ] { ( int ) PointerControl.PositionX, ( int ) PointerControl.PositionY, ( int ) PointerControl.PositionZ }
-			                                   } );
+			controls.Add( new InputControlData
+				{
+                      name = "Position"
+                    , controlType = InputControlType.Vector3
+                    , componentControlIndices = new int[ 3 ] { ( int ) PointerControl.PositionX, ( int ) PointerControl.PositionY, ( int ) PointerControl.PositionZ }
+                } );
 
 			// Primitives.
 			controls.Add( new InputControlData { name = "PositionX", controlType = InputControlType.RelativeAxis } );

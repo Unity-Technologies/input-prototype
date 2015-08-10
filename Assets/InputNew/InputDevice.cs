@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-////TODO: connect/disconnect support
-
 namespace UnityEngine.InputNew
 {
 	public abstract class InputDevice
@@ -35,6 +33,12 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
+		#endregion
+
+		#region Public Properties
+
+		public bool connected { get; internal set; }
+		
 		#endregion
 	}
 }

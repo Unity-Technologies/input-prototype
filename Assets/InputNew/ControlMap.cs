@@ -10,6 +10,17 @@ namespace UnityEngine.InputNew
 		public List< ControlMapEntry > entries;
 		public List< string > schemes;
 
+		public void OnEnable()
+		{
+			if ( entries != null )
+			{
+				for ( var i = 0; i < entries.Count; ++ i )
+				{
+					entries[ i ].controlIndex = i;		
+				}
+			}
+		}
+
 		public IEnumerable< Type > GetUsedDeviceType( int controlSchemeIndex )
 		{
 			if ( entries == null )

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UnityEngine.InputNew
 {
@@ -28,6 +27,7 @@ namespace UnityEngine.InputNew
 		public void RegisterDevice( InputDevice device )
 		{
 			RegisterDeviceInternal( device.GetType(), device );
+			HandleDeviceConnectDisconnect( device, true );
 		}
 
 		public InputDevice GetMostRecentlyUsedDevice( Type deviceType )
@@ -74,6 +74,10 @@ namespace UnityEngine.InputNew
 			if ( device == null )
 				return false;
 
+			// Ignore event on device if device is disconnected.
+			if ( !device.connected )
+				return false;
+
 			// Update most-recently-used status.
 			for ( var currentType = inputEvent.deviceType; currentType != typeof( InputDevice ); currentType = currentType.BaseType )
 			{
@@ -104,6 +108,22 @@ namespace UnityEngine.InputNew
 			return device.RemapEvent( inputEvent );
 		}
 
+		public void DisconnectDevice( InputDevice device )
+		{
+			if ( !device.connected )
+				return;
+
+			HandleDeviceConnectDisconnect( device, false );
+		}
+
+		public void ReconnectDevice( InputDevice device )
+		{
+			if ( device.connected )
+				return;
+
+			HandleDeviceConnectDisconnect( device, true );
+		}
+
 		#endregion
 
 		#region Non-Public Methods
@@ -123,6 +143,17 @@ namespace UnityEngine.InputNew
 			var baseType = deviceType.BaseType;
 			if ( baseType != typeof( InputDevice ) )
 				RegisterDeviceInternal( baseType, device );
+		}
+
+		private void HandleDeviceConnectDisconnect( InputDevice device, bool connected )
+		{
+			// Sync state.
+			device.connected = connected;
+
+			// Fire event.
+			var handler = deviceConnectedDisconnected;
+			if ( handler != null )
+				handler( device, connected );
 		}
 
 		#endregion
@@ -161,10 +192,22 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		#region Public Events
+
+		public DeviceConnectDisconnectEvent deviceConnectedDisconnected;
+		
+		#endregion
+
 		#region Fields
 
-		private Dictionary< Type, List< InputDevice > > _devices = new Dictionary< Type, List< InputDevice > >();
-		private List< InputDevice > _leastToMostRecentlyUsedDevices = new List< InputDevice >();
+		private readonly Dictionary< Type, List< InputDevice > > _devices = new Dictionary< Type, List< InputDevice > >();
+		private readonly List< InputDevice > _leastToMostRecentlyUsedDevices = new List< InputDevice >();
+
+		#endregion
+
+		#region Inner Types
+
+		public delegate void DeviceConnectDisconnectEvent( InputDevice device, bool connected );
 
 		#endregion
 	}
