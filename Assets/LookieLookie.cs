@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.InputNew;
-using System.Collections;
 using System.Linq;
 
 public class LookieLookie : MonoBehaviour
 {
-	public InputMap inputMap;
+	public ControlMap controlMap;
+	public ControlMapEntry lookControlX;
+	public ControlMapEntry lookControlY;
 
-	private InputMapInstance _inputMapInstance;
-	private InputControlData _lookBinding;
+	private ControlMapInstance _controlMapInstance;
 
 	public void Awake()
 	{
-		_inputMapInstance = InputSystem.BindInputs( inputMap ).First();
-		_inputMapInstance.Activate();
+		_controlMapInstance = InputSystem.BindInputs( controlMap ).First();
+		_controlMapInstance.Activate();
 	}
 
 	public void Update()
 	{
-		//var position = _inputMapInstance[ lookBinding ].vector3Value;
+		var lookX = _controlMapInstance[ lookControlX ].floatValue;
+		var lookY = _controlMapInstance[ lookControlY ].floatValue;
+
+		Debug.Log( string.Format( "lookX = {0}, lookY = {1}", lookX, lookY ) );
 	}
 }
