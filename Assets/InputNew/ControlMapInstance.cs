@@ -42,12 +42,21 @@ namespace UnityEngine.InputNew
 
 			// Update device state (if event actually goes to one of the devices we talk to).
 			foreach ( var deviceState in _deviceStates )
+			{
 				////FIXME: should refer to proper type
-				if ( ( ( InputDevice ) deviceState.controlProvider ).ProcessEventIntoState( inputEvent, deviceState ) )
+				var device = ( InputDevice ) deviceState.controlProvider;
+
+				// Skip state if event is not meant for device associated with it.
+				if ( InputSystem.LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex ) != device )
+					continue;
+
+				// Give device a stab at converting the event into state.
+				if ( device.ProcessEventIntoState( inputEvent, deviceState ) )
 				{
 					consumed = true;
 					break;
 				}
+			}
 
 			if ( !consumed )
 				return false;

@@ -20,16 +20,7 @@ namespace UnityEngine.InputNew
 		public virtual bool ProcessEvent( InputEvent inputEvent )
 		{
 			lastEventTime = inputEvent.time;
-
-			var consumed = false;
-
-			var genericEvent = inputEvent as GenericControlEvent;
-			if ( genericEvent != null )
-			{
-				consumed |= _state.SetCurrentValue( genericEvent.controlIndex, genericEvent.value );
-			}
-
-			return consumed;
+			return false;
 		}
 
 		#endregion

@@ -15,5 +15,21 @@ namespace UnityEngine.InputNew
 		}
 
 		#endregion
+
+		public override bool ProcessEventIntoState( InputEvent inputEvent, InputState intoState )
+		{
+			var consumed = false;
+
+			var genericEvent = inputEvent as GenericControlEvent;
+			if ( genericEvent != null )
+			{
+				consumed |= state.SetCurrentValue( genericEvent.controlIndex, genericEvent.value );
+			}
+
+			if ( consumed )
+				return true;
+
+			return base.ProcessEventIntoState( inputEvent, intoState );
+		}
 	}
 }
