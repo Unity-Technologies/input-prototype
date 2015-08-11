@@ -42,7 +42,6 @@ namespace UnityEngine.InputNew
 			controls[ ( int ) GamepadControl.ButtonY ] = new InputControlData { name = "Y", controlType = InputControlType.Button };
 			controls[ ( int ) GamepadControl.Start ] = new InputControlData { name = "Start", controlType = InputControlType.Button };
 			controls[ ( int ) GamepadControl.Back ] = new InputControlData { name = "Back", controlType = InputControlType.Button };
-			controls[ ( int ) GamepadControl.DpadPress ] = new InputControlData { name = "DpadPress", controlType = InputControlType.Button };
 			controls[ ( int ) GamepadControl.LeftThumbstickPress ] = new InputControlData { name = "LeftThumbstickPress", controlType = InputControlType.Button };
 			controls[ ( int ) GamepadControl.RightThumbstickPress ] = new InputControlData { name = "RightThumbstickPress", controlType = InputControlType.Button };
 			controls[ ( int ) GamepadControl.DpadUp ] = new InputControlData { name = "DpadUp", controlType = InputControlType.Button };

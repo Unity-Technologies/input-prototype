@@ -35,8 +35,24 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private SortedList< float, InputEvent > _list = new SortedList< float, InputEvent >();
+		private readonly SortedList< float, InputEvent > _list = new SortedList< float, InputEvent >( new SortInputEventsByTime() );
 
+		#endregion
+
+		#region Inner Types
+
+		private class SortInputEventsByTime
+			: IComparer< float >
+		{
+			public int Compare( float x, float y )
+			{
+				if ( x < y )
+					return -1;
+				// Avoid duplicate keys in sorted list by always treating equality as greater-than.
+				return 1;
+			}
+		}
+		
 		#endregion
 	}
 }

@@ -32,7 +32,6 @@ namespace UnityEngine.InputNew
 
 		// -- Optional:
 
-		DpadPress,
 		LeftThumbstickPress,
 		RightThumbstickPress,
 	}
