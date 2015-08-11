@@ -6,101 +6,96 @@ using Assets.Utilities;
 
 public static class CreateDemoAssets
 {
+	private static ControlMapEntry CreateControl (string name, InputControlType controlType, System.Type deviceType, int controlIndex)
+	{
+		var entry = ScriptableObject.CreateInstance< ControlMapEntry >();
+		entry.controlData = new InputControlData
+		{
+			name = name,
+			controlType = controlType
+		};
+		entry.bindings = new List< ControlBinding >
+		{
+			new ControlBinding 
+			{
+				sources = new List< InputControlDescriptor >
+				{
+					new InputControlDescriptor
+					{
+						deviceType = deviceType,
+						controlIndex = controlIndex
+					}
+				}
+			}
+		};
+		return entry;
+	}
+	
+	private static ControlMapEntry CreateControlButtonAxis (string name, InputControlType controlType, System.Type deviceType, int controlIndexNegative, int controlIndexPositive)
+	{
+		var entry = ScriptableObject.CreateInstance< ControlMapEntry >();
+		entry.controlData = new InputControlData
+		{
+			name = name,
+			controlType = controlType
+		};
+		entry.bindings = new List< ControlBinding >
+		{
+			new ControlBinding 
+			{
+				buttonAxisSources = new List< ButtonAxisSource >
+				{
+					new ButtonAxisSource(
+						new InputControlDescriptor
+						{
+							deviceType = deviceType,
+							controlIndex = controlIndexNegative
+						},
+						new InputControlDescriptor
+						{
+							deviceType = deviceType,
+							controlIndex = controlIndexPositive
+						}
+					)
+				}
+			}
+		};
+		return entry;
+	}
+	
+	private static ControlMapEntry CreateControlComposite (string name, InputControlType controlType, int[] indices)
+	{
+		var entry = ScriptableObject.CreateInstance< ControlMapEntry >();
+		entry.controlData = new InputControlData
+		{
+			name = name,
+			controlType = controlType,
+			componentControlIndices = indices
+		};
+		return entry;
+	}
+	
 	[ MenuItem( "Tools/Create Input Map Asset" ) ]
 	public static void CreateInputMapAsset()
 	{
 		var controlMap = ScriptableObject.CreateInstance< ControlMap >();
 
 		var entries = new List< ControlMapEntry >();
-		var lookX = ScriptableObject.CreateInstance< ControlMapEntry >();
-		lookX.controlData = new InputControlData
-			  {
-					  name = "LookX"
-					, controlType = InputControlType.RelativeAxis
-			  };
-		lookX.bindings = new List< ControlBinding >
-			{
-				new ControlBinding 
-				{
-					  sources = new List< InputControlDescriptor >
-						  {
-								new InputControlDescriptor
-								{
-									  deviceType = typeof( Pointer )
-									, controlIndex = ( int ) PointerControl.PositionX
-								}
-						  }
-				}
-			};
-		entries.Add( lookX );
-
-		var lookY = ScriptableObject.CreateInstance< ControlMapEntry >();
-		lookY.controlData = new InputControlData
-			  {
-					  name = "LookY"
-					, controlType = InputControlType.RelativeAxis
-			  };
-		lookY.bindings = new List< ControlBinding >
-			{
-				new ControlBinding 
-				{
-					  sources = new List< InputControlDescriptor >
-						  {
-								new InputControlDescriptor
-								{
-									  deviceType = typeof( Pointer )
-									, controlIndex = ( int ) PointerControl.PositionY
-								}
-						  }
-				}
-			};
-		entries.Add( lookY );
-
-		var look = ScriptableObject.CreateInstance< ControlMapEntry >();
-		look.controlData = new InputControlData
-			  {
-					  name = "Look"
-					, controlType = InputControlType.Vector2
-					, componentControlIndices = new[] { 0, 1 }
-			  };
-		entries.Add( look );
-
-		var fire = ScriptableObject.CreateInstance< ControlMapEntry >();
-		fire.controlData = new InputControlData
-			  {
-					  name = "Fire"
-					, controlType = InputControlType.Button
-			  };
-		fire.bindings = new List< ControlBinding >
-			{
-				new ControlBinding 
-				{
-					  sources = new List< InputControlDescriptor >
-						  {
-								  new InputControlDescriptor
-								  {
-									    deviceType = typeof( Pointer )
-									  , controlIndex = ( int ) PointerControl.LeftButton
-								  }
-								, new InputControlDescriptor
-								  {
-									    deviceType = typeof( Gamepad )
-									  , controlIndex = ( int ) GamepadControl.ButtonA
-								  }
-						  }
-				}
-			};
-		entries.Add( fire );
+		entries.Add( CreateControlButtonAxis( "MoveX", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyCode.A, (int)KeyCode.D ));
+		entries.Add( CreateControlButtonAxis( "MoveY", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyCode.S, (int)KeyCode.W ));
+		entries.Add( CreateControlComposite( "Move", InputControlType.Vector2, new int[] { 0, 1 } ));
+		entries.Add( CreateControl( "LookX", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionX ));
+		entries.Add( CreateControl( "LookY", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionY ));
+		entries.Add( CreateControlComposite( "Look", InputControlType.Vector2, new int[] { 2, 3 } ));
+		entries.Add( CreateControl( "Fire", InputControlType.Button, typeof( Pointer ), (int)PointerControl.LeftButton ));
 	
 		controlMap.entries = entries;
 		controlMap.schemes = new List< string > { "default" };
 
 		const string path = "Assets/LookieLookieMap.asset";
 		AssetDatabase.CreateAsset( controlMap, path );
-		AssetDatabase.AddObjectToAsset( lookX, path );
-		AssetDatabase.AddObjectToAsset( lookY, path );
-		AssetDatabase.AddObjectToAsset( look, path );
-		AssetDatabase.AddObjectToAsset( fire, path );
+		for ( int i = 0; i < entries.Count; i++ )
+			AssetDatabase.AddObjectToAsset( entries[i], path );
 	}
 
 	[ MenuItem( "Tools/Create Device Profile Asset" ) ]
