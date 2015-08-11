@@ -47,7 +47,6 @@ namespace UnityEngine.InputNew
 		{
 			var controls = new List< InputControlData >();
 
-			// Compounds.
 			controls.Add( new InputControlData
 				{
                       name = "Position"
@@ -55,10 +54,15 @@ namespace UnityEngine.InputNew
                     , componentControlIndices = new int[ 3 ] { ( int ) PointerControl.PositionX, ( int ) PointerControl.PositionY, ( int ) PointerControl.PositionZ }
                 } );
 
-			// Primitives.
 			controls.Add( new InputControlData { name = "PositionX", controlType = InputControlType.RelativeAxis } );
 			controls.Add( new InputControlData { name = "PositionY", controlType = InputControlType.RelativeAxis } );
 			controls.Add( new InputControlData { name = "PositionZ", controlType = InputControlType.RelativeAxis } );
+			controls.Add( new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis } );
+			controls.Add( new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis } );
+			controls.Add( new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis } );
+			controls.Add( new InputControlData { name = "LeftButton", controlType = InputControlType.Button } );
+			controls.Add( new InputControlData { name = "RightButton", controlType = InputControlType.Button } );
+			controls.Add( new InputControlData { name = "MiddleButton", controlType = InputControlType.Button } );
 
 			return controls;
 		}

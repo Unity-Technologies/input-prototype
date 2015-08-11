@@ -25,7 +25,10 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				throw new NotImplementedException();
+				var currentValue = _state.GetCurrentValue( _index );
+				if ( currentValue > 0.001f )
+					return true;
+				return false;
 			}
 		}
 
@@ -44,7 +47,7 @@ namespace UnityEngine.InputNew
 					  _state.GetCurrentValue( controlData.componentControlIndices[ 0 ] )
 					, _state.GetCurrentValue( controlData.componentControlIndices[ 1 ] )
 					, _state.GetCurrentValue( controlData.componentControlIndices[ 2 ] )
-					);
+				);
 			}
 		}
 

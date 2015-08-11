@@ -23,13 +23,13 @@ public static class CreateDemoAssets
 				new ControlBinding 
 				{
 					  sources = new List< InputControlDescriptor >
-					  {
-							new InputControlDescriptor
-							{
-								  deviceType = typeof( Pointer )
-								, controlIndex = ( int ) PointerControl.PositionX
-							}
-					  }
+						  {
+								new InputControlDescriptor
+								{
+									  deviceType = typeof( Pointer )
+									, controlIndex = ( int ) PointerControl.PositionX
+								}
+						  }
 				}
 			};
 		entries.Add( lookX );
@@ -45,13 +45,13 @@ public static class CreateDemoAssets
 				new ControlBinding 
 				{
 					  sources = new List< InputControlDescriptor >
-					  {
-							new InputControlDescriptor
-							{
-								  deviceType = typeof( Pointer )
-								, controlIndex = ( int ) PointerControl.PositionY
-							}
-					  }
+						  {
+								new InputControlDescriptor
+								{
+									  deviceType = typeof( Pointer )
+									, controlIndex = ( int ) PointerControl.PositionY
+								}
+						  }
 				}
 			};
 		entries.Add( lookY );
@@ -61,9 +61,36 @@ public static class CreateDemoAssets
 			  {
 					  name = "Look"
 					, controlType = InputControlType.Vector2
-					, componentControlIndices = new int[] { 0, 1 }
+					, componentControlIndices = new[] { 0, 1 }
 			  };
 		entries.Add( look );
+
+		var fire = ScriptableObject.CreateInstance< ControlMapEntry >();
+		fire.controlData = new InputControlData
+			  {
+					  name = "Fire"
+					, controlType = InputControlType.Button
+			  };
+		fire.bindings = new List< ControlBinding >
+			{
+				new ControlBinding 
+				{
+					  sources = new List< InputControlDescriptor >
+						  {
+								  new InputControlDescriptor
+								  {
+									    deviceType = typeof( Pointer )
+									  , controlIndex = ( int ) PointerControl.LeftButton
+								  }
+								, new InputControlDescriptor
+								  {
+									    deviceType = typeof( Gamepad )
+									  , controlIndex = ( int ) GamepadControl.ButtonA
+								  }
+						  }
+				}
+			};
+		entries.Add( fire );
 	
 		controlMap.entries = entries;
 		controlMap.schemes = new List< string > { "default" };
@@ -73,6 +100,7 @@ public static class CreateDemoAssets
 		AssetDatabase.AddObjectToAsset( lookX, path );
 		AssetDatabase.AddObjectToAsset( lookY, path );
 		AssetDatabase.AddObjectToAsset( look, path );
+		AssetDatabase.AddObjectToAsset( fire, path );
 	}
 
 	[ MenuItem( "Tools/Create Device Profile Asset" ) ]
