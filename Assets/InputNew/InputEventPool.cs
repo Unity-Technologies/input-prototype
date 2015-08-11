@@ -14,6 +14,7 @@ namespace UnityEngine.InputNew
 		public void Return( InputEvent inputEvent )
 		{
 			////TODO
+			inputEvent.Reset ();
 		}
 
 		#endregion

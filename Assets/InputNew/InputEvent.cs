@@ -33,7 +33,28 @@ namespace UnityEngine.InputNew
 		public Type deviceType { get; set; }
 		public int deviceIndex { get; set; }
 
+		public InputDevice device
+		{
+			get
+			{
+				if (_cachedDevice == null && deviceType != null)
+					_cachedDevice = InputSystem.LookupDevice (deviceType, deviceIndex);
+
+				return _cachedDevice;
+			}
+		}
+
 		#endregion
+
+		internal void Reset ()
+		{
+			time = 0.0f;
+			deviceType = null;
+			deviceIndex = 0;
+			_cachedDevice = null;
+		}
+
+		private InputDevice _cachedDevice;
 	}
 }
 

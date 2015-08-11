@@ -45,7 +45,7 @@ namespace UnityEngine.InputNew
 
 		public static InputDevice LookupDevice( Type deviceType, int deviceIndex )
 		{
-			throw new NotImplementedException();
+			return _devices.LookupDevice (deviceType, deviceIndex);
 		}
 
 		public static void QueueEvent( InputEvent inputEvent )

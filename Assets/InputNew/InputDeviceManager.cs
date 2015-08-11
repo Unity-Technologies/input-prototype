@@ -78,8 +78,8 @@ namespace UnityEngine.InputNew
 		public bool ProcessEvent( InputEvent inputEvent )
 		{
 			// Look up device.
-			var device = LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex );
-			if ( device == null )
+			var device = inputEvent.device;
+			if (device == null)
 				return false;
 
 			// Ignore event on device if device is disconnected.
@@ -108,8 +108,8 @@ namespace UnityEngine.InputNew
 		public bool RemapEvent( InputEvent inputEvent )
 		{
 			// Look up device.
-			var device = LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex );
-			if ( device == null )
+			var device = inputEvent.device;
+			if (device == null)
 				return false;
 
 			// Let device remap event.
