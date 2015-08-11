@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.InputNew;
-using System.Collections;
 
-public class MouseInputToEvents : MonoBehaviour
+public class MouseInputToEvents
+	: MonoBehaviour
 {
 	public void Update()
 	{

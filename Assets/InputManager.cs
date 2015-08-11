@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.InputNew;
 
-public class InputManager : MonoBehaviour
+public class InputManager
+	: MonoBehaviour
 {
-	public void Update()
-	{
-		InputSystem.ExecuteEvents();
-	}
+	public InputDeviceProfile[] profiles;
 
-	public void FixedUpdate()
+	public void Awake()
 	{
-		InputSystem.ExecuteEvents();
+		Debug.Log( "Initialize input system" );
+		InputSystem.Initialize( profiles );
 	}
 }

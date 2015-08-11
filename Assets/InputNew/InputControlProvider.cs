@@ -44,8 +44,8 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private InputState _state;
-		private List< InputControlData > _controls;
+		private readonly InputState _state;
+		private readonly List< InputControlData > _controls;
 
 		#endregion
 	}

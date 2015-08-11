@@ -1,5 +1,10 @@
 using System.Collections.Generic;
 
+// TODO
+// X device need to have some kind of identification string
+// X create fakepad profile asset
+// - look for matching profile on device registration
+
 namespace UnityEngine.InputNew
 {
 	public abstract class InputDevice
@@ -7,9 +12,10 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		protected InputDevice( List< InputControlData > controls )
+		protected InputDevice( string deviceName, List< InputControlData > controls )
 			: base( controls )
 		{
+			this.deviceName = deviceName;
 		}
 
 		#endregion
@@ -29,7 +35,8 @@ namespace UnityEngine.InputNew
 
 		public virtual bool RemapEvent( InputEvent inputEvent )
 		{
-			////TODO: implement remapping
+			if ( profile != null )
+				profile.Remap( inputEvent );
 			return false;
 		}
 
@@ -38,6 +45,10 @@ namespace UnityEngine.InputNew
 		#region Public Properties
 
 		public bool connected { get; internal set; }
+
+		public InputDeviceProfile profile { get; set; }
+
+		public string deviceName { get; private set; }
 		
 		#endregion
 	}

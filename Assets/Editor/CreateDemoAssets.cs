@@ -2,11 +2,12 @@
 using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections.Generic;
+using Assets.Utilities;
 
-public static class CreateInputMapAsset
+public static class CreateDemoAssets
 {
 	[ MenuItem( "Tools/Create Input Map Asset" ) ]
-	public static void CreateAsset()
+	public static void CreateInputMapAsset()
 	{
 		var controlMap = ScriptableObject.CreateInstance< ControlMap >();
 
@@ -72,5 +73,19 @@ public static class CreateInputMapAsset
 		AssetDatabase.AddObjectToAsset( lookX, path );
 		AssetDatabase.AddObjectToAsset( lookY, path );
 		AssetDatabase.AddObjectToAsset( look, path );
+	}
+
+	[ MenuItem( "Tools/Create Device Profile Asset" ) ]
+	public static void CreateDeviceProfileAsset()
+	{
+		var profile = ScriptableObject.CreateInstance< GamepadProfile >();
+
+		profile.AddDeviceName( "Generic Gamepad" );
+		profile.SetMappingsCount( EnumHelpers.GetValueCount< GamepadControl >() );
+		profile.SetMapping( ( int ) GamepadControl.ButtonA, GamepadControl.ButtonB );
+		profile.SetMapping( ( int ) GamepadControl.ButtonB, GamepadControl.ButtonA );
+
+		const string path = "Assets/FakepadProfile.asset";
+		AssetDatabase.CreateAsset( profile, path );
 	}
 }

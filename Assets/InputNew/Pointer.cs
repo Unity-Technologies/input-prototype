@@ -10,8 +10,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		protected Pointer( List< InputControlData > controls )
-			: base( controls )
+		protected Pointer( string deviceName, List< InputControlData > controls )
+			: base( deviceName, controls )
 		{
 		}
 

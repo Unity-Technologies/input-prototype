@@ -9,13 +9,16 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
-		#region Constructors
+		#region Public Methods
 
-		static InputSystem()
+		public static void Initialize( InputDeviceProfile[] profiles )
 		{
 			_devices = new InputDeviceManager();
 			_eventQueue = new InputEventQueue();
 			_eventPool = new InputEventPool();
+
+			foreach ( var profile in profiles )
+				RegisterProfile( profile );
 
 			// Set up event tree.
 			_eventTree = new InputEventTree { name = "Root" };
@@ -35,9 +38,10 @@ namespace UnityEngine.InputNew
 			_eventTree.children.Add( state );
 		}
 
-		#endregion
-
-		#region Public Methods
+		public static void RegisterProfile( InputDeviceProfile profile )
+		{
+			_devices.RegisterProfile( profile );
+		}
 
 		public static InputDevice LookupDevice( Type deviceType, int deviceIndex )
 		{

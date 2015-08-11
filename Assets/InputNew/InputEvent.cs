@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -9,6 +8,25 @@ namespace UnityEngine.InputNew
 
 	public abstract class InputEvent
 	{
+		#region Public Methods
+
+		public override string ToString()
+		{
+			if ( deviceType == null )
+				return base.ToString();
+
+			return string.Format
+				(
+					  "{0} on {1}:{2} at {3}"
+					, GetType().Name
+					, deviceType.Name
+					, deviceIndex
+					, time
+				);
+		}
+
+		#endregion
+
 		#region Public Properties
 
 		public float time { get; set; }
@@ -17,23 +35,12 @@ namespace UnityEngine.InputNew
 
 		#endregion
 	}
+}
 
-	// Approach A
 
-	////REVIEW: i don't like this whole thing
+// -------- from old single file thing
 
-	// ------------------------------------------------------------------------
-	//	Native Events.
-	// ------------------------------------------------------------------------
 
-	// ------------------------------------------------------------------------
-	//	Controls.
-	// ------------------------------------------------------------------------
-
-	// ------------------------------------------------------------------------
-	//	States.
-	// ------------------------------------------------------------------------
-	
 	////REVIEW: we may want to store actual state for compounds such that we can do postprocessing on them (like normalize vectors, for example)
 
 	// ------------------------------------------------------------------------
@@ -62,5 +69,3 @@ namespace UnityEngine.InputNew
 	// ------------------------------------------------------------------------
 	//	System.
 	// ------------------------------------------------------------------------
-}
-

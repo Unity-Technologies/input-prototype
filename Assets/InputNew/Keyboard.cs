@@ -7,8 +7,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Keyboard( List< InputControlData > controls )
-			: base( controls )
+		public Keyboard( string deviceName, List< InputControlData > controls )
+			: base( deviceName, controls )
 		{
 		}
 
@@ -19,7 +19,7 @@ namespace UnityEngine.InputNew
 		public static Keyboard CreateDefault()
 		{
 			var controls = new List< InputControlData >();
-			return new Keyboard( controls );
+			return new Keyboard( "Generic Keyboard", controls );
 		}
 
 		#endregion

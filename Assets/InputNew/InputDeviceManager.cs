@@ -14,10 +14,12 @@ namespace UnityEngine.InputNew
 			var mouse = Mouse.CreateDefault();
 			var keyboard = Keyboard.CreateDefault();
 			var touchscreen = Touchscreen.CreateDefault();
+			var gamepad = Gamepad.CreateDefault();
 
 			RegisterDevice( mouse );
 			RegisterDevice( keyboard );
 			RegisterDevice( touchscreen );
+			RegisterDevice( gamepad );
 		}
 
 		#endregion
@@ -26,8 +28,14 @@ namespace UnityEngine.InputNew
 
 		public void RegisterDevice( InputDevice device )
 		{
+			AssignDeviceProfile (device);
 			RegisterDeviceInternal( device.GetType(), device );
 			HandleDeviceConnectDisconnect( device, true );
+		}
+
+		public void RegisterProfile( InputDeviceProfile profile )
+		{
+			_profiles.Add( profile );
 		}
 
 		public InputDevice GetMostRecentlyUsedDevice( Type deviceType )
@@ -59,7 +67,7 @@ namespace UnityEngine.InputNew
 		{
 			List< InputDevice > list;
 			if (    !_devices.TryGetValue( deviceType, out list )
-			        || deviceIndex >= list.Count )
+			     || deviceIndex >= list.Count )
 				return null;
 
 			return list[ deviceIndex ];
@@ -127,7 +135,26 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Non-Public Methods
-		
+
+		private void AssignDeviceProfile( InputDevice device )
+		{
+			device.profile = FindDeviceProfile( device );
+		}
+
+		private InputDeviceProfile FindDeviceProfile( InputDevice device )
+		{
+			foreach ( var profile in _profiles )
+			{
+				if ( profile.deviceNames != null )
+				{
+					foreach ( var deviceName in profile.deviceNames )
+						if ( string.Compare( deviceName, device.deviceName, StringComparison.InvariantCulture ) == 0 )
+							return profile;
+				}
+			}
+			return null;
+		}
+
 		private void RegisterDeviceInternal( Type deviceType, InputDevice device )
 		{
 			List< InputDevice > list;
@@ -202,6 +229,7 @@ namespace UnityEngine.InputNew
 
 		private readonly Dictionary< Type, List< InputDevice > > _devices = new Dictionary< Type, List< InputDevice > >();
 		private readonly List< InputDevice > _leastToMostRecentlyUsedDevices = new List< InputDevice >();
+		private readonly List< InputDeviceProfile > _profiles = new List< InputDeviceProfile >();
 
 		#endregion
 
