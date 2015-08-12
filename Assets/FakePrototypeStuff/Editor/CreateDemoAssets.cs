@@ -92,7 +92,7 @@ public static class CreateDemoAssets
 		controlMap.entries = entries;
 		controlMap.schemes = new List< string > { "default" };
 
-		const string path = "Assets/LookieLookieMap.asset";
+		const string path = "Assets/DemoAssets/LookieLookieMap.asset";
 		AssetDatabase.CreateAsset( controlMap, path );
 		for ( int i = 0; i < entries.Count; i++ )
 			AssetDatabase.AddObjectToAsset( entries[i], path );
@@ -108,7 +108,7 @@ public static class CreateDemoAssets
 		profile.SetMapping( ( int ) GamepadControl.ButtonA, GamepadControl.ButtonB );
 		profile.SetMapping( ( int ) GamepadControl.ButtonB, GamepadControl.ButtonA );
 
-		const string path = "Assets/FakepadProfile.asset";
+		const string path = "Assets/FakePrototypeStuff/FakepadProfile.asset";
 		AssetDatabase.CreateAsset( profile, path );
 	}
 }
