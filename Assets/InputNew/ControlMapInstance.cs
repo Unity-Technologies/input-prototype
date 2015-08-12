@@ -75,19 +75,30 @@ namespace UnityEngine.InputNew
 				var controlValue = 0.0f;
 				foreach ( var source in binding.sources )
 				{
-					var deviceState = GetDeviceStateForDeviceType( source.deviceType );
-					var value = deviceState[ source.controlIndex ].floatValue;
-
+					var value = GetSourceValue( source );
 					if ( Mathf.Abs( value ) > Mathf.Abs( controlValue ) )
 						controlValue = value;
 				}
 
-				////TODO: support button axes
-				
+				foreach ( var axis in binding.buttonAxisSources )
+				{
+					var negativeValue = GetSourceValue( axis.negative );
+					var positiveValue = GetSourceValue( axis.positive );
+					var value = positiveValue - negativeValue;
+					if ( Mathf.Abs( value ) > Mathf.Abs( controlValue ) )
+						controlValue = value;
+				}
+
 				state.SetCurrentValue( entryIndex, controlValue );
 			}
 
 			return true;
+		}
+		
+		float GetSourceValue( InputControlDescriptor source )
+		{
+			var deviceState = GetDeviceStateForDeviceType( source.deviceType );
+			return deviceState[ source.controlIndex ].floatValue;
 		}
 
 		#endregion

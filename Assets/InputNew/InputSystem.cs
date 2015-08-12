@@ -77,10 +77,22 @@ namespace UnityEngine.InputNew
 			}
 		}
 
+		static void ExtractDeviceTypeAndControlIndexFromSource( Dictionary< Type, List< int > > perDeviceTypeMapEntries, InputControlDescriptor control )
+		{
+			List< int > entries;
+			if ( !perDeviceTypeMapEntries.TryGetValue( control.deviceType, out entries ) )
+			{
+				entries = new List< int >();
+				perDeviceTypeMapEntries[ control.deviceType ] = entries;
+			}
+			
+			entries.Add( control.controlIndex );
+		}
+		
 		public static IEnumerable< ControlMapInstance > BindInputs( ControlMap controlMap, bool localMultiplayer, int controlSchemeIndex )
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
-			var perDeviceTypeMapEntries = new Dictionary< Type, List< ControlMapEntry > >();
+			var perDeviceTypeUsedControlIndices = new Dictionary< Type, List< int > >();
 			foreach ( var entry in controlMap.entries )
 			{
 				if ( entry.bindings == null || entry.bindings.Count == 0 )
@@ -88,14 +100,13 @@ namespace UnityEngine.InputNew
 
 				foreach ( var control in entry.bindings[ controlSchemeIndex ].sources )
 				{
-					List< ControlMapEntry > entries;
-					if ( !perDeviceTypeMapEntries.TryGetValue( control.deviceType, out entries ) )
-					{
-						entries = new List< ControlMapEntry >();
-						perDeviceTypeMapEntries[ control.deviceType ] = entries;
-					}
+					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, control );
+				}
 
-					entries.Add( entry );
+				foreach ( var axis in entry.bindings[ controlSchemeIndex ].buttonAxisSources )
+				{
+					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, axis.negative );
+					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, axis.positive );
 				}
 			}
 
@@ -118,7 +129,7 @@ namespace UnityEngine.InputNew
 				// Gather available devices for each type of device.
 				var deviceTypesToAvailableDevices = new Dictionary< Type, List< InputDevice > >();
 				var minDeviceCountOfType = Int32.MaxValue;
-				foreach ( var deviceType in perDeviceTypeMapEntries.Keys )
+				foreach ( var deviceType in perDeviceTypeUsedControlIndices.Keys )
 				{
 					var availableDevicesOfType = _devices.GetDevicesOfType( deviceType );
 					if ( availableDevicesOfType != null )
@@ -132,11 +143,11 @@ namespace UnityEngine.InputNew
 				{
 					var deviceStates = new List< InputState >();
 
-					foreach ( var entry in perDeviceTypeMapEntries )
+					foreach ( var entry in perDeviceTypeUsedControlIndices )
 					{
 						// Take i-th device of current type.
 						var device = deviceTypesToAvailableDevices[ entry.Key ][ i ];
-						var state = new InputState( device );
+						var state = new InputState( device, entry.Value );
 						deviceStates.Add( state );
 					}
 					
@@ -150,13 +161,13 @@ namespace UnityEngine.InputNew
 				var deviceStates = new List< InputState >();
 
 				// Create device states for most recently used device of given types.
-				foreach ( var entry in perDeviceTypeMapEntries )
+				foreach ( var entry in perDeviceTypeUsedControlIndices )
 				{
 					var device = _devices.GetMostRecentlyUsedDevice( entry.Key );
 					if ( device == null )
 						yield break; // Can't satisfy this ControlMap; no available device of given type.
 
-					var state = new InputState( device );
+					var state = new InputState( device, entry.Value );
 					deviceStates.Add( state );
 				}
 				

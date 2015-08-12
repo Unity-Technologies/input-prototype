@@ -6,7 +6,9 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public InputState( InputControlProvider controlProvider )
+		public InputState( InputControlProvider controlProvider ) : this( controlProvider, null ) {}
+
+		public InputState( InputControlProvider controlProvider, List< int > usedControlIndices )
 		{
 			_controlProvider = controlProvider;
 
@@ -15,7 +17,15 @@ namespace UnityEngine.InputNew
 			_previousStates = new float[ controlCount ];
 
 			_enabled = new bool[ controlCount ];
-			SetAllControlsEnabled( true );
+			if (usedControlIndices == null)
+			{
+				SetAllControlsEnabled( true );
+			}
+			else
+			{
+				for (int i = 0; i < usedControlIndices.Count; i++)
+					_enabled[usedControlIndices[i]] = true;
+			}
 		}
 
 		#endregion
