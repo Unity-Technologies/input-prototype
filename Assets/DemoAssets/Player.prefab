@@ -184,7 +184,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
-  m_StereoMirrorMode: 0
 --- !u!23 &2317320
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -319,11 +318,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlMap: {fileID: 11400000, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
-  moveControlX: {fileID: 11452884, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
-  moveControlY: {fileID: 11440722, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
-  lookControlX: {fileID: 11432946, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
-  lookControlY: {fileID: 11462676, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
-  fireControl: {fileID: 11494846, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
+  moveControlX: {fileID: 0}
+  moveControlY: {fileID: 0}
+  lookControlX: {fileID: 11422408, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
+  lookControlY: {fileID: 11495252, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
+  fireControl: {fileID: 11485544, guid: 56b8d0458748da546879b9d8babc74da, type: 2}
   moveSpeed: 5
   head: {fileID: 484432}
   projectile: {fileID: 171512, guid: 35bb1b2b246f2924c9e37e30f454c7ee, type: 2}

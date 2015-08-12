@@ -3,6 +3,15 @@ namespace UnityEngine.InputNew
 	public class PointerEvent
 		: InputEvent
 	{
+		#region Public Methods
+
+		public override string ToString()
+		{
+			return string.Format( "{0} pos={1}", base.ToString(), position );
+		}
+
+		#endregion
+
 		#region Public Properties
 
 		public Vector3 position { get; set; }

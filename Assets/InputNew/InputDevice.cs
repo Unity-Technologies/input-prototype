@@ -22,12 +22,14 @@ namespace UnityEngine.InputNew
 
 		public sealed override bool ProcessEvent( InputEvent inputEvent )
 		{
+			ProcessEventIntoState( inputEvent, state );
 			return false;
 		}
 
 		public virtual bool ProcessEventIntoState( InputEvent inputEvent, InputState intoState )
 		{
-			return base.ProcessEvent( inputEvent );
+			lastEventTime = inputEvent.time;
+			return false;
 		}
 
 		public virtual bool RemapEvent( InputEvent inputEvent )

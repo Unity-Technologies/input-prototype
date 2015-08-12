@@ -38,7 +38,7 @@ namespace UnityEngine.InputNew
 			get { return _controls; }
 		}
 
-		public float lastEventTime { get; private set; }
+		public float lastEventTime { get; protected set; }
 
 		#endregion
 

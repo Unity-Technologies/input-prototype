@@ -86,7 +86,7 @@ public static class CreateDemoAssets
 		entries.Add( CreateControlComposite( "Move", InputControlType.Vector2, new int[] { 0, 1 } ));
 		entries.Add( CreateControl( "LookX", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionX ));
 		entries.Add( CreateControl( "LookY", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionY ));
-		entries.Add( CreateControlComposite( "Look", InputControlType.Vector2, new int[] { 2, 3 } ));
+		entries.Add( CreateControlComposite( "Look", InputControlType.Vector2, new int[] { 3, 4 } ));
 		entries.Add( CreateControl( "Fire", InputControlType.Button, typeof( Pointer ), (int)PointerControl.LeftButton ));
 	
 		controlMap.entries = entries;

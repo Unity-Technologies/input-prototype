@@ -16,9 +16,9 @@ namespace UnityEngine.InputNew
 			var touchscreen = Touchscreen.CreateDefault();
 			var gamepad = Gamepad.CreateDefault();
 
+			RegisterDevice( touchscreen ); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
 			RegisterDevice( mouse );
 			RegisterDevice( keyboard );
-			RegisterDevice( touchscreen );
 			RegisterDevice( gamepad );
 		}
 

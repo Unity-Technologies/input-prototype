@@ -224,12 +224,3 @@ MonoBehaviour:
     toRange:
       min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
-    displayName: 
-    fromRange:
-      min: 0
-      max: 0
-    toRange:
-      min: 0
-      max: 0

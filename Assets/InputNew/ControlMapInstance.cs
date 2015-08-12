@@ -47,7 +47,8 @@ namespace UnityEngine.InputNew
 				var device = ( InputDevice ) deviceState.controlProvider;
 
 				// Skip state if event is not meant for device associated with it.
-				if ( InputSystem.LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex ) != device )
+				var foundDevice = InputSystem.LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex );
+				if ( foundDevice != device )
 					continue;
 
 				// Give device a stab at converting the event into state.
