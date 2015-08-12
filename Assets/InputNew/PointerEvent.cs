@@ -7,7 +7,7 @@ namespace UnityEngine.InputNew
 
 		public override string ToString()
 		{
-			return string.Format( "{0} pos={1}", base.ToString(), position );
+			return string.Format( "({0}, pos:{1})", base.ToString(), position );
 		}
 
 		#endregion

@@ -7,7 +7,7 @@ namespace UnityEngine.InputNew
 
 		public override string ToString()
 		{
-			return string.Format( "{0} index={1} value={2}", base.ToString(), controlIndex, value );
+			return string.Format( "({0}, index:{1}, value:{2})", base.ToString(), controlIndex, value );
 		}
 
 		#endregion

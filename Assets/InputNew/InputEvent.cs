@@ -17,11 +17,11 @@ namespace UnityEngine.InputNew
 
 			return string.Format
 				(
-					  "{0} on {1}:{2} at {3}"
+					  "{0} on {1}, {2}, time:{3}"
 					, GetType().Name
 					, deviceType.Name
 					, deviceIndex
-					, time
+					, time.ToString( "0.00" )
 				);
 		}
 

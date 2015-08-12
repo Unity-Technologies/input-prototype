@@ -23,6 +23,11 @@ namespace UnityEngine.InputNew
 
 		[ NonSerialized ]
 		public int controlIndex;
+		
+		public override string ToString ()
+		{
+			return string.Format( "({0}, bindings:{1})", controlData.name, bindings.Count );
+		}
 
 		#endregion
 

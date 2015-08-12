@@ -5,6 +5,11 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 		
+		public override string ToString()
+		{
+			return string.Format( "({0}, key:{1}, isDown:{2})", base.ToString(), key, isDown );
+		}
+		
 		#endregion
 
 		#region Public Properties
