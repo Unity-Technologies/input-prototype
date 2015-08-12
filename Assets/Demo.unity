@@ -199,6 +199,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: moveControlX
+      value: 
+      objectReference: {fileID: 11405426, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: moveControlY
+      value: 
+      objectReference: {fileID: 11405520, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
   m_IsPrefabParent: 0
@@ -614,6 +624,7 @@ GameObject:
   - 114: {fileID: 1320763605}
   - 114: {fileID: 1320763609}
   - 114: {fileID: 1320763599}
+  - 114: {fileID: 1320763600}
   - 114: {fileID: 1320763610}
   m_Layer: 0
   m_Name: Controller
@@ -631,6 +642,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b151f756c495834fa63f07ea366132a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1320763600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1320763598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330c8870b308a774a82a43198e179c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1320763604

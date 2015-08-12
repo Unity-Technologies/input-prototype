@@ -42,6 +42,11 @@ namespace UnityEngine.InputNew
 			return _previousStates[ index ];
 		}
 
+		public bool SetCurrentValue( int index, bool value )
+		{
+			return SetCurrentValue( index, value ? 1.0f : 0.0f );
+		}
+
 		public bool SetCurrentValue( int index, float value )
 		{
 			if ( !IsControlEnabled( index ) )
