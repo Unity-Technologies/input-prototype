@@ -7,6 +7,11 @@ namespace UnityEngine.InputNew
 		PositionY,
 		PositionZ,
 
+		Delta,
+		DeltaX,
+		DeltaY,
+		DeltaZ,
+
 		Pressure,
 		Tilt,
 		Rotation,

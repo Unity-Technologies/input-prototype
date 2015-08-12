@@ -33,6 +33,10 @@ namespace UnityEngine.InputNew
 				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.PositionY, moveEvent.position.y );
 				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.PositionZ, moveEvent.position.z );
 
+				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.DeltaX, moveEvent.delta.x );
+				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.DeltaY, moveEvent.delta.y );
+				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.DeltaZ, moveEvent.delta.z );
+
 				return consumed;
 			}
 
@@ -54,9 +58,20 @@ namespace UnityEngine.InputNew
                     , componentControlIndices = new int[ 3 ] { ( int ) PointerControl.PositionX, ( int ) PointerControl.PositionY, ( int ) PointerControl.PositionZ }
                 } );
 
-			controls.Add( new InputControlData { name = "PositionX", controlType = InputControlType.RelativeAxis } );
-			controls.Add( new InputControlData { name = "PositionY", controlType = InputControlType.RelativeAxis } );
-			controls.Add( new InputControlData { name = "PositionZ", controlType = InputControlType.RelativeAxis } );
+			controls.Add( new InputControlData { name = "PositionX", controlType = InputControlType.AbsoluteAxis } );
+			controls.Add( new InputControlData { name = "PositionY", controlType = InputControlType.AbsoluteAxis } );
+			controls.Add( new InputControlData { name = "PositionZ", controlType = InputControlType.AbsoluteAxis } );
+
+			controls.Add( new InputControlData
+				{
+                      name = "Delta"
+                    , controlType = InputControlType.Vector3
+                    , componentControlIndices = new int[ 3 ] { ( int ) PointerControl.DeltaX, ( int ) PointerControl.DeltaY, ( int ) PointerControl.DeltaZ }
+                } );
+
+			controls.Add( new InputControlData { name = "DeltaX", controlType = InputControlType.RelativeAxis } );
+			controls.Add( new InputControlData { name = "DeltaY", controlType = InputControlType.RelativeAxis } );
+			controls.Add( new InputControlData { name = "DeltaZ", controlType = InputControlType.RelativeAxis } );
 			controls.Add( new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis } );
 			controls.Add( new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis } );
 			controls.Add( new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis } );
