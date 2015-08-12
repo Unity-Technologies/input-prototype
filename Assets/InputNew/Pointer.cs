@@ -40,6 +40,14 @@ namespace UnityEngine.InputNew
 				return consumed;
 			}
 
+			var clickEvent = inputEvent as GenericControlEvent;
+			if ( clickEvent != null )
+			{
+				consumed |= intoState.SetCurrentValue( ( int ) PointerControl.LeftButton, clickEvent.value );
+
+				return consumed;
+			}
+
 			return false;
 		}
 

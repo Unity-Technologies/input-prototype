@@ -43,8 +43,7 @@ public class MouseInputToEvents
 		inputEvent.deviceIndex = 0;
 		inputEvent.controlIndex = ( int ) controlIndex;
 		inputEvent.value = clicked ? 1.0f : 0.0f; 
-		Debug.Log( inputEvent );
-		InputSystem.QueueEvent( inputEvent );	
+		InputSystem.QueueEvent( inputEvent );
 	}
 
 	private Vector3 _lastMousePosition;

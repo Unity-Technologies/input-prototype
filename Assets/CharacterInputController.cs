@@ -65,7 +65,6 @@ public class CharacterInputController
 		var fire = _controlMapInstance[ fireControl ].boolValue;
 		if ( fire )
 		{
-			Debug.Log ("Fire");
 			var currentTime = Time.time;
 			var timeElapsedSinceLastShot = currentTime - _timeOfLastShot;
 			if ( timeElapsedSinceLastShot > timeBetweenShots )
@@ -74,8 +73,6 @@ public class CharacterInputController
 				Fire();
 			}
 		}
-		
-		
 	}
 
 	private void Fire()
@@ -83,6 +80,6 @@ public class CharacterInputController
 		var newProjectile = Instantiate( projectile );
 		newProjectile.transform.position = head.position + head.forward * 0.6f;
 		newProjectile.transform.rotation = head.rotation;
-		newProjectile.GetComponent< Rigidbody >().AddForce( head.forward * 2.0f );
+		newProjectile.GetComponent< Rigidbody >().AddForce( head.forward * 20f, ForceMode.Impulse );
 	}
 }
