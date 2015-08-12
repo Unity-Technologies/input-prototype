@@ -81,8 +81,8 @@ public static class CreateDemoAssets
 		var controlMap = ScriptableObject.CreateInstance< ControlMap >();
 
 		var entries = new List< ControlMapEntry >();
-		entries.Add( CreateControlButtonAxis( "MoveX", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyCode.A, (int)KeyCode.D ));
-		entries.Add( CreateControlButtonAxis( "MoveY", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyCode.S, (int)KeyCode.W ));
+		entries.Add( CreateControlButtonAxis( "MoveX", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyControl.A, (int)KeyControl.D ));
+		entries.Add( CreateControlButtonAxis( "MoveY", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyControl.S, (int)KeyControl.W ));
 		entries.Add( CreateControlComposite( "Move", InputControlType.Vector2, new int[] { 0, 1 } ));
 		entries.Add( CreateControl( "LookX", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionX ));
 		entries.Add( CreateControl( "LookY", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionY ));

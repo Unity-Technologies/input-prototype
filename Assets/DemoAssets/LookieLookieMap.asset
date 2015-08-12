@@ -12,46 +12,16 @@ MonoBehaviour:
   m_Name: LookieLookieMap
   m_EditorClassIdentifier: 
   entries:
-  - {fileID: 11405426}
-  - {fileID: 11405520}
-  - {fileID: 11415856}
-  - {fileID: 11422408}
-  - {fileID: 11495252}
-  - {fileID: 11416428}
-  - {fileID: 11485544}
+  - {fileID: 11452346}
+  - {fileID: 11419998}
+  - {fileID: 11428550}
+  - {fileID: 11455566}
+  - {fileID: 11468166}
+  - {fileID: 11458066}
+  - {fileID: 11423426}
   schemes:
   - default
---- !u!114 &11405426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: MoveX
-  m_EditorClassIdentifier: 
-  bindings:
-  - sources: []
-    deadZone: .300000012
-    buttonAxisSources:
-    - negative:
-        controlIndex: 97
-        _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      positive:
-        controlIndex: 100
-        _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-  _controlData:
-    name: MoveX
-    controlType: 1
-    componentControlIndices: 
---- !u!114 &11405520
+--- !u!114 &11419998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -67,11 +37,11 @@ MonoBehaviour:
     deadZone: .300000012
     buttonAxisSources:
     - negative:
-        controlIndex: 115
+        controlIndex: 18
         _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       positive:
-        controlIndex: 119
+        controlIndex: 22
         _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
     gravity: 1000
@@ -81,64 +51,7 @@ MonoBehaviour:
     name: MoveY
     controlType: 1
     componentControlIndices: 
---- !u!114 &11415856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: Move
-  m_EditorClassIdentifier: 
-  bindings: []
-  _controlData:
-    name: Move
-    controlType: 3
-    componentControlIndices: 0000000001000000
---- !u!114 &11416428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: Look
-  m_EditorClassIdentifier: 
-  bindings: []
-  _controlData:
-    name: Look
-    controlType: 3
-    componentControlIndices: 0300000004000000
---- !u!114 &11422408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: LookX
-  m_EditorClassIdentifier: 
-  bindings:
-  - sources:
-    - controlIndex: 1
-      _deviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    deadZone: .300000012
-    buttonAxisSources: []
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-  _controlData:
-    name: LookX
-    controlType: 1
-    componentControlIndices: 
---- !u!114 &11485544
+--- !u!114 &11423426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -163,7 +76,94 @@ MonoBehaviour:
     name: Fire
     controlType: 0
     componentControlIndices: 
---- !u!114 &11495252
+--- !u!114 &11428550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: Move
+  m_EditorClassIdentifier: 
+  bindings: []
+  _controlData:
+    name: Move
+    controlType: 3
+    componentControlIndices: 0000000001000000
+--- !u!114 &11452346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: MoveX
+  m_EditorClassIdentifier: 
+  bindings:
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources:
+    - negative:
+        controlIndex: 0
+        _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      positive:
+        controlIndex: 3
+        _deviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+  _controlData:
+    name: MoveX
+    controlType: 1
+    componentControlIndices: 
+--- !u!114 &11455566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: LookX
+  m_EditorClassIdentifier: 
+  bindings:
+  - sources:
+    - controlIndex: 1
+      _deviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+  _controlData:
+    name: LookX
+    controlType: 1
+    componentControlIndices: 
+--- !u!114 &11458066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: Look
+  m_EditorClassIdentifier: 
+  bindings: []
+  _controlData:
+    name: Look
+    controlType: 3
+    componentControlIndices: 0300000004000000
+--- !u!114 &11468166
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
