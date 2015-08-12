@@ -24,7 +24,7 @@ namespace UnityEngine.InputNew
 
 			var keyEvent = inputEvent as KeyboardEvent;
 			if ( keyEvent != null )
-				consumed |= state.SetCurrentValue( ( int ) keyEvent.key, keyEvent.isDown );
+				consumed |= intoState.SetCurrentValue( ( int ) keyEvent.key, keyEvent.isDown );
 
 			if ( consumed )
 				return true;

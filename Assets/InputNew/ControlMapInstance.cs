@@ -40,8 +40,6 @@ namespace UnityEngine.InputNew
 		{
 			var consumed = false;
 
-			////FIXME: this is BOGUS! we consume all events for a device regardless of whether they are bound by us
-
 			// Update device state (if event actually goes to one of the devices we talk to).
 			foreach ( var deviceState in _deviceStates )
 			{
