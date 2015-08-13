@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.InputNew
 {
-	[ Serializable ]
+	[Serializable]
 	public struct InputControlData
 	{
 		public string name;

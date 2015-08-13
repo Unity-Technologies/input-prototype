@@ -3,11 +3,11 @@ using Assets.Utilities;
 
 namespace UnityEngine.InputNew
 {
-	[ Serializable ]
+	[Serializable]
 	public struct JoystickControlMapping
 	{
 		public int targetIndex;
-		public Sprite displayIcon; 
+		public Sprite displayIcon;
 		public string displayName;
 		public Range fromRange;
 		public Range toRange;

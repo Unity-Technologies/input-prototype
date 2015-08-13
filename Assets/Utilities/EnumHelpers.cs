@@ -5,15 +5,15 @@ namespace Assets.Utilities
 {
 	public static class EnumHelpers
 	{
-		public static int GetNameCount< TEnum >()
+		public static int GetNameCount<TEnum>()
 		{
-			return Enum.GetNames( typeof( TEnum ) ).Length;
+			return Enum.GetNames(typeof(TEnum)).Length;
 		}
 
-		public static int GetValueCount< TEnum >()
+		public static int GetValueCount<TEnum>()
 		{
 			// Slow...
-			return Enum.GetValues( typeof( TEnum ) ).Cast< TEnum >().Distinct().Count();
+			return Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Distinct().Count();
 		}
 	}
 }

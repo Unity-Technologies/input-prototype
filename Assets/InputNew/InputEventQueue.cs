@@ -2,31 +2,31 @@ using System.Collections.Generic;
 
 namespace UnityEngine.InputNew
 {
-	internal class InputEventQueue
+	class InputEventQueue
 	{
 		#region Public Methods
 
-		public void Queue( InputEvent inputEvent )
+		public void Queue(InputEvent inputEvent)
 		{
-			_list.Add( inputEvent.time, inputEvent );
+			_list.Add(inputEvent.time, inputEvent);
 		}
 
-		public bool Dequeue( float targetTime, out InputEvent inputEvent )
+		public bool Dequeue(float targetTime, out InputEvent inputEvent)
 		{
-			if ( _list.Count == 0 )
+			if (_list.Count == 0)
 			{
 				inputEvent = null;
 				return false;
 			}
 
-			var nextEvent = _list.Values[ 0 ];
-			if ( nextEvent.time > targetTime )
+			var nextEvent = _list.Values[0];
+			if (nextEvent.time > targetTime)
 			{
 				inputEvent = null;
 				return false;
 			}
 
-			_list.RemoveAt( 0 );
+			_list.RemoveAt(0);
 			inputEvent = nextEvent;
 			return true;
 		}
@@ -35,24 +35,24 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private readonly SortedList< float, InputEvent > _list = new SortedList< float, InputEvent >( new SortInputEventsByTime() );
+		readonly SortedList<float, InputEvent> _list = new SortedList<float, InputEvent>(new SortInputEventsByTime());
 
 		#endregion
 
 		#region Inner Types
 
-		private class SortInputEventsByTime
-			: IComparer< float >
+		class SortInputEventsByTime
+			: IComparer<float>
 		{
-			public int Compare( float x, float y )
+			public int Compare(float x, float y)
 			{
-				if ( x < y )
+				if (x < y)
 					return -1;
 				// Avoid duplicate keys in sorted list by always treating equality as greater-than.
 				return 1;
 			}
 		}
-		
+
 		#endregion
 	}
 }

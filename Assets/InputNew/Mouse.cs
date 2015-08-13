@@ -7,10 +7,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Mouse( string deviceName, List< InputControlData > controls )
-			: base( deviceName, controls )
-		{
-		}
+		public Mouse(string deviceName, List<InputControlData> controls)
+			: base(deviceName, controls) { }
 
 		#endregion
 
@@ -19,7 +17,7 @@ namespace UnityEngine.InputNew
 		public static Mouse CreateDefault()
 		{
 			var controls = CreateDefaultControls();
-			return new Mouse( "Generic Mouse", controls );
+			return new Mouse("Generic Mouse", controls);
 		}
 
 		#endregion

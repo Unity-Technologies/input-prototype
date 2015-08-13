@@ -6,7 +6,7 @@ namespace UnityEngine.InputNew
 	{
 		string name { get; }
 
-		IList< IInputConsumer > children { get; }
+		IList<IInputConsumer> children { get; }
 
 		ProcessInputDelegate processInput { get; set; }
 	}

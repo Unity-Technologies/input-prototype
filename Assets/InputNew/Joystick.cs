@@ -9,27 +9,25 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Joystick( string deviceName, List< InputControlData > controls )
-			: base( deviceName, controls )
-		{
-		}
+		public Joystick(string deviceName, List<InputControlData> controls)
+			: base(deviceName, controls) { }
 
 		#endregion
 
-		public override bool ProcessEventIntoState( InputEvent inputEvent, InputState intoState )
+		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
 			var consumed = false;
 
 			var genericEvent = inputEvent as GenericControlEvent;
-			if ( genericEvent != null )
+			if (genericEvent != null)
 			{
-				consumed |= state.SetCurrentValue( genericEvent.controlIndex, genericEvent.value );
+				consumed |= state.SetCurrentValue(genericEvent.controlIndex, genericEvent.value);
 			}
 
-			if ( consumed )
+			if (consumed)
 				return true;
 
-			return base.ProcessEventIntoState( inputEvent, intoState );
+			return base.ProcessEventIntoState(inputEvent, intoState);
 		}
 	}
 }

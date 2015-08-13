@@ -11,192 +11,198 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 
-		public static void Initialize( InputDeviceProfile[] profiles )
+		public static void Initialize(InputDeviceProfile[] profiles)
 		{
 			_devices = new InputDeviceManager();
 			_eventQueue = new InputEventQueue();
 			_eventPool = new InputEventPool();
 
-			foreach ( var profile in profiles )
-				RegisterProfile( profile );
+			foreach (var profile in profiles)
+			{
+				RegisterProfile(profile);
+			}
 
 			// Set up event tree.
 			_eventTree = new InputEventTree { name = "Root" };
 
 			var remap = new InputEventTree
-			            {
-				            name = "Remap"
-				            , processInput = _devices.RemapEvent
-			            };
-			_eventTree.children.Add( remap );
+			{
+				name = "Remap"
+				, processInput = _devices.RemapEvent
+			};
+			_eventTree.children.Add(remap);
 
 			var state = new InputEventTree
-			            {
-				            name = "State"
-				            , processInput = _devices.ProcessEvent
-			            };
-			_eventTree.children.Add( state );
+			{
+				name = "State"
+				, processInput = _devices.ProcessEvent
+			};
+			_eventTree.children.Add(state);
 		}
 
-		public static void RegisterProfile( InputDeviceProfile profile )
+		public static void RegisterProfile(InputDeviceProfile profile)
 		{
-			_devices.RegisterProfile( profile );
+			_devices.RegisterProfile(profile);
 		}
 
-		public static InputDevice LookupDevice( Type deviceType, int deviceIndex )
+		public static InputDevice LookupDevice(Type deviceType, int deviceIndex)
 		{
-			return _devices.LookupDevice (deviceType, deviceIndex);
+			return _devices.LookupDevice(deviceType, deviceIndex);
 		}
 
-		public static void QueueEvent( InputEvent inputEvent )
+		public static void QueueEvent(InputEvent inputEvent)
 		{
-			_eventQueue.Queue( inputEvent );
+			_eventQueue.Queue(inputEvent);
 		}
 
-		public static bool ExecuteEvent( InputEvent inputEvent )
+		public static bool ExecuteEvent(InputEvent inputEvent)
 		{
-			var wasConsumed = _eventTree.ProcessEvent( inputEvent );
-			_eventPool.Return( inputEvent );
+			var wasConsumed = _eventTree.ProcessEvent(inputEvent);
+			_eventPool.Return(inputEvent);
 			return wasConsumed;
 		}
 
-		public static TEvent CreateEvent< TEvent >()
+		public static TEvent CreateEvent<TEvent>()
 			where TEvent : InputEvent, new()
 		{
-			var newEvent = _eventPool.ReuseOrCreate< TEvent >();
+			var newEvent = _eventPool.ReuseOrCreate<TEvent>();
 			newEvent.time = Time.time;
 			return newEvent;
 		}
 
-		public static IEnumerable< ControlMapInstance > BindInputs( ControlMap controlMap, bool localMultiplayer = false )
+		public static IEnumerable<ControlMapInstance> BindInputs(ControlMap controlMap, bool localMultiplayer = false)
 		{
-			for ( var i = 0; i < controlMap.schemes.Count; ++ i )
+			for (var i = 0; i < controlMap.schemes.Count; ++ i)
 			{
-				foreach ( var instance in BindInputs( controlMap, localMultiplayer, i ) )
+				foreach (var instance in BindInputs(controlMap, localMultiplayer, i))
+				{
 					yield return instance;
+				}
 			}
 		}
 
-		static void ExtractDeviceTypeAndControlIndexFromSource( Dictionary< Type, List< int > > perDeviceTypeMapEntries, InputControlDescriptor control )
+		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
 		{
-			List< int > entries;
-			if ( !perDeviceTypeMapEntries.TryGetValue( control.deviceType, out entries ) )
+			List<int> entries;
+			if (!perDeviceTypeMapEntries.TryGetValue(control.deviceType, out entries))
 			{
-				entries = new List< int >();
-				perDeviceTypeMapEntries[ control.deviceType ] = entries;
+				entries = new List<int>();
+				perDeviceTypeMapEntries[control.deviceType] = entries;
 			}
-			
-			entries.Add( control.controlIndex );
+
+			entries.Add(control.controlIndex);
 		}
-		
-		public static IEnumerable< ControlMapInstance > BindInputs( ControlMap controlMap, bool localMultiplayer, int controlSchemeIndex )
+
+		public static IEnumerable<ControlMapInstance> BindInputs(ControlMap controlMap, bool localMultiplayer, int controlSchemeIndex)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
-			var perDeviceTypeUsedControlIndices = new Dictionary< Type, List< int > >();
-			foreach ( var entry in controlMap.entries )
+			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
+			foreach (var entry in controlMap.entries)
 			{
-				if ( entry.bindings == null || entry.bindings.Count == 0 )
+				if (entry.bindings == null || entry.bindings.Count == 0)
 					continue;
 
-				foreach ( var control in entry.bindings[ controlSchemeIndex ].sources )
+				foreach (var control in entry.bindings[controlSchemeIndex].sources)
 				{
-					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, control );
+					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, control);
 				}
 
-				foreach ( var axis in entry.bindings[ controlSchemeIndex ].buttonAxisSources )
+				foreach (var axis in entry.bindings[controlSchemeIndex].buttonAxisSources)
 				{
-					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, axis.negative );
-					ExtractDeviceTypeAndControlIndexFromSource( perDeviceTypeUsedControlIndices, axis.positive );
+					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.negative);
+					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.positive);
 				}
 			}
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
- 
+
 			// Create list of controls from InputMap.
-			var controls = new List< InputControlData >();
-			foreach ( var entry in controlMap.entries )
+			var controls = new List<InputControlData>();
+			foreach (var entry in controlMap.entries)
 			{
 				var control = new InputControlData
 				{
-					  name = entry.controlData.name
+					name = entry.controlData.name
 					, controlType = entry.controlData.controlType
 				};
-				controls.Add( control );
+				controls.Add(control);
 			}
 
-			if ( localMultiplayer )
+			if (localMultiplayer)
 			{
 				// Gather available devices for each type of device.
-				var deviceTypesToAvailableDevices = new Dictionary< Type, List< InputDevice > >();
+				var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
 				var minDeviceCountOfType = Int32.MaxValue;
-				foreach ( var deviceType in perDeviceTypeUsedControlIndices.Keys )
+				foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
 				{
-					var availableDevicesOfType = _devices.GetDevicesOfType( deviceType );
-					if ( availableDevicesOfType != null )
-						deviceTypesToAvailableDevices[ deviceType ] = availableDevicesOfType;
+					var availableDevicesOfType = _devices.GetDevicesOfType(deviceType);
+					if (availableDevicesOfType != null)
+						deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
 
-					minDeviceCountOfType = Mathf.Min( minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0 );
+					minDeviceCountOfType = Mathf.Min(minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0);
 				}
 
 				// Create map instances according to available devices.
-				for ( var i = 0; i < minDeviceCountOfType; ++ i )
+				for (var i = 0; i < minDeviceCountOfType; ++ i)
 				{
-					var deviceStates = new List< InputState >();
+					var deviceStates = new List<InputState>();
 
-					foreach ( var entry in perDeviceTypeUsedControlIndices )
+					foreach (var entry in perDeviceTypeUsedControlIndices)
 					{
 						// Take i-th device of current type.
-						var device = deviceTypesToAvailableDevices[ entry.Key ][ i ];
-						var state = new InputState( device, entry.Value );
-						deviceStates.Add( state );
+						var device = deviceTypesToAvailableDevices[entry.Key][i];
+						var state = new InputState(device, entry.Value);
+						deviceStates.Add(state);
 					}
-					
-					yield return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
+
+					yield return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
 				}
 			}
 			else
 			{
 				////TODO: make ControlMapInstance hook into MRU device change event and respond by updating its device states
 
-				var deviceStates = new List< InputState >();
+				var deviceStates = new List<InputState>();
 
 				// Create device states for most recently used device of given types.
-				foreach ( var entry in perDeviceTypeUsedControlIndices )
+				foreach (var entry in perDeviceTypeUsedControlIndices)
 				{
-					var device = _devices.GetMostRecentlyUsedDevice( entry.Key );
-					if ( device == null )
+					var device = _devices.GetMostRecentlyUsedDevice(entry.Key);
+					if (device == null)
 						yield break; // Can't satisfy this ControlMap; no available device of given type.
 
-					var state = new InputState( device, entry.Value );
-					deviceStates.Add( state );
+					var state = new InputState(device, entry.Value);
+					deviceStates.Add(state);
 				}
-				
-				yield return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
+
+				yield return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
 			}
 		}
 
 		// This is for having explicit control over what devices go into a ControlMapInstance.
-		public static ControlMapInstance BindInputs( ControlMap controlMap, int controlSchemeIndex, IEnumerable< InputDevice > devices )
+		public static ControlMapInstance BindInputs(ControlMap controlMap, int controlSchemeIndex, IEnumerable<InputDevice> devices)
 		{
 			// Create state for every device.
-			var deviceStates = new List< InputState >();
-			foreach ( var device in devices )
-				deviceStates.Add( new InputState( device ) );
+			var deviceStates = new List<InputState>();
+			foreach (var device in devices)
+			{
+				deviceStates.Add(new InputState(device));
+			}
 
 			// Create list of controls from InputMap.
-			var controls = new List< InputControlData >();
-			foreach ( var entry in controlMap.entries )
+			var controls = new List<InputControlData>();
+			foreach (var entry in controlMap.entries)
 			{
 				var control = new InputControlData
 				{
-					  name = entry.controlData.name
+					name = entry.controlData.name
 					, controlType = entry.controlData.controlType
 				};
-				controls.Add( control );
+				controls.Add(control);
 			}
 
 			// Create map instance.
-			return new ControlMapInstance( controlMap, controlSchemeIndex, controls, deviceStates );
+			return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
 		}
 
 		#endregion
@@ -207,13 +213,13 @@ namespace UnityEngine.InputNew
 		{
 			var currentTime = Time.time;
 			InputEvent nextEvent;
-			while ( _eventQueue.Dequeue( currentTime, out nextEvent ) )
+			while (_eventQueue.Dequeue(currentTime, out nextEvent))
 			{
-				ExecuteEvent( nextEvent );
+				ExecuteEvent(nextEvent);
 			}
 		}
 
-		internal static void QueueNativeEvents( List< NativeInputEvent > nativeEvents )
+		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)
 		{
 			////TODO
 
@@ -249,7 +255,7 @@ namespace UnityEngine.InputNew
 			get { return _devices.touchscreen; }
 		}
 
-		public static IEnumerable< InputDevice > devices
+		public static IEnumerable<InputDevice> devices
 		{
 			get { return _devices.devices; }
 		}
@@ -258,10 +264,10 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private static InputDeviceManager _devices;
-		private static InputEventQueue _eventQueue;
-		private static InputEventPool _eventPool;
-		private static InputEventTree _eventTree;
+		static InputDeviceManager _devices;
+		static InputEventQueue _eventQueue;
+		static InputEventPool _eventPool;
+		static InputEventTree _eventTree;
 
 		#endregion
 	}

@@ -5,32 +5,32 @@ namespace Assets.Utilities
 {
 	public static class ArrayHelpers
 	{
-		public static void Resize< T >( ref T[] array, int newSize )
+		public static void Resize<T>(ref T[] array, int newSize)
 		{
-			if ( array == null )
-				array = new T[ 1 ];
+			if (array == null)
+				array = new T[1];
 			else
 			{
-				var newArray = new T[ newSize ];
-				Array.Copy( array, newArray, newSize );
+				var newArray = new T[newSize];
+				Array.Copy(array, newArray, newSize);
 				array = newArray;
 			}
 		}
 
-		public static void AppendUnique< T >( ref T[] array, T value )
+		public static void AppendUnique<T>(ref T[] array, T value)
 		{
-			if ( array == null )
+			if (array == null)
 			{
-				array = new T[ 1 ];
-				array[ 0 ] = value;
+				array = new T[1];
+				array[0] = value;
 			}
 			else
 			{
-				if ( array.Contains( value ) )
+				if (array.Contains(value))
 					return;
 
-				Resize( ref array, array.Length + 1 );
-				array[ array.Length - 1 ] = value;
+				Resize(ref array, array.Length + 1);
+				array[array.Length - 1] = value;
 			}
 		}
 	}

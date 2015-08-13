@@ -7,10 +7,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Touchscreen( string deviceName, List< InputControlData > controls )
-			: base( deviceName, controls )
-		{
-		}
+		public Touchscreen(string deviceName, List<InputControlData> controls)
+			: base(deviceName, controls) { }
 
 		#endregion
 
@@ -19,7 +17,7 @@ namespace UnityEngine.InputNew
 		public static Touchscreen CreateDefault()
 		{
 			var controls = CreateDefaultControls();
-			return new Touchscreen( "Generic Touchscreen", controls );
+			return new Touchscreen("Generic Touchscreen", controls);
 		}
 
 		#endregion

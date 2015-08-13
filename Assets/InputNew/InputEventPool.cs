@@ -1,20 +1,20 @@
 namespace UnityEngine.InputNew
 {
-	internal class InputEventPool
+	class InputEventPool
 	{
 		#region Public Methods
 
-		public TEvent ReuseOrCreate< TEvent >()
+		public TEvent ReuseOrCreate<TEvent>()
 			where TEvent : InputEvent, new()
 		{
 			////TODO
 			return new TEvent();
 		}
 
-		public void Return( InputEvent inputEvent )
+		public void Return(InputEvent inputEvent)
 		{
 			////TODO
-			inputEvent.Reset ();
+			inputEvent.Reset();
 		}
 
 		#endregion

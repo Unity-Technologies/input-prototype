@@ -7,10 +7,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		protected Sensor( string deviceName, List< InputControlData > controls )
-			: base( deviceName, controls )
-		{
-		}
+		protected Sensor(string deviceName, List<InputControlData> controls)
+			: base(deviceName, controls) { }
 
 		#endregion
 	}

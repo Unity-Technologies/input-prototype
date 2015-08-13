@@ -7,8 +7,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		protected InputDevice( string deviceName, List< InputControlData > controls )
-			: base( controls )
+		protected InputDevice(string deviceName, List<InputControlData> controls)
+			: base(controls)
 		{
 			this.deviceName = deviceName;
 		}
@@ -20,22 +20,22 @@ namespace UnityEngine.InputNew
 		////REVIEW: right now the devices don't check whether the event was really meant for them; they go purely by the
 		////  type of event they receive. should they check more closely?
 
-		public sealed override bool ProcessEvent( InputEvent inputEvent )
+		public override sealed bool ProcessEvent(InputEvent inputEvent)
 		{
-			ProcessEventIntoState( inputEvent, state );
+			ProcessEventIntoState(inputEvent, state);
 			return false;
 		}
 
-		public virtual bool ProcessEventIntoState( InputEvent inputEvent, InputState intoState )
+		public virtual bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
 			lastEventTime = inputEvent.time;
 			return false;
 		}
 
-		public virtual bool RemapEvent( InputEvent inputEvent )
+		public virtual bool RemapEvent(InputEvent inputEvent)
 		{
-			if ( profile != null )
-				profile.Remap( inputEvent );
+			if (profile != null)
+				profile.Remap(inputEvent);
 			return false;
 		}
 
@@ -48,7 +48,7 @@ namespace UnityEngine.InputNew
 		public InputDeviceProfile profile { get; set; }
 
 		public string deviceName { get; private set; }
-		
+
 		#endregion
 	}
 }

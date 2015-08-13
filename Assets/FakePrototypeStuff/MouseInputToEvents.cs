@@ -10,41 +10,41 @@ public class MouseInputToEvents
 		SendMoveEvent();
 	}
 
-	private void SendButtonEvents()
+	void SendButtonEvents()
 	{
-		if ( Input.GetKeyDown( KeyCode.Mouse0 ) )
-			SendClickEvent( PointerControl.LeftButton, true );	
-		if ( Input.GetKeyUp( KeyCode.Mouse0 ) )
-			SendClickEvent( PointerControl.LeftButton, false );	
+		if (Input.GetKeyDown(KeyCode.Mouse0))
+			SendClickEvent(PointerControl.LeftButton, true);
+		if (Input.GetKeyUp(KeyCode.Mouse0))
+			SendClickEvent(PointerControl.LeftButton, false);
 	}
 
-	private void SendMoveEvent()
+	void SendMoveEvent()
 	{
 		var newMousePosition = Input.mousePosition;
-		if ( newMousePosition == _lastMousePosition )
+		if (newMousePosition == _lastMousePosition)
 			return;
 
-		var inputEvent = InputSystem.CreateEvent< PointerMoveEvent >();
-		inputEvent.deviceType = typeof( Mouse );
+		var inputEvent = InputSystem.CreateEvent<PointerMoveEvent>();
+		inputEvent.deviceType = typeof(Mouse);
 		inputEvent.deviceIndex = 0;
 		inputEvent.delta = newMousePosition - _lastMousePosition;
 		inputEvent.position = newMousePosition;
 
-		InputSystem.QueueEvent( inputEvent );
+		InputSystem.QueueEvent(inputEvent);
 
 		_lastMousePosition = newMousePosition;
 	}
 
-	private void SendClickEvent( PointerControl controlIndex, bool clicked )
+	void SendClickEvent(PointerControl controlIndex, bool clicked)
 	{
 		////REVIEW: should this be a pointer-specific event type?
-		var inputEvent = InputSystem.CreateEvent< GenericControlEvent >();
-		inputEvent.deviceType = typeof( Mouse );
+		var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
+		inputEvent.deviceType = typeof(Mouse);
 		inputEvent.deviceIndex = 0;
-		inputEvent.controlIndex = ( int ) controlIndex;
-		inputEvent.value = clicked ? 1.0f : 0.0f; 
-		InputSystem.QueueEvent( inputEvent );
+		inputEvent.controlIndex = (int)controlIndex;
+		inputEvent.value = clicked ? 1.0f : 0.0f;
+		InputSystem.QueueEvent(inputEvent);
 	}
 
-	private Vector3 _lastMousePosition;
+	Vector3 _lastMousePosition;
 }

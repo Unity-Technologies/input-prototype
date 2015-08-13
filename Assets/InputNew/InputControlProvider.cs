@@ -7,17 +7,17 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public InputControlProvider( List< InputControlData > controls )
+		public InputControlProvider(List<InputControlData> controls)
 		{
 			_controls = controls;
-			_state = new InputState( this );
+			_state = new InputState(this);
 		}
 
 		#endregion
 
 		#region Public Methods
 
-		public virtual bool ProcessEvent( InputEvent inputEvent )
+		public virtual bool ProcessEvent(InputEvent inputEvent)
 		{
 			lastEventTime = inputEvent.time;
 			return false;
@@ -27,13 +27,13 @@ namespace UnityEngine.InputNew
 
 		#region Public Properties
 
-		public InputState state 
+		public InputState state
 		{
 			get { return _state; }
 		}
 
 		////REVIEW: this view should be immutable
-		public IList< InputControlData > controls
+		public IList<InputControlData> controls
 		{
 			get { return _controls; }
 		}
@@ -44,8 +44,8 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private readonly InputState _state;
-		private readonly List< InputControlData > _controls;
+		readonly InputState _state;
+		readonly List<InputControlData> _controls;
 
 		#endregion
 	}

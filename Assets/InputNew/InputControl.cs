@@ -6,7 +6,7 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		internal InputControl( int index, InputState state )
+		internal InputControl(int index, InputState state)
 		{
 			_index = index;
 			_state = state;
@@ -25,8 +25,8 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				var currentValue = _state.GetCurrentValue( _index );
-				if ( currentValue > 0.001f )
+				var currentValue = _state.GetCurrentValue(_index);
+				if (currentValue > 0.001f)
 					return true;
 				return false;
 			}
@@ -34,34 +34,34 @@ namespace UnityEngine.InputNew
 
 		public float floatValue
 		{
-			get { return _state.GetCurrentValue( _index ); }
+			get { return _state.GetCurrentValue(_index); }
 		}
 
 		public Vector3 vector3Value
 		{
 			get
 			{
-				var controlData = _state.controlProvider.controls[ _index ];
+				var controlData = _state.controlProvider.controls[_index];
 				////TODO: typecheck control type; convert if necessary
 				return new Vector3(
-					  _state.GetCurrentValue( controlData.componentControlIndices[ 0 ] )
-					, _state.GetCurrentValue( controlData.componentControlIndices[ 1 ] )
-					, _state.GetCurrentValue( controlData.componentControlIndices[ 2 ] )
-				);
+					_state.GetCurrentValue(controlData.componentControlIndices[0])
+					, _state.GetCurrentValue(controlData.componentControlIndices[1])
+					, _state.GetCurrentValue(controlData.componentControlIndices[2])
+					);
 			}
 		}
 
 		public bool isEnabled
 		{
-			get { return _state.IsControlEnabled( _index ); }
+			get { return _state.IsControlEnabled(_index); }
 		}
 
 		#endregion
 
 		#region Fields
 
-		private int _index;
-		private InputState _state;
+		int _index;
+		InputState _state;
 
 		#endregion
 	}

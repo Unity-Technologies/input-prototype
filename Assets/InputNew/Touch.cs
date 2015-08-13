@@ -1,6 +1,4 @@
 namespace UnityEngine.InputNew
 {
-	public struct Touch
-	{
-	}
+	public struct Touch { }
 }

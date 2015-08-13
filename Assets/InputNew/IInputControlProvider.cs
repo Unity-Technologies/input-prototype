@@ -8,6 +8,6 @@ namespace UnityEngine.InputNew
 	public interface IInputControlProvider
 	{
 		////REVIEW: this should be readonly but not sure ReadOnlyCollection from .NET 2 is good enough
-		IList< InputControlData > controls { get; }
+		IList<InputControlData> controls { get; }
 	}
 }

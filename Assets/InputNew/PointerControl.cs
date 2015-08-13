@@ -19,7 +19,7 @@ namespace UnityEngine.InputNew
 		LeftButton,
 		RightButton,
 		MiddleButton,
-		
+
 		ScrollWheel,
 		ScrollWheelX,
 		ScrollWheelY,

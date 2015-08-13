@@ -8,30 +8,30 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 
-		public override void Remap( InputEvent inputEvent )
+		public override void Remap(InputEvent inputEvent)
 		{
 			var controlEvent = inputEvent as GenericControlEvent;
-			if ( controlEvent != null )
+			if (controlEvent != null)
 			{
-				var mapping = mappings[ controlEvent.controlIndex ];
-				if ( mapping.targetIndex != -1 )
+				var mapping = mappings[controlEvent.controlIndex];
+				if (mapping.targetIndex != -1)
 					controlEvent.controlIndex = mapping.targetIndex;
 			}
 		}
 
-		public void SetMappingsCount( int sourceControlCount )
+		public void SetMappingsCount(int sourceControlCount)
 		{
-			mappings = new JoystickControlMapping[ sourceControlCount ];	
+			mappings = new JoystickControlMapping[sourceControlCount];
 		}
 
-		public void SetMapping( int sourceControlIndex, int targetControlIndex, string displayName = null, Sprite displayIcon = null )
+		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName = null, Sprite displayIcon = null)
 		{
-			mappings[ sourceControlIndex ] = new JoystickControlMapping
-				{
-					  targetIndex = targetControlIndex
-					, displayName = displayName
-					, displayIcon = displayIcon
-				};
+			mappings[sourceControlIndex] = new JoystickControlMapping
+			{
+				targetIndex = targetControlIndex
+				, displayName = displayName
+				, displayIcon = displayIcon
+			};
 		}
 
 		#endregion

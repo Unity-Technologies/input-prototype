@@ -1,6 +1,6 @@
 namespace UnityEngine.InputNew
 {
-	internal enum NativeEventType
+	enum NativeEventType
 	{
 		GenericButton,
 		GenericAxis,

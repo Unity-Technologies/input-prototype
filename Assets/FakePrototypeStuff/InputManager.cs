@@ -8,6 +8,6 @@ public class InputManager
 
 	public void Awake()
 	{
-		InputSystem.Initialize( profiles );
+		InputSystem.Initialize(profiles);
 	}
 }

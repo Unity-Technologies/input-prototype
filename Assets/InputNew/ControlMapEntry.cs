@@ -19,22 +19,22 @@ namespace UnityEngine.InputNew
 		}
 
 		// This is one entry for each control scheme (matching indices).
-		public List< ControlBinding > bindings;
+		public List<ControlBinding> bindings;
 
-		[ NonSerialized ]
+		[NonSerialized]
 		public int controlIndex;
-		
-		public override string ToString ()
+
+		public override string ToString()
 		{
-			return string.Format( "({0}, bindings:{1})", controlData.name, bindings.Count );
+			return string.Format("({0}, bindings:{1})", controlData.name, bindings.Count);
 		}
 
 		#endregion
 
 		#region Fields
 
-		[ SerializeField ]
-		private InputControlData _controlData;
+		[SerializeField]
+		InputControlData _controlData;
 
 		#endregion
 	}

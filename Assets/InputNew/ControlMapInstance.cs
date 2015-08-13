@@ -10,12 +10,12 @@ namespace UnityEngine.InputNew
 
 		public ControlMapInstance
 			(
-				  ControlMap controlMap
-			    , int controlSchemeIndex
-				, List< InputControlData > controls
-				, List< InputState > deviceStates
+			ControlMap controlMap
+			, int controlSchemeIndex
+			, List<InputControlData> controls
+			, List<InputState> deviceStates
 			)
-			: base( controls )
+			: base(controls)
 		{
 			this.controlSchemeIndex = controlSchemeIndex;
 			_deviceStates = deviceStates;
@@ -29,88 +29,90 @@ namespace UnityEngine.InputNew
 		public void Activate()
 		{
 			var treeNode = new InputEventTree
-			            {
-				              name = "Map"
-				            , processInput = ProcessEvent
-			            };
-			InputSystem.eventTree.children.Add( treeNode );
+			{
+				name = "Map"
+				, processInput = ProcessEvent
+			};
+			InputSystem.eventTree.children.Add(treeNode);
 		}
-		
-		public override bool ProcessEvent( InputEvent inputEvent )
+
+		public override bool ProcessEvent(InputEvent inputEvent)
 		{
 			var consumed = false;
 
 			// Update device state (if event actually goes to one of the devices we talk to).
-			foreach ( var deviceState in _deviceStates )
+			foreach (var deviceState in _deviceStates)
 			{
 				////FIXME: should refer to proper type
-				var device = ( InputDevice ) deviceState.controlProvider;
+				var device = (InputDevice)deviceState.controlProvider;
 
 				// Skip state if event is not meant for device associated with it.
-				var foundDevice = InputSystem.LookupDevice( inputEvent.deviceType, inputEvent.deviceIndex );
-				if ( foundDevice != device )
+				var foundDevice = InputSystem.LookupDevice(inputEvent.deviceType, inputEvent.deviceIndex);
+				if (foundDevice != device)
 					continue;
 
 				// Give device a stab at converting the event into state.
-				if ( device.ProcessEventIntoState( inputEvent, deviceState ) )
+				if (device.ProcessEventIntoState(inputEvent, deviceState))
 				{
 					consumed = true;
 					break;
 				}
 			}
 
-			if ( !consumed )
+			if (!consumed)
 				return false;
 
 			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
 			// Synchronize the ControlMapInstance's own state.
-			for ( var entryIndex = 0; entryIndex < _controlMap.entries.Count; ++ entryIndex)
+			for (var entryIndex = 0; entryIndex < _controlMap.entries.Count; ++ entryIndex)
 			{
-				var entry = _controlMap.entries[ entryIndex ];
-				if ( entry.bindings == null || entry.bindings.Count == 0 )
+				var entry = _controlMap.entries[entryIndex];
+				if (entry.bindings == null || entry.bindings.Count == 0)
 					continue;
 
-				var binding = entry.bindings[ controlSchemeIndex ];
+				var binding = entry.bindings[controlSchemeIndex];
 
 				var controlValue = 0.0f;
-				foreach ( var source in binding.sources )
+				foreach (var source in binding.sources)
 				{
-					var value = GetSourceValue( source );
-					if ( Mathf.Abs( value ) > Mathf.Abs( controlValue ) )
+					var value = GetSourceValue(source);
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
 						controlValue = value;
 				}
 
-				foreach ( var axis in binding.buttonAxisSources )
+				foreach (var axis in binding.buttonAxisSources)
 				{
-					var negativeValue = GetSourceValue( axis.negative );
-					var positiveValue = GetSourceValue( axis.positive );
+					var negativeValue = GetSourceValue(axis.negative);
+					var positiveValue = GetSourceValue(axis.positive);
 					var value = positiveValue - negativeValue;
-					if ( Mathf.Abs( value ) > Mathf.Abs( controlValue ) )
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
 						controlValue = value;
 				}
 
-				state.SetCurrentValue( entryIndex, controlValue );
+				state.SetCurrentValue(entryIndex, controlValue);
 			}
 
 			return true;
 		}
-		
-		float GetSourceValue( InputControlDescriptor source )
+
+		float GetSourceValue(InputControlDescriptor source)
 		{
-			var deviceState = GetDeviceStateForDeviceType( source.deviceType );
-			return deviceState[ source.controlIndex ].floatValue;
+			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
+			return deviceState[source.controlIndex].floatValue;
 		}
 
 		#endregion
 
 		#region Non-Public Methods
 
-		private InputState GetDeviceStateForDeviceType( Type deviceType )
+		InputState GetDeviceStateForDeviceType(Type deviceType)
 		{
-			foreach ( var deviceState in _deviceStates )
-				if ( deviceType.IsInstanceOfType( deviceState.controlProvider ) )
+			foreach (var deviceState in _deviceStates)
+			{
+				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
 					return deviceState;
-			throw new ArgumentException( "deviceType" );
+			}
+			throw new ArgumentException("deviceType");
 		}
 
 		#endregion
@@ -119,20 +121,17 @@ namespace UnityEngine.InputNew
 
 		public int controlSchemeIndex { get; private set; }
 
-		public InputControl this[ ControlMapEntry entry ]
+		public InputControl this[ControlMapEntry entry]
 		{
-			get
-			{
-				return state[ entry.controlIndex ];
-			}
+			get { return state[entry.controlIndex]; }
 		}
-		
+
 		#endregion
 
 		#region Fields
 
-		private readonly ControlMap _controlMap;
-		private readonly List< InputState > _deviceStates;
+		readonly ControlMap _controlMap;
+		readonly List<InputState> _deviceStates;
 
 		#endregion
 	}

@@ -1,6 +1,6 @@
 namespace UnityEngine.InputNew
 {
-	internal struct NativeInputEvent
+	struct NativeInputEvent
 	{
 		public NativeEventType eventType;
 		public int deviceIndex;
