@@ -615,6 +615,7 @@ GameObject:
   - 114: {fileID: 1320763609}
   - 114: {fileID: 1320763599}
   - 114: {fileID: 1320763600}
+  - 114: {fileID: 1320763601}
   - 114: {fileID: 1320763610}
   m_Layer: 0
   m_Name: Controller
@@ -629,7 +630,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1320763598}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b151f756c495834fa63f07ea366132a, type: 3}
   m_Name: 
@@ -643,6 +644,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 330c8870b308a774a82a43198e179c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1320763601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1320763598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 776e5fc7985e7f64fa92c05511f18927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1320763604

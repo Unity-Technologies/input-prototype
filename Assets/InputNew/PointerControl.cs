@@ -30,6 +30,11 @@ namespace UnityEngine.InputNew
 		////REVIEW: have Z for ScrollWheel, too?
 
 		ForwardButton,
-		BackButton
+		BackButton,
+	}
+
+	public static class PointerControlConstants
+	{
+		public const int ControlCount = (int)PointerControl.BackButton + 1;
 	}
 }

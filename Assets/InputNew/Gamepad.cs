@@ -25,13 +25,13 @@ namespace UnityEngine.InputNew
 			{
 				name = "LeftThumbstick"
 				, controlType = InputControlType.Vector2
-				, componentControlIndices = new int[2] { (int)GamepadControl.LeftStickX, (int)GamepadControl.LeftStickY }
+				, componentControlIndices = new[] { (int)GamepadControl.LeftStickX, (int)GamepadControl.LeftStickY }
 			};
 			controls[(int)GamepadControl.RightStick] = new InputControlData
 			{
 				name = "RightThumbstick"
 				, controlType = InputControlType.Vector2
-				, componentControlIndices = new int[2] { (int)GamepadControl.RightStickX, (int)GamepadControl.RightStickY }
+				, componentControlIndices = new[] { (int)GamepadControl.RightStickX, (int)GamepadControl.RightStickY }
 			};
 			////TODO: dpad (more complicated as the source is buttons which need to be translated into a vector)
 
