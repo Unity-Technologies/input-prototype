@@ -86,12 +86,12 @@ public static class CreateDemoAssets
 		entries.Add(CreateControlComposite("Move", InputControlType.Vector2, new[] { 0, 1 }));
 		
 		entries.Add(CreateControl("LookX", InputControlType.RelativeAxis,
-			CreateBinding(typeof(Pointer), (int)PointerControl.PositionX),
+			CreateBinding(typeof(Pointer), (int)PointerControl.DeltaX),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX)
 		));
 		
 		entries.Add(CreateControl("LookY", InputControlType.RelativeAxis,
-			CreateBinding(typeof(Pointer), (int)PointerControl.PositionY),
+			CreateBinding(typeof(Pointer), (int)PointerControl.DeltaY),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY)
 		));
 		

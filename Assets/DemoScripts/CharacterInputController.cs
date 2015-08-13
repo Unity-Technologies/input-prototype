@@ -8,8 +8,6 @@ public class CharacterInputController
 	: MonoBehaviour
 {
 	ControlMapInstance m_ControlMapInstance;
-	float m_LastLookX;
-	float m_LastLookY;
 	Rigidbody m_Rigid;
 	Vector2 m_Rotation = Vector2.zero;
 	float m_TimeOfLastShot;
@@ -44,18 +42,16 @@ public class CharacterInputController
 			var moveX = m_ControlMapInstance[moveControlX].value;
 			var moveY = m_ControlMapInstance[moveControlY].value;
 
-			m_Rigid.velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
+			Vector3 velocity = m_Rigid.velocity;
+			float velocityY = velocity.y;
+			velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
+			velocity.y = velocityY;
+			m_Rigid.velocity = velocity;
 		}
 
 		// Look
 		var lookX = m_ControlMapInstance[lookControlX].value;
 		var lookY = m_ControlMapInstance[lookControlY].value;
-
-		// HACK UNTIL MOUSE IS RELATIVE
-		lookX = lookX - m_LastLookX;
-		lookY = lookY - m_LastLookY;
-		m_LastLookX = lookX + m_LastLookX;
-		m_LastLookY = lookY + m_LastLookY;
 
 		m_Rotation.y += lookX;
 		transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);

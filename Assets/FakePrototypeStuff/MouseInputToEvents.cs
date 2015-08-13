@@ -25,8 +25,6 @@ public class MouseInputToEvents
 	void SendMoveEvent()
 	{
 		var newMousePosition = Input.mousePosition;
-		if (newMousePosition == m_LastMousePosition)
-			return;
 
 		var inputEvent = InputSystem.CreateEvent<PointerMoveEvent>();
 		inputEvent.deviceType = typeof(Mouse);

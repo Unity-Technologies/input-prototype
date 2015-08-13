@@ -23,7 +23,7 @@ namespace UnityEngine.InputNew
 			var genericEvent = inputEvent as GenericControlEvent;
 			if (genericEvent != null)
 			{
-				consumed |= state.SetCurrentValue(genericEvent.controlIndex, genericEvent.value);
+				consumed |= intoState.SetCurrentValue(genericEvent.controlIndex, genericEvent.value);
 			}
 
 			if (consumed)

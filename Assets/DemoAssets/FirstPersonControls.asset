@@ -12,56 +12,17 @@ MonoBehaviour:
   m_Name: FirstPersonControls
   m_EditorClassIdentifier: 
   entries:
-  - {fileID: 11409486}
-  - {fileID: 11429146}
-  - {fileID: 11438280}
-  - {fileID: 11442868}
-  - {fileID: 11480914}
-  - {fileID: 11433966}
-  - {fileID: 11447110}
+  - {fileID: 11487912}
+  - {fileID: 11405628}
+  - {fileID: 11435078}
+  - {fileID: 11488674}
+  - {fileID: 11415238}
+  - {fileID: 11442838}
+  - {fileID: 11427676}
   schemes:
   - KeyboardMouse
   - Gamepad
---- !u!114 &11409486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: MoveX
-  m_EditorClassIdentifier: 
-  m_ControlData:
-    componentControlIndices: 
-    controlType: 1
-    name: MoveX
-  bindings:
-  - buttonAxisSources:
-    - negative:
-        controlIndex: 0
-        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      positive:
-        controlIndex: 3
-        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources: []
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
-    - controlIndex: 0
-      m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
---- !u!114 &11429146
+--- !u!114 &11405628
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -100,7 +61,7 @@ MonoBehaviour:
     - controlIndex: 1
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
---- !u!114 &11433966
+--- !u!114 &11415238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -109,44 +70,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: Look
-  m_EditorClassIdentifier: 
-  m_ControlData:
-    componentControlIndices: 0300000004000000
-    controlType: 3
-    name: Look
-  bindings: []
---- !u!114 &11438280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: Move
-  m_EditorClassIdentifier: 
-  m_ControlData:
-    componentControlIndices: 0000000001000000
-    controlType: 3
-    name: Move
-  bindings: []
---- !u!114 &11442868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: LookX
+  m_Name: LookY
   m_EditorClassIdentifier: 
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    name: LookX
+    name: LookY
   bindings:
   - buttonAxisSources: []
     deadZone: .300000012
@@ -154,7 +83,7 @@ MonoBehaviour:
     sensitivity: 1000
     snap: 1
     sources:
-    - controlIndex: 1
+    - controlIndex: 6
       m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   - buttonAxisSources: []
@@ -163,10 +92,10 @@ MonoBehaviour:
     sensitivity: 1000
     snap: 1
     sources:
-    - controlIndex: 3
+    - controlIndex: 4
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
---- !u!114 &11447110
+--- !u!114 &11427676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -200,7 +129,7 @@ MonoBehaviour:
     - controlIndex: 15
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
---- !u!114 &11480914
+--- !u!114 &11435078
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -209,12 +138,83 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
-  m_Name: LookY
+  m_Name: Move
+  m_EditorClassIdentifier: 
+  m_ControlData:
+    componentControlIndices: 0000000001000000
+    controlType: 3
+    name: Move
+  bindings: []
+--- !u!114 &11442838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: Look
+  m_EditorClassIdentifier: 
+  m_ControlData:
+    componentControlIndices: 0300000004000000
+    controlType: 3
+    name: Look
+  bindings: []
+--- !u!114 &11487912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: MoveX
   m_EditorClassIdentifier: 
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    name: LookY
+    name: MoveX
+  bindings:
+  - buttonAxisSources:
+    - negative:
+        controlIndex: 0
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      positive:
+        controlIndex: 3
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    sources: []
+  - buttonAxisSources: []
+    deadZone: .300000012
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    sources:
+    - controlIndex: 0
+      m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+--- !u!114 &11488674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: LookX
+  m_EditorClassIdentifier: 
+  m_ControlData:
+    componentControlIndices: 
+    controlType: 1
+    name: LookX
   bindings:
   - buttonAxisSources: []
     deadZone: .300000012
@@ -222,7 +222,7 @@ MonoBehaviour:
     sensitivity: 1000
     snap: 1
     sources:
-    - controlIndex: 2
+    - controlIndex: 5
       m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   - buttonAxisSources: []
@@ -231,6 +231,6 @@ MonoBehaviour:
     sensitivity: 1000
     snap: 1
     sources:
-    - controlIndex: 4
+    - controlIndex: 3
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
