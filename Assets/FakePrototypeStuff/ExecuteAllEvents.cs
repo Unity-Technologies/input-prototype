@@ -8,11 +8,13 @@ public class ExecuteAllEvents
 {
 	public void Update()
 	{
-		InputSystem.ExecuteEvents();
+		InputSystem.BeginNewFrame ();
+		InputSystem.ExecuteEvents ();
 	}
 
 	public void FixedUpdate()
 	{
-		InputSystem.ExecuteEvents();
+		InputSystem.BeginNewFrame ();
+		InputSystem.ExecuteEvents ();
 	}
 }

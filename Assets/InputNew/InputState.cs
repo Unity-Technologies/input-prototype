@@ -57,9 +57,6 @@ namespace UnityEngine.InputNew
 			if (!IsControlEnabled(index))
 				return false;
 
-			////FIXME: need to copy current into previous whenever update starts; this thing here doesn't work
-
-			m_PreviousStates[index] = m_CurrentStates[index];
 			m_CurrentStates[index] = value;
 
 			return true;
@@ -80,6 +77,20 @@ namespace UnityEngine.InputNew
 			for (var i = 0; i < m_Enabled.Length; ++ i)
 			{
 				m_Enabled[i] = enabled;
+			}
+		}
+
+		#endregion
+
+		#region Non-Public Methods
+
+		internal void BeginNewFrame ()
+		{
+			var stateCount = m_Enabled.Length;
+			for (var index = 0; index < stateCount; ++index)
+			{
+				if (m_Enabled[index])
+					m_PreviousStates[index] = m_CurrentStates[index];
 			}
 		}
 

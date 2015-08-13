@@ -9,5 +9,6 @@ namespace UnityEngine.InputNew
 		string name { get; }
 		IList<IInputConsumer> children { get; }
 		ProcessInputDelegate processInput { get; set; }
+		BeginNewFrameDelegate beginNewFrame { get; set; }
 	}
 }

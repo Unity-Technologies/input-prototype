@@ -10,14 +10,12 @@ namespace UnityEngine.InputNew
 
 	public abstract class InputEvent
 	{
-		InputDevice m_CachedDevice;
-
 		#region Public Methods
 
-		public override string ToString()
+		public override string ToString ()
 		{
 			if (deviceType == null)
-				return base.ToString();
+				return base.ToString ();
 
 			return string.Format
 				(
@@ -36,27 +34,38 @@ namespace UnityEngine.InputNew
 			time = 0.0f;
 			deviceType = null;
 			deviceIndex = 0;
-			m_CachedDevice = null;
 		}
 
 		#region Public Properties
 
 		public float time { get; set; }
-		public Type deviceType { get; set; }
-		public int deviceIndex { get; set; }
+		public Type deviceType
+		{
+			get { return m_DeviceType; }
+			set { m_DeviceType = value; m_CachedDevice = null; }
+		}
+		public int deviceIndex
+		{
+			get { return m_DeviceIndex; }
+			set { m_DeviceIndex = value; m_CachedDevice = null; }
+		}
 
 		public InputDevice device
 		{
 			get
 			{
 				if (m_CachedDevice == null && deviceType != null)
-					m_CachedDevice = InputSystem.LookupDevice(deviceType, deviceIndex);
+					m_CachedDevice = InputSystem.LookupDevice (deviceType, deviceIndex);
 
 				return m_CachedDevice;
 			}
 		}
 
 		#endregion
+
+		private Type m_DeviceType;
+		private int m_DeviceIndex;
+		private InputDevice m_CachedDevice;
 	}
 }
 

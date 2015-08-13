@@ -42,6 +42,16 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
+		internal void BeginNewFrame (IInputConsumer consumer)
+		{
+			var callback = consumer.beginNewFrame;
+			if (callback != null)
+				callback ();
+
+			foreach (var child in consumer.children)
+				BeginNewFrame (child);
+		}
+
 		#endregion
 
 		#region Public Properties
@@ -54,6 +64,8 @@ namespace UnityEngine.InputNew
 		}
 
 		public ProcessInputDelegate processInput { get; set; }
+
+		public BeginNewFrameDelegate beginNewFrame { get; set; }
 
 		#endregion
 	}

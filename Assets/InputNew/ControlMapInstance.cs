@@ -47,6 +47,7 @@ namespace UnityEngine.InputNew
 			{
 				name = "Map"
 				, processInput = ProcessEvent
+				, beginNewFrame = BeginNewFrameEvent
 			};
 			InputSystem.eventTree.children.Add(treeNode);
 		}
@@ -117,6 +118,12 @@ namespace UnityEngine.InputNew
 		}
 
 		#endregion
+
+		void BeginNewFrameEvent ()
+		{
+			foreach (var deviceState in m_DeviceStates)
+				deviceState.BeginNewFrame ();
+		}
 
 		#region Public Properties
 

@@ -35,6 +35,7 @@ namespace UnityEngine.InputNew
 			{
 				name = "State"
 				, processInput = s_Devices.ProcessEvent
+				, beginNewFrame = s_Devices.BeginNewFrameEvent
 			};
 			s_EventTree.children.Add(state);
 		}
@@ -216,6 +217,11 @@ namespace UnityEngine.InputNew
 			{
 				ExecuteEvent(nextEvent);
 			}
+		}
+
+		internal static void BeginNewFrame ()
+		{
+			s_EventTree.BeginNewFrame (s_EventTree);
 		}
 
 		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)

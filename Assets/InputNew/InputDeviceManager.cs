@@ -198,6 +198,12 @@ namespace UnityEngine.InputNew
 				handler(device, connected);
 		}
 
+		internal void BeginNewFrameEvent ()
+		{
+			foreach (var device in devices)
+				device.state.BeginNewFrame ();
+		}
+
 		#endregion
 
 		#region Public Properties
