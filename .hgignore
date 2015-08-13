@@ -1,5 +1,6 @@
 syntax: glob
 
+Builds
 Library
 Temp
 obj
@@ -7,4 +8,5 @@ obj
 *.sln
 *.suo
 *.userprefs
-
+Assets/UnityVS
+Assets/UnityVS.meta
