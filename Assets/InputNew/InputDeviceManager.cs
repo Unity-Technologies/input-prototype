@@ -22,6 +22,11 @@ namespace UnityEngine.InputNew
 
 		public InputDeviceManager()
 		{
+			
+		}
+		
+		public void InitAfterProfiles()
+		{
 			// In the prototype, just create a set of default devices. In the real thing, these would be registered
 			// and configured by the platform layer according to what's really available on the system.
 			var mouseDevice = Mouse.CreateDefault();

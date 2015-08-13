@@ -21,6 +21,8 @@ namespace UnityEngine.InputNew
 				RegisterProfile(profile);
 			}
 
+			s_Devices.InitAfterProfiles();
+
 			// Set up event tree.
 			s_EventTree = new InputEventTree { name = "Root" };
 
