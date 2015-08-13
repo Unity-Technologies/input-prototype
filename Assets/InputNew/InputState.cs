@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -11,22 +13,22 @@ namespace UnityEngine.InputNew
 
 		public InputState(InputControlProvider controlProvider, List<int> usedControlIndices)
 		{
-			_controlProvider = controlProvider;
+			this.controlProvider = controlProvider;
 
 			var controlCount = controlProvider.controls.Count;
-			_currentStates = new float[controlCount];
-			_previousStates = new float[controlCount];
+			m_CurrentStates = new float[controlCount];
+			m_PreviousStates = new float[controlCount];
 
-			_enabled = new bool[controlCount];
+			m_Enabled = new bool[controlCount];
 			if (usedControlIndices == null)
 			{
 				SetAllControlsEnabled(true);
 			}
 			else
 			{
-				for (int i = 0; i < usedControlIndices.Count; i++)
+				for (var i = 0; i < usedControlIndices.Count; i++)
 				{
-					_enabled[usedControlIndices[i]] = true;
+					m_Enabled[usedControlIndices[i]] = true;
 				}
 			}
 		}
@@ -37,12 +39,12 @@ namespace UnityEngine.InputNew
 
 		public float GetCurrentValue(int index)
 		{
-			return _currentStates[index];
+			return m_CurrentStates[index];
 		}
 
 		public float GetPreviousValue(int index)
 		{
-			return _previousStates[index];
+			return m_PreviousStates[index];
 		}
 
 		public bool SetCurrentValue(int index, bool value)
@@ -57,27 +59,27 @@ namespace UnityEngine.InputNew
 
 			////FIXME: need to copy current into previous whenever update starts; this thing here doesn't work
 
-			_previousStates[index] = _currentStates[index];
-			_currentStates[index] = value;
+			m_PreviousStates[index] = m_CurrentStates[index];
+			m_CurrentStates[index] = value;
 
 			return true;
 		}
 
 		public bool IsControlEnabled(int index)
 		{
-			return _enabled[index];
+			return m_Enabled[index];
 		}
 
 		public void SetControlEnabled(int index, bool enabled)
 		{
-			_enabled[index] = enabled;
+			m_Enabled[index] = enabled;
 		}
 
 		public void SetAllControlsEnabled(bool enabled)
 		{
-			for (var i = 0; i < _enabled.Length; ++ i)
+			for (var i = 0; i < m_Enabled.Length; ++ i)
 			{
-				_enabled[i] = enabled;
+				m_Enabled[i] = enabled;
 			}
 		}
 
@@ -85,10 +87,7 @@ namespace UnityEngine.InputNew
 
 		#region Public Properties
 
-		public InputControlProvider controlProvider
-		{
-			get { return _controlProvider; }
-		}
+		public InputControlProvider controlProvider { get; set; }
 
 		public InputControl this[int index]
 		{
@@ -114,10 +113,9 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		float[] _currentStates;
-		float[] _previousStates;
-		bool[] _enabled;
-		InputControlProvider _controlProvider;
+		readonly float[] m_CurrentStates;
+		readonly float[] m_PreviousStates;
+		readonly bool[] m_Enabled;
 
 		#endregion
 	}

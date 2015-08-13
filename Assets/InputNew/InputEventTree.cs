@@ -1,10 +1,18 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	class InputEventTree
 		: IInputConsumer
 	{
+		#region Fields
+
+		readonly List<IInputConsumer> m_Children = new List<IInputConsumer>();
+
+		#endregion
+
 		#region Public Methods
 
 		public bool ProcessEvent(InputEvent inputEvent)
@@ -42,16 +50,10 @@ namespace UnityEngine.InputNew
 
 		public IList<IInputConsumer> children
 		{
-			get { return _children; }
+			get { return m_Children; }
 		}
 
 		public ProcessInputDelegate processInput { get; set; }
-
-		#endregion
-
-		#region Fields
-
-		List<IInputConsumer> _children = new List<IInputConsumer>();
 
 		#endregion
 	}

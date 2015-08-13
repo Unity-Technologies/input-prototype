@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -8,8 +10,8 @@ namespace UnityEngine.InputNew
 
 		internal InputControl(int index, InputState state)
 		{
-			_index = index;
-			_state = state;
+			m_Index = index;
+			m_State = state;
 		}
 
 		#endregion
@@ -18,14 +20,14 @@ namespace UnityEngine.InputNew
 
 		public int index
 		{
-			get { return _index; }
+			get { return m_Index; }
 		}
 
 		public bool boolValue
 		{
 			get
 			{
-				var currentValue = _state.GetCurrentValue(_index);
+				var currentValue = m_State.GetCurrentValue(m_Index);
 				if (currentValue > 0.001f)
 					return true;
 				return false;
@@ -34,34 +36,34 @@ namespace UnityEngine.InputNew
 
 		public float floatValue
 		{
-			get { return _state.GetCurrentValue(_index); }
+			get { return m_State.GetCurrentValue(m_Index); }
 		}
 
 		public Vector3 vector3Value
 		{
 			get
 			{
-				var controlData = _state.controlProvider.controls[_index];
+				var controlData = m_State.controlProvider.controls[m_Index];
 				////TODO: typecheck control type; convert if necessary
 				return new Vector3(
-					_state.GetCurrentValue(controlData.componentControlIndices[0])
-					, _state.GetCurrentValue(controlData.componentControlIndices[1])
-					, _state.GetCurrentValue(controlData.componentControlIndices[2])
+					m_State.GetCurrentValue(controlData.componentControlIndices[0])
+					, m_State.GetCurrentValue(controlData.componentControlIndices[1])
+					, m_State.GetCurrentValue(controlData.componentControlIndices[2])
 					);
 			}
 		}
 
 		public bool isEnabled
 		{
-			get { return _state.IsControlEnabled(_index); }
+			get { return m_State.IsControlEnabled(m_Index); }
 		}
 
 		#endregion
 
 		#region Fields
 
-		int _index;
-		InputState _state;
+		readonly int m_Index;
+		readonly InputState m_State;
 
 		#endregion
 	}

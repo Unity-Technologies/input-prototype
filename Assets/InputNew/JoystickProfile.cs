@@ -1,11 +1,18 @@
 using System;
-using Assets.Utilities;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	public class JoystickProfile
 		: InputDeviceProfile
 	{
+		#region Public Properties
+
+		public JoystickControlMapping[] mappings;
+
+		#endregion
+
 		#region Public Methods
 
 		public override void Remap(InputEvent inputEvent)
@@ -33,12 +40,6 @@ namespace UnityEngine.InputNew
 				, displayIcon = displayIcon
 			};
 		}
-
-		#endregion
-
-		#region Public Properties
-
-		public JoystickControlMapping[] mappings;
 
 		#endregion
 	}

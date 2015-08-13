@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -9,8 +11,8 @@ namespace UnityEngine.InputNew
 
 		public InputControlProvider(List<InputControlData> controls)
 		{
-			_controls = controls;
-			_state = new InputState(this);
+			m_Controls = controls;
+			m_State = new InputState(this);
 		}
 
 		#endregion
@@ -29,13 +31,13 @@ namespace UnityEngine.InputNew
 
 		public InputState state
 		{
-			get { return _state; }
+			get { return m_State; }
 		}
 
 		////REVIEW: this view should be immutable
 		public IList<InputControlData> controls
 		{
-			get { return _controls; }
+			get { return m_Controls; }
 		}
 
 		public float lastEventTime { get; protected set; }
@@ -44,8 +46,8 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		readonly InputState _state;
-		readonly List<InputControlData> _controls;
+		readonly InputState m_State;
+		readonly List<InputControlData> m_Controls;
 
 		#endregion
 	}

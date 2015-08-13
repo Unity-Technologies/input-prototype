@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -18,8 +19,22 @@ namespace UnityEngine.InputNew
 			: base(controls)
 		{
 			this.controlSchemeIndex = controlSchemeIndex;
-			_deviceStates = deviceStates;
-			_controlMap = controlMap;
+			m_DeviceStates = deviceStates;
+			m_ControlMap = controlMap;
+		}
+
+		#endregion
+
+		#region Non-Public Methods
+
+		InputState GetDeviceStateForDeviceType(Type deviceType)
+		{
+			foreach (var deviceState in m_DeviceStates)
+			{
+				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
+					return deviceState;
+			}
+			throw new ArgumentException("deviceType");
 		}
 
 		#endregion
@@ -41,7 +56,7 @@ namespace UnityEngine.InputNew
 			var consumed = false;
 
 			// Update device state (if event actually goes to one of the devices we talk to).
-			foreach (var deviceState in _deviceStates)
+			foreach (var deviceState in m_DeviceStates)
 			{
 				////FIXME: should refer to proper type
 				var device = (InputDevice)deviceState.controlProvider;
@@ -64,9 +79,9 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
 			// Synchronize the ControlMapInstance's own state.
-			for (var entryIndex = 0; entryIndex < _controlMap.entries.Count; ++ entryIndex)
+			for (var entryIndex = 0; entryIndex < m_ControlMap.entries.Count; ++ entryIndex)
 			{
-				var entry = _controlMap.entries[entryIndex];
+				var entry = m_ControlMap.entries[entryIndex];
 				if (entry.bindings == null || entry.bindings.Count == 0)
 					continue;
 
@@ -103,20 +118,6 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
-		#region Non-Public Methods
-
-		InputState GetDeviceStateForDeviceType(Type deviceType)
-		{
-			foreach (var deviceState in _deviceStates)
-			{
-				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
-					return deviceState;
-			}
-			throw new ArgumentException("deviceType");
-		}
-
-		#endregion
-
 		#region Public Properties
 
 		public int controlSchemeIndex { get; private set; }
@@ -130,8 +131,8 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		readonly ControlMap _controlMap;
-		readonly List<InputState> _deviceStates;
+		readonly ControlMap m_ControlMap;
+		readonly List<InputState> m_DeviceStates;
 
 		#endregion
 	}

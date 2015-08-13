@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	[Serializable]
 	public struct InputControlData
 	{
-		public string name;
-		public InputControlType controlType;
 		public int[] componentControlIndices;
+		public InputControlType controlType;
+		public string name;
 	}
 }

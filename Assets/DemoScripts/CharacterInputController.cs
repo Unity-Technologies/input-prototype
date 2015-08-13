@@ -1,78 +1,78 @@
-﻿using UnityEngine;
-using UnityEngine.InputNew;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.InputNew;
 
 public class CharacterInputController
 	: MonoBehaviour
 {
+	ControlMapInstance m_ControlMapInstance;
+	float m_LastLookX;
+	float m_LastLookY;
+	Rigidbody m_Rigid;
+	Vector2 m_Rotation = Vector2.zero;
+	float m_TimeOfLastShot;
 	public ControlMap controlMap;
+	public ControlMapEntry fireControl;
+	public Transform head;
+	public ControlMapEntry lookControlX;
+	public ControlMapEntry lookControlY;
 
 	[Space(10)]
 	public ControlMapEntry moveControlX;
 
 	public ControlMapEntry moveControlY;
-	public ControlMapEntry lookControlX;
-	public ControlMapEntry lookControlY;
-	public ControlMapEntry fireControl;
 
 	[Space(10)]
 	public float moveSpeed = 5;
 
-	public Transform head;
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
 
-	ControlMapInstance _controlMapInstance;
-	float _timeOfLastShot;
-	Rigidbody _rigid;
-	Vector2 _rotation = Vector2.zero;
-
 	public void Awake()
 	{
-		_controlMapInstance = InputSystem.BindInputs(controlMap).First();
-		_controlMapInstance.Activate();
-		_rigid = GetComponent<Rigidbody>();
+		m_ControlMapInstance = InputSystem.BindInputs(controlMap).First();
+		m_ControlMapInstance.Activate();
+		m_Rigid = GetComponent<Rigidbody>();
 	}
-
-	float _lastLookX;
-	float _lastLookY;
 
 	public void Update()
 	{
 		// Move
 		if (moveControlX)
 		{
-			var moveX = _controlMapInstance[moveControlX].floatValue;
-			var moveY = _controlMapInstance[moveControlY].floatValue;
+			var moveX = m_ControlMapInstance[moveControlX].floatValue;
+			var moveY = m_ControlMapInstance[moveControlY].floatValue;
 
-			_rigid.velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
+			m_Rigid.velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
 		}
 
 		// Look
-		var lookX = _controlMapInstance[lookControlX].floatValue;
-		var lookY = _controlMapInstance[lookControlY].floatValue;
+		var lookX = m_ControlMapInstance[lookControlX].floatValue;
+		var lookY = m_ControlMapInstance[lookControlY].floatValue;
 
 		// HACK UNTIL MOUSE IS RELATIVE
-		lookX = lookX - _lastLookX;
-		lookY = lookY - _lastLookY;
-		_lastLookX = lookX + _lastLookX;
-		_lastLookY = lookY + _lastLookY;
+		lookX = lookX - m_LastLookX;
+		lookY = lookY - m_LastLookY;
+		m_LastLookX = lookX + m_LastLookX;
+		m_LastLookY = lookY + m_LastLookY;
 
-		_rotation.y += lookX;
-		transform.localEulerAngles = new Vector3(0, _rotation.y, 0);
+		m_Rotation.y += lookX;
+		transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);
 
-		_rotation.x = Mathf.Clamp(_rotation.x - lookY, -89, 89);
-		head.localEulerAngles = new Vector3(_rotation.x, 0, 0);
+		m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
+		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
 
 		// Fire
-		var fire = _controlMapInstance[fireControl].boolValue;
+		var fire = m_ControlMapInstance[fireControl].boolValue;
 		if (fire)
 		{
 			var currentTime = Time.time;
-			var timeElapsedSinceLastShot = currentTime - _timeOfLastShot;
+			var timeElapsedSinceLastShot = currentTime - m_TimeOfLastShot;
 			if (timeElapsedSinceLastShot > timeBetweenShots)
 			{
-				_timeOfLastShot = currentTime;
+				m_TimeOfLastShot = currentTime;
 				Fire();
 			}
 		}

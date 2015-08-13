@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityEngine.InputNew
 {
 	public enum PointerControl
@@ -26,6 +30,6 @@ namespace UnityEngine.InputNew
 		////REVIEW: have Z for ScrollWheel, too?
 
 		ForwardButton,
-		BackButton,
+		BackButton
 	}
 }

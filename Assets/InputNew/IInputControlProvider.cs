@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	/// <summary>
-	/// An object that exposes a specific configuration of input controls.
+	///     An object that exposes a specific configuration of input controls.
 	/// </summary>
 	public interface IInputControlProvider
 	{

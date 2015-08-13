@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputNew;
 
 public class MouseInputToEvents
 	: MonoBehaviour
 {
+	Vector3 m_LastMousePosition;
+
 	public void Update()
 	{
 		SendButtonEvents();
@@ -21,18 +25,18 @@ public class MouseInputToEvents
 	void SendMoveEvent()
 	{
 		var newMousePosition = Input.mousePosition;
-		if (newMousePosition == _lastMousePosition)
+		if (newMousePosition == m_LastMousePosition)
 			return;
 
 		var inputEvent = InputSystem.CreateEvent<PointerMoveEvent>();
 		inputEvent.deviceType = typeof(Mouse);
 		inputEvent.deviceIndex = 0;
-		inputEvent.delta = newMousePosition - _lastMousePosition;
+		inputEvent.delta = newMousePosition - m_LastMousePosition;
 		inputEvent.position = newMousePosition;
 
 		InputSystem.QueueEvent(inputEvent);
 
-		_lastMousePosition = newMousePosition;
+		m_LastMousePosition = newMousePosition;
 	}
 
 	void SendClickEvent(PointerControl controlIndex, bool clicked)
@@ -45,6 +49,4 @@ public class MouseInputToEvents
 		inputEvent.value = clicked ? 1.0f : 0.0f;
 		InputSystem.QueueEvent(inputEvent);
 	}
-
-	Vector3 _lastMousePosition;
 }

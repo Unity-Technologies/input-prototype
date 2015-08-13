@@ -1,25 +1,38 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	class InputDeviceManager
 	{
+		#region Inner Types
+
+		public delegate void DeviceConnectDisconnectEvent(InputDevice device, bool connected);
+
+		#endregion
+
+		#region Public Events
+
+		public DeviceConnectDisconnectEvent deviceConnectedDisconnected;
+
+		#endregion
+
 		#region Constructors
 
 		public InputDeviceManager()
 		{
 			// In the prototype, just create a set of default devices. In the real thing, these would be registered
 			// and configured by the platform layer according to what's really available on the system.
-			var mouse = Mouse.CreateDefault();
-			var keyboard = Keyboard.CreateDefault();
-			var touchscreen = Touchscreen.CreateDefault();
-			var gamepad = Gamepad.CreateDefault();
+			var mouseDevice = Mouse.CreateDefault();
+			var keyboardDevice = Keyboard.CreateDefault();
+			var touchscreenDevice = Touchscreen.CreateDefault();
+			var gamepadDevice = Gamepad.CreateDefault();
 
-			RegisterDevice(touchscreen); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
-			RegisterDevice(mouse);
-			RegisterDevice(keyboard);
-			RegisterDevice(gamepad);
+			RegisterDevice(touchscreenDevice); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
+			RegisterDevice(mouseDevice);
+			RegisterDevice(keyboardDevice);
+			RegisterDevice(gamepadDevice);
 		}
 
 		#endregion
@@ -35,14 +48,14 @@ namespace UnityEngine.InputNew
 
 		public void RegisterProfile(InputDeviceProfile profile)
 		{
-			_profiles.Add(profile);
+			m_Profiles.Add(profile);
 		}
 
 		public InputDevice GetMostRecentlyUsedDevice(Type deviceType)
 		{
-			for (var i = _leastToMostRecentlyUsedDevices.Count - 1; i >= 0; -- i)
+			for (var i = m_LeastToMostRecentlyUsedDevices.Count - 1; i >= 0; -- i)
 			{
-				var device = _leastToMostRecentlyUsedDevices[i];
+				var device = m_LeastToMostRecentlyUsedDevices[i];
 				if (deviceType.IsInstanceOfType(device))
 					return device;
 			}
@@ -59,14 +72,14 @@ namespace UnityEngine.InputNew
 		public List<InputDevice> GetDevicesOfType(Type deviceType)
 		{
 			List<InputDevice> list;
-			_devices.TryGetValue(deviceType, out list);
+			m_Devices.TryGetValue(deviceType, out list);
 			return list;
 		}
 
 		public InputDevice LookupDevice(Type deviceType, int deviceIndex)
 		{
 			List<InputDevice> list;
-			if (!_devices.TryGetValue(deviceType, out list)
+			if (!m_Devices.TryGetValue(deviceType, out list)
 				|| deviceIndex >= list.Count)
 				return null;
 
@@ -92,8 +105,8 @@ namespace UnityEngine.InputNew
 				var mostRecentlyUsedDeviceOfType = GetMostRecentlyUsedDevice(currentType);
 				if (mostRecentlyUsedDeviceOfType != device)
 				{
-					_leastToMostRecentlyUsedDevices.Remove(device);
-					_leastToMostRecentlyUsedDevices.Add(device);
+					m_LeastToMostRecentlyUsedDevices.Remove(device);
+					m_LeastToMostRecentlyUsedDevices.Add(device);
 
 					//fire event
 
@@ -143,7 +156,7 @@ namespace UnityEngine.InputNew
 
 		InputDeviceProfile FindDeviceProfile(InputDevice device)
 		{
-			foreach (var profile in _profiles)
+			foreach (var profile in m_Profiles)
 			{
 				if (profile.deviceNames != null)
 				{
@@ -160,14 +173,14 @@ namespace UnityEngine.InputNew
 		void RegisterDeviceInternal(Type deviceType, InputDevice device)
 		{
 			List<InputDevice> list;
-			if (!_devices.TryGetValue(deviceType, out list))
+			if (!m_Devices.TryGetValue(deviceType, out list))
 			{
 				list = new List<InputDevice>();
-				_devices[deviceType] = list;
+				m_Devices[deviceType] = list;
 			}
 
 			list.Add(device);
-			_leastToMostRecentlyUsedDevices.Add(device);
+			m_LeastToMostRecentlyUsedDevices.Add(device);
 
 			var baseType = deviceType.BaseType;
 			if (baseType != typeof(InputDevice))
@@ -213,7 +226,7 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				foreach (var list in _devices.Values)
+				foreach (var list in m_Devices.Values)
 				{
 					foreach (var device in list)
 					{
@@ -225,23 +238,11 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
-		#region Public Events
-
-		public DeviceConnectDisconnectEvent deviceConnectedDisconnected;
-
-		#endregion
-
 		#region Fields
 
-		readonly Dictionary<Type, List<InputDevice>> _devices = new Dictionary<Type, List<InputDevice>>();
-		readonly List<InputDevice> _leastToMostRecentlyUsedDevices = new List<InputDevice>();
-		readonly List<InputDeviceProfile> _profiles = new List<InputDeviceProfile>();
-
-		#endregion
-
-		#region Inner Types
-
-		public delegate void DeviceConnectDisconnectEvent(InputDevice device, bool connected);
+		readonly Dictionary<Type, List<InputDevice>> m_Devices = new Dictionary<Type, List<InputDevice>>();
+		readonly List<InputDevice> m_LeastToMostRecentlyUsedDevices = new List<InputDevice>();
+		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
 
 		#endregion
 	}

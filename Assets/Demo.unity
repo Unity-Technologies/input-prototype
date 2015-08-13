@@ -199,6 +199,36 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: controlMap
+      value: 
+      objectReference: {fileID: 11400000, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: fireControl
+      value: 
+      objectReference: {fileID: 11475452, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: lookControlX
+      value: 
+      objectReference: {fileID: 11486516, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: lookControlY
+      value: 
+      objectReference: {fileID: 11467170, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: moveControlX
+      value: 
+      objectReference: {fileID: 11493668, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
+    - target: {fileID: 11461774, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: moveControlY
+      value: 
+      objectReference: {fileID: 11403004, guid: 56b8d0458748da546879b9d8babc74da,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
   m_IsPrefabParent: 0

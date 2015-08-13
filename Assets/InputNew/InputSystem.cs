@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.InputNew;
+using UnityEngine;
 
 //// - solve mapping of device type names from control maps to device types at runtime
 
@@ -13,9 +12,9 @@ namespace UnityEngine.InputNew
 
 		public static void Initialize(InputDeviceProfile[] profiles)
 		{
-			_devices = new InputDeviceManager();
-			_eventQueue = new InputEventQueue();
-			_eventPool = new InputEventPool();
+			s_Devices = new InputDeviceManager();
+			s_EventQueue = new InputEventQueue();
+			s_EventPool = new InputEventPool();
 
 			foreach (var profile in profiles)
 			{
@@ -23,49 +22,49 @@ namespace UnityEngine.InputNew
 			}
 
 			// Set up event tree.
-			_eventTree = new InputEventTree { name = "Root" };
+			s_EventTree = new InputEventTree { name = "Root" };
 
 			var remap = new InputEventTree
 			{
 				name = "Remap"
-				, processInput = _devices.RemapEvent
+				, processInput = s_Devices.RemapEvent
 			};
-			_eventTree.children.Add(remap);
+			s_EventTree.children.Add(remap);
 
 			var state = new InputEventTree
 			{
 				name = "State"
-				, processInput = _devices.ProcessEvent
+				, processInput = s_Devices.ProcessEvent
 			};
-			_eventTree.children.Add(state);
+			s_EventTree.children.Add(state);
 		}
 
 		public static void RegisterProfile(InputDeviceProfile profile)
 		{
-			_devices.RegisterProfile(profile);
+			s_Devices.RegisterProfile(profile);
 		}
 
 		public static InputDevice LookupDevice(Type deviceType, int deviceIndex)
 		{
-			return _devices.LookupDevice(deviceType, deviceIndex);
+			return s_Devices.LookupDevice(deviceType, deviceIndex);
 		}
 
 		public static void QueueEvent(InputEvent inputEvent)
 		{
-			_eventQueue.Queue(inputEvent);
+			s_EventQueue.Queue(inputEvent);
 		}
 
 		public static bool ExecuteEvent(InputEvent inputEvent)
 		{
-			var wasConsumed = _eventTree.ProcessEvent(inputEvent);
-			_eventPool.Return(inputEvent);
+			var wasConsumed = s_EventTree.ProcessEvent(inputEvent);
+			s_EventPool.Return(inputEvent);
 			return wasConsumed;
 		}
 
 		public static TEvent CreateEvent<TEvent>()
 			where TEvent : InputEvent, new()
 		{
-			var newEvent = _eventPool.ReuseOrCreate<TEvent>();
+			var newEvent = s_EventPool.ReuseOrCreate<TEvent>();
 			newEvent.time = Time.time;
 			return newEvent;
 		}
@@ -135,7 +134,7 @@ namespace UnityEngine.InputNew
 				var minDeviceCountOfType = Int32.MaxValue;
 				foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
 				{
-					var availableDevicesOfType = _devices.GetDevicesOfType(deviceType);
+					var availableDevicesOfType = s_Devices.GetDevicesOfType(deviceType);
 					if (availableDevicesOfType != null)
 						deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
 
@@ -167,7 +166,7 @@ namespace UnityEngine.InputNew
 				// Create device states for most recently used device of given types.
 				foreach (var entry in perDeviceTypeUsedControlIndices)
 				{
-					var device = _devices.GetMostRecentlyUsedDevice(entry.Key);
+					var device = s_Devices.GetMostRecentlyUsedDevice(entry.Key);
 					if (device == null)
 						yield break; // Can't satisfy this ControlMap; no available device of given type.
 
@@ -213,7 +212,7 @@ namespace UnityEngine.InputNew
 		{
 			var currentTime = Time.time;
 			InputEvent nextEvent;
-			while (_eventQueue.Dequeue(currentTime, out nextEvent))
+			while (s_EventQueue.Dequeue(currentTime, out nextEvent))
 			{
 				ExecuteEvent(nextEvent);
 			}
@@ -232,42 +231,42 @@ namespace UnityEngine.InputNew
 
 		public static IInputConsumer eventTree
 		{
-			get { return _eventTree; }
+			get { return s_EventTree; }
 		}
 
 		public static Pointer pointer
 		{
-			get { return _devices.pointer; }
+			get { return s_Devices.pointer; }
 		}
 
 		public static Keyboard keyboard
 		{
-			get { return _devices.keyboard; }
+			get { return s_Devices.keyboard; }
 		}
 
 		public static Mouse mouse
 		{
-			get { return _devices.mouse; }
+			get { return s_Devices.mouse; }
 		}
 
 		public static Touchscreen touchscreen
 		{
-			get { return _devices.touchscreen; }
+			get { return s_Devices.touchscreen; }
 		}
 
 		public static IEnumerable<InputDevice> devices
 		{
-			get { return _devices.devices; }
+			get { return s_Devices.devices; }
 		}
 
 		#endregion
 
 		#region Fields
 
-		static InputDeviceManager _devices;
-		static InputEventQueue _eventQueue;
-		static InputEventPool _eventPool;
-		static InputEventTree _eventTree;
+		static InputDeviceManager s_Devices;
+		static InputEventQueue s_EventQueue;
+		static InputEventPool s_EventPool;
+		static InputEventTree s_EventTree;
 
 		#endregion
 	}

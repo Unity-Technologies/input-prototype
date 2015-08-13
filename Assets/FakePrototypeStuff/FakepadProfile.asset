@@ -17,210 +17,210 @@ MonoBehaviour:
   deviceRegexes: []
   lastResortDeviceRegex: 
   mappings:
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 16
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 16
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 15
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 15
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
-  - targetIndex: 0
-    displayIcon: {fileID: 0}
+      min: 0
+  - displayIcon: {fileID: 0}
     displayName: 
     fromRange:
-      min: 0
       max: 0
+      min: 0
+    targetIndex: 0
     toRange:
-      min: 0
       max: 0
+      min: 0

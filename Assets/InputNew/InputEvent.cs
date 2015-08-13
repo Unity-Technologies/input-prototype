@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -8,6 +10,8 @@ namespace UnityEngine.InputNew
 
 	public abstract class InputEvent
 	{
+		InputDevice m_CachedDevice;
+
 		#region Public Methods
 
 		public override string ToString()
@@ -27,6 +31,14 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		internal void Reset()
+		{
+			time = 0.0f;
+			deviceType = null;
+			deviceIndex = 0;
+			m_CachedDevice = null;
+		}
+
 		#region Public Properties
 
 		public float time { get; set; }
@@ -37,24 +49,14 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				if (_cachedDevice == null && deviceType != null)
-					_cachedDevice = InputSystem.LookupDevice(deviceType, deviceIndex);
+				if (m_CachedDevice == null && deviceType != null)
+					m_CachedDevice = InputSystem.LookupDevice(deviceType, deviceIndex);
 
-				return _cachedDevice;
+				return m_CachedDevice;
 			}
 		}
 
 		#endregion
-
-		internal void Reset()
-		{
-			time = 0.0f;
-			deviceType = null;
-			deviceIndex = 0;
-			_cachedDevice = null;
-		}
-
-		InputDevice _cachedDevice;
 	}
 }
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputNew;
 
 public class GamepadInputToEvents
@@ -18,34 +20,34 @@ public class GamepadInputToEvents
 
 	void SendAxisEvents()
 	{
-		var leftThumbstickX_1 = Input.GetAxis("LeftThumbstickX_1");
-		if (leftThumbstickX_1 != _lastLeftThumbstickX[0])
-			SendEvent(0, GamepadControl.LeftThumbstickX, leftThumbstickX_1);
-		var leftThumbstickY_1 = Input.GetAxis("LeftThumbstickY_1");
-		if (leftThumbstickY_1 != _lastLeftThumbstickY[0])
-			SendEvent(0, GamepadControl.LeftThumbstickY, leftThumbstickY_1);
+		var leftThumbstickX1 = Input.GetAxis("LeftThumbstickX_1");
+		if (leftThumbstickX1 != m_LastLeftThumbstickX[0])
+			SendEvent(0, GamepadControl.LeftThumbstickX, leftThumbstickX1);
+		var leftThumbstickY1 = Input.GetAxis("LeftThumbstickY_1");
+		if (leftThumbstickY1 != m_LastLeftThumbstickY[0])
+			SendEvent(0, GamepadControl.LeftThumbstickY, leftThumbstickY1);
 
-		var rightThumbstickX_1 = Input.GetAxis("RightThumbstickX_1");
-		if (rightThumbstickX_1 != _lastRightThumbstickX[0])
-			SendEvent(0, GamepadControl.RightThumbstickX, rightThumbstickX_1);
-		var rightThumbstickY_1 = Input.GetAxis("RightThumbstickY_1");
-		if (rightThumbstickY_1 != _lastRightThumbstickY[0])
-			SendEvent(0, GamepadControl.LeftThumbstickY, rightThumbstickY_1);
+		var rightThumbstickX1 = Input.GetAxis("RightThumbstickX_1");
+		if (rightThumbstickX1 != m_LastRightThumbstickX[0])
+			SendEvent(0, GamepadControl.RightThumbstickX, rightThumbstickX1);
+		var rightThumbstickY1 = Input.GetAxis("RightThumbstickY_1");
+		if (rightThumbstickY1 != m_LastRightThumbstickY[0])
+			SendEvent(0, GamepadControl.LeftThumbstickY, rightThumbstickY1);
 
 		////FIXME: for some reason, LeftTrigger_1 responds to both left and right trigger; Unity bug??
-		var leftTrigger_1 = Input.GetAxis("LeftTrigger_1");
-		if (leftTrigger_1 != _lastLeftTrigger[0])
-			SendEvent(0, GamepadControl.LeftTrigger, leftTrigger_1);
-		var rightTrigger_1 = Input.GetAxis("RightTrigger_1");
-		if (rightTrigger_1 != _lastRightTrigger[0])
-			SendEvent(0, GamepadControl.RightTrigger, rightTrigger_1);
+		var leftTrigger1 = Input.GetAxis("LeftTrigger_1");
+		if (leftTrigger1 != m_LastLeftTrigger[0])
+			SendEvent(0, GamepadControl.LeftTrigger, leftTrigger1);
+		var rightTrigger1 = Input.GetAxis("RightTrigger_1");
+		if (rightTrigger1 != m_LastRightTrigger[0])
+			SendEvent(0, GamepadControl.RightTrigger, rightTrigger1);
 
-		_lastLeftThumbstickX[0] = leftThumbstickX_1;
-		_lastLeftThumbstickY[0] = leftThumbstickY_1;
-		_lastRightThumbstickX[0] = rightThumbstickX_1;
-		_lastRightThumbstickY[0] = rightThumbstickY_1;
-		_lastLeftTrigger[0] = leftTrigger_1;
-		_lastRightTrigger[0] = rightTrigger_1;
+		m_LastLeftThumbstickX[0] = leftThumbstickX1;
+		m_LastLeftThumbstickY[0] = leftThumbstickY1;
+		m_LastRightThumbstickX[0] = rightThumbstickX1;
+		m_LastRightThumbstickY[0] = rightThumbstickY1;
+		m_LastLeftTrigger[0] = leftTrigger1;
+		m_LastRightTrigger[0] = rightTrigger1;
 	}
 
 	void SendButtonEvents()
@@ -107,12 +109,12 @@ public class GamepadInputToEvents
 
 	#region Fields
 
-	readonly float[] _lastLeftThumbstickX = new float[8];
-	readonly float[] _lastLeftThumbstickY = new float[8];
-	readonly float[] _lastRightThumbstickX = new float[8];
-	readonly float[] _lastRightThumbstickY = new float[8];
-	readonly float[] _lastLeftTrigger = new float[8];
-	readonly float[] _lastRightTrigger = new float[8];
+	readonly float[] m_LastLeftThumbstickX = new float[8];
+	readonly float[] m_LastLeftThumbstickY = new float[8];
+	readonly float[] m_LastRightThumbstickX = new float[8];
+	readonly float[] m_LastRightThumbstickY = new float[8];
+	readonly float[] m_LastLeftTrigger = new float[8];
+	readonly float[] m_LastRightTrigger = new float[8];
 
 	#endregion
 }

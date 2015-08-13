@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityEngine.InputNew
 {
 	enum NativeEventType
@@ -7,6 +11,6 @@ namespace UnityEngine.InputNew
 		KeyDown,
 		KeyUp,
 		TextInput,
-		PointerMove,
+		PointerMove
 	}
 }

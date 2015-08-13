@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityEngine.InputNew
 {
 	public enum GamepadControl
@@ -33,6 +37,6 @@ namespace UnityEngine.InputNew
 		// -- Optional:
 
 		LeftThumbstickPress,
-		RightThumbstickPress,
+		RightThumbstickPress
 	}
 }

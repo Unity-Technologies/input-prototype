@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Utilities;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -11,6 +13,19 @@ namespace UnityEngine.InputNew
 
 		public Keyboard(string deviceName, List<InputControlData> controls)
 			: base(deviceName, controls) { }
+
+		#endregion
+
+		#region Non-Public Methods
+
+		static void InitKey(List<InputControlData> controls, KeyControl key)
+		{
+			controls[(int)key] = new InputControlData
+			{
+				name = key.ToString()
+				, controlType = InputControlType.Button
+			};
+		}
 
 		#endregion
 
@@ -41,19 +56,6 @@ namespace UnityEngine.InputNew
 			}
 
 			return new Keyboard("Generic Keyboard", controls);
-		}
-
-		#endregion
-
-		#region Non-Public Methods
-
-		static void InitKey(List<InputControlData> controls, KeyControl key)
-		{
-			controls[(int)key] = new InputControlData
-			{
-				name = key.ToString()
-				, controlType = InputControlType.Button
-			};
 		}
 
 		#endregion

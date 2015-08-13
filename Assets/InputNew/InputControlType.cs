@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityEngine.InputNew
 {
 	public enum InputControlType
@@ -8,6 +12,6 @@ namespace UnityEngine.InputNew
 		Vector2,
 		Vector3,
 		Vector4,
-		Quaternion,
+		Quaternion
 	}
 }

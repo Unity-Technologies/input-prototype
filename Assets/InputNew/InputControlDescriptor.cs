@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.InputNew
 {
-	[Serializable]
+	[ Serializable ]
 	public struct InputControlDescriptor
 	{
 		public int controlIndex;
@@ -11,27 +11,26 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				if (_cachedDeviceType == null)
-					_cachedDeviceType = Type.GetType(_deviceTypeName);
+				if ( m_CachedDeviceType == null )
+					m_CachedDeviceType = Type.GetType( m_DeviceTypeName );
 
-				return _cachedDeviceType;
-				;
+				return m_CachedDeviceType;;
 			}
 			set
 			{
-				_cachedDeviceType = value;
-				_deviceTypeName = _cachedDeviceType.AssemblyQualifiedName;
+				m_CachedDeviceType = value;
+				m_DeviceTypeName = m_CachedDeviceType.AssemblyQualifiedName;
 			}
 		}
 
-		[SerializeField]
-		string _deviceTypeName;
+		[ SerializeField ]
+		private string m_DeviceTypeName;
 
-		Type _cachedDeviceType;
-
-		public override string ToString()
+		private Type m_CachedDeviceType;
+		
+		public override string ToString ()
 		{
-			return string.Format("(device:{0}, control:{1})", deviceType.Name, controlIndex);
+			return string.Format( "(device:{0}, control:{1})", deviceType.Name, controlIndex );
 		}
 	}
 }

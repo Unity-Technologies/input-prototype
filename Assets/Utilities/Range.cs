@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Utilities
 {
 	[Serializable]
 	public struct Range
 	{
-		public float min;
 		public float max;
+		public float min;
 
 		public Range(float min, float max)
 		{

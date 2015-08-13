@@ -1,41 +1,14 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	class InputEventQueue
 	{
-		#region Public Methods
-
-		public void Queue(InputEvent inputEvent)
-		{
-			_list.Add(inputEvent.time, inputEvent);
-		}
-
-		public bool Dequeue(float targetTime, out InputEvent inputEvent)
-		{
-			if (_list.Count == 0)
-			{
-				inputEvent = null;
-				return false;
-			}
-
-			var nextEvent = _list.Values[0];
-			if (nextEvent.time > targetTime)
-			{
-				inputEvent = null;
-				return false;
-			}
-
-			_list.RemoveAt(0);
-			inputEvent = nextEvent;
-			return true;
-		}
-
-		#endregion
-
 		#region Fields
 
-		readonly SortedList<float, InputEvent> _list = new SortedList<float, InputEvent>(new SortInputEventsByTime());
+		readonly SortedList<float, InputEvent> m_List = new SortedList<float, InputEvent>(new SortInputEventsByTime());
 
 		#endregion
 
@@ -51,6 +24,35 @@ namespace UnityEngine.InputNew
 				// Avoid duplicate keys in sorted list by always treating equality as greater-than.
 				return 1;
 			}
+		}
+
+		#endregion
+
+		#region Public Methods
+
+		public void Queue(InputEvent inputEvent)
+		{
+			m_List.Add(inputEvent.time, inputEvent);
+		}
+
+		public bool Dequeue(float targetTime, out InputEvent inputEvent)
+		{
+			if (m_List.Count == 0)
+			{
+				inputEvent = null;
+				return false;
+			}
+
+			var nextEvent = m_List.Values[0];
+			if (nextEvent.time > targetTime)
+			{
+				inputEvent = null;
+				return false;
+			}
+
+			m_List.RemoveAt(0);
+			inputEvent = nextEvent;
+			return true;
 		}
 
 		#endregion

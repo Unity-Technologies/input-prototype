@@ -1,20 +1,28 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	public class ControlMapEntry
 		: ScriptableObject
 	{
+		#region Fields
+
+		[SerializeField]
+		InputControlData m_ControlData;
+
+		#endregion
+
 		#region Public Properties
 
 		public InputControlData controlData
 		{
-			get { return _controlData; }
+			get { return m_ControlData; }
 			set
 			{
-				_controlData = value;
-				name = _controlData.name;
+				m_ControlData = value;
+				name = m_ControlData.name;
 			}
 		}
 
@@ -28,13 +36,6 @@ namespace UnityEngine.InputNew
 		{
 			return string.Format("({0}, bindings:{1})", controlData.name, bindings.Count);
 		}
-
-		#endregion
-
-		#region Fields
-
-		[SerializeField]
-		InputControlData _controlData;
 
 		#endregion
 	}

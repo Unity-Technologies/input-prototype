@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
 	/// <summary>
-	/// A device that can point at and click on things.
+	///     A device that can point at and click on things.
 	/// </summary>
 	public abstract class Pointer
 		: InputDevice
@@ -57,22 +59,22 @@ namespace UnityEngine.InputNew
 		{
 			var controls = new List<InputControlData>();
 
-			controls.Add(new InputControlData
+			controls.Add(item: new InputControlData
 			{
 				name = "Position"
 				, controlType = InputControlType.Vector3
-				, componentControlIndices = new int[3] { (int)PointerControl.PositionX, (int)PointerControl.PositionY, (int)PointerControl.PositionZ }
+				, componentControlIndices = new[] { (int)PointerControl.PositionX, (int)PointerControl.PositionY, (int)PointerControl.PositionZ }
 			});
 
 			controls.Add(new InputControlData { name = "PositionX", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "PositionY", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "PositionZ", controlType = InputControlType.AbsoluteAxis });
 
-			controls.Add(new InputControlData
+			controls.Add(item: new InputControlData
 			{
 				name = "Delta"
 				, controlType = InputControlType.Vector3
-				, componentControlIndices = new int[3] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
+				, componentControlIndices = new[] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
 			});
 
 			controls.Add(new InputControlData { name = "DeltaX", controlType = InputControlType.RelativeAxis });

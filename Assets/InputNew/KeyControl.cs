@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityEngine.InputNew
 {
 	public enum KeyControl
@@ -55,6 +59,6 @@ namespace UnityEngine.InputNew
 		Space,
 		Backspace,
 		Tab,
-		Return,
+		Return
 	}
 }

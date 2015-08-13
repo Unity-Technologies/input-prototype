@@ -83,10 +83,10 @@ public static class CreateDemoAssets
 		var entries = new List< ControlMapEntry >();
 		entries.Add( CreateControlButtonAxis( "MoveX", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyControl.A, (int)KeyControl.D ));
 		entries.Add( CreateControlButtonAxis( "MoveY", InputControlType.RelativeAxis, typeof( Keyboard ), (int)KeyControl.S, (int)KeyControl.W ));
-		entries.Add( CreateControlComposite( "Move", InputControlType.Vector2, new int[] { 0, 1 } ));
+		entries.Add( CreateControlComposite( "Move", InputControlType.Vector2, new[] { 0, 1 } ));
 		entries.Add( CreateControl( "LookX", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionX ));
 		entries.Add( CreateControl( "LookY", InputControlType.RelativeAxis, typeof( Pointer ), (int)PointerControl.PositionY ));
-		entries.Add( CreateControlComposite( "Look", InputControlType.Vector2, new int[] { 3, 4 } ));
+		entries.Add( CreateControlComposite( "Look", InputControlType.Vector2, new[] { 3, 4 } ));
 		entries.Add( CreateControl( "Fire", InputControlType.Button, typeof( Pointer ), (int)PointerControl.LeftButton ));
 	
 		controlMap.entries = entries;
