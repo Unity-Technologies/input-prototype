@@ -25,13 +25,17 @@ namespace UnityEngine.InputNew
 
 		public bool button
 		{
-			get
-			{
-				var currentValue = m_State.GetCurrentValue(m_Index);
-				if (currentValue > 0.001f)
-					return true;
-				return false;
-			}
+			get { return m_State.GetCurrentValue(m_Index) > k_buttonThreshold; }
+		}
+
+		public bool buttonDown
+		{
+			get { return button && (m_State.GetPreviousValue(m_Index) <= k_buttonThreshold); }
+		}
+
+		public bool buttonUp
+		{
+			get { return !button && (m_State.GetPreviousValue(m_Index) > k_buttonThreshold); }
 		}
 
 		public float value
@@ -77,6 +81,7 @@ namespace UnityEngine.InputNew
 
 		readonly int m_Index;
 		readonly InputState m_State;
+		const float k_buttonThreshold = 0.001f;
 
 		#endregion
 	}
