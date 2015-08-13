@@ -15,23 +15,23 @@ namespace UnityEngine.InputNew
 			: base(deviceName, controls) { }
 
 		#endregion
-
+		
 		public static InputDevice CreateDefault()
 		{
 			var controls = Enumerable.Repeat(new InputControlData(), EnumHelpers.GetValueCount<GamepadControl>()).ToList();
 
 			// Compounds.
-			controls[(int)GamepadControl.LeftThumbstick] = new InputControlData
+			controls[(int)GamepadControl.LeftStick] = new InputControlData
 			{
 				name = "LeftThumbstick"
 				, controlType = InputControlType.Vector2
-				, componentControlIndices = new int[2] { (int)GamepadControl.LeftThumbstickX, (int)GamepadControl.LeftThumbstickY }
+				, componentControlIndices = new int[2] { (int)GamepadControl.LeftStickX, (int)GamepadControl.LeftStickY }
 			};
-			controls[(int)GamepadControl.RightThumbstick] = new InputControlData
+			controls[(int)GamepadControl.RightStick] = new InputControlData
 			{
 				name = "RightThumbstick"
 				, controlType = InputControlType.Vector2
-				, componentControlIndices = new int[2] { (int)GamepadControl.RightThumbstickX, (int)GamepadControl.RightThumbstickY }
+				, componentControlIndices = new int[2] { (int)GamepadControl.RightStickX, (int)GamepadControl.RightStickY }
 			};
 			////TODO: dpad (more complicated as the source is buttons which need to be translated into a vector)
 
@@ -42,22 +42,22 @@ namespace UnityEngine.InputNew
 			controls[(int)GamepadControl.ButtonY] = new InputControlData { name = "Y", controlType = InputControlType.Button };
 			controls[(int)GamepadControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
 			controls[(int)GamepadControl.Back] = new InputControlData { name = "Back", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.LeftThumbstickPress] = new InputControlData { name = "LeftThumbstickPress", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.RightThumbstickPress] = new InputControlData { name = "RightThumbstickPress", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.DpadUp] = new InputControlData { name = "DpadUp", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.DpadDown] = new InputControlData { name = "DpadDown", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.DpadLeft] = new InputControlData { name = "DpadLeft", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.DpadRight] = new InputControlData { name = "DpadRight", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.LeftShoulder] = new InputControlData { name = "LeftShoulder", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.RightShoulder] = new InputControlData { name = "RightShoulder", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.LeftStickButton] = new InputControlData { name = "Left Stick Button", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.RightStickButton] = new InputControlData { name = "Right Stick Button", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.DPadUp] = new InputControlData { name = "DPad Up", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.DPadDown] = new InputControlData { name = "DPad Down", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.DPadLeft] = new InputControlData { name = "DPad Left", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.DPadRight] = new InputControlData { name = "DPad Right", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.LeftBumper] = new InputControlData { name = "Left Bumper", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.RightBumper] = new InputControlData { name = "Right Bumper", controlType = InputControlType.Button };
 
 			// Axes.
-			controls[(int)GamepadControl.LeftThumbstickX] = new InputControlData { name = "LeftThumbstickX", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)GamepadControl.LeftThumbstickY] = new InputControlData { name = "LeftThumbstickY", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)GamepadControl.RightThumbstickX] = new InputControlData { name = "RightThumbstickX", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)GamepadControl.RightThumbstickY] = new InputControlData { name = "RightThumbstickY", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)GamepadControl.LeftTrigger] = new InputControlData { name = "LeftTrigger", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)GamepadControl.RightTrigger] = new InputControlData { name = "RightTrigger", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.LeftStickX] = new InputControlData { name = "Left Stick X", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.LeftStickY] = new InputControlData { name = "Left Stick Y", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.RightStickX] = new InputControlData { name = "Right Stick X", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.RightStickY] = new InputControlData { name = "Right Stick Y", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.LeftTrigger] = new InputControlData { name = "Left Trigger", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)GamepadControl.RightTrigger] = new InputControlData { name = "Right Trigger", controlType = InputControlType.AbsoluteAxis };
 
 			return new Gamepad("Generic Gamepad", controls);
 		}

@@ -13,20 +13,19 @@ public class CharacterInputController
 	Rigidbody m_Rigid;
 	Vector2 m_Rotation = Vector2.zero;
 	float m_TimeOfLastShot;
+
 	public ControlMap controlMap;
-	public ControlMapEntry fireControl;
-	public Transform head;
-	public ControlMapEntry lookControlX;
-	public ControlMapEntry lookControlY;
 
 	[Space(10)]
 	public ControlMapEntry moveControlX;
-
 	public ControlMapEntry moveControlY;
+	public ControlMapEntry lookControlX;
+	public ControlMapEntry lookControlY;
+	public ControlMapEntry fireControl;
 
 	[Space(10)]
+	public Transform head;
 	public float moveSpeed = 5;
-
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
 

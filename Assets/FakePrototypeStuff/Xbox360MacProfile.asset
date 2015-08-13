@@ -1,0 +1,713 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8ff02a7574002c48a857d3506499175, type: 3}
+  m_Name: Xbox360MacProfile
+  m_EditorClassIdentifier: 
+  supportedPlatforms:
+  - OS X
+  deviceNames:
+  - Generic Gamepad
+  deviceRegexes: []
+  lastResortDeviceRegex: 
+  mappings:
+  - displayIcon: {fileID: 0}
+    displayName: Left Stick X
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Left Stick Y
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 1
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Right Stick X
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 3
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Right Stick Y
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 4
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Left Trigger
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 14
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Right Trigger
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 15
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: DPad Up
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 8
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: DPad Down
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 9
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: DPad Left
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 6
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: DPad Right
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 7
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Start
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 22
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Back
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 21
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Left Stick Button
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 5
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Right Stick Button
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 2
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Left Bumper
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 16
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Right Bumper
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 17
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: System
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 21
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: A
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 10
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: B
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 11
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: X
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 12
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: Y
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 13
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayIcon: {fileID: 0}
+    displayName: 
+    fromRange:
+      max: 0
+      min: 0
+    targetIndex: 0
+    toRange:
+      max: 0
+      min: 0
