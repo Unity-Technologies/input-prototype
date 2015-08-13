@@ -10,3 +10,4 @@ obj
 *.userprefs
 Assets/UnityVS
 Assets/UnityVS.meta
+ProjectSettings/ProjectVersion.txt
