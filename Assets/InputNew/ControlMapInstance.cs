@@ -63,8 +63,7 @@ namespace UnityEngine.InputNew
 				var device = (InputDevice)deviceState.controlProvider;
 
 				// Skip state if event is not meant for device associated with it.
-				var foundDevice = InputSystem.LookupDevice(inputEvent.deviceType, inputEvent.deviceIndex);
-				if (foundDevice != device)
+				if (device != inputEvent.device)
 					continue;
 
 				// Give device a stab at converting the event into state.
@@ -121,8 +120,7 @@ namespace UnityEngine.InputNew
 
 		void BeginNewFrameEvent ()
 		{
-			foreach (var deviceState in m_DeviceStates)
-				deviceState.BeginNewFrame ();
+			state.BeginNewFrame ();
 		}
 
 		#region Public Properties
