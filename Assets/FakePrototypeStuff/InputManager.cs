@@ -12,4 +12,9 @@ public class InputManager
 	{
 		InputSystem.Initialize(profiles);
 	}
+
+	public void Update()
+	{
+		InputSystem.BeginNewFrame ();
+	}
 }
