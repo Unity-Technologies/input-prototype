@@ -96,12 +96,12 @@ namespace UnityEngine.InputNew
 
 		public Vector3 position
 		{
-			get { return state[(int)PointerControl.Position].vector3Value; }
+			get { return state[(int)PointerControl.Position].vector3; }
 		}
 
 		public float pressure
 		{
-			get { return state[(int)PointerControl.Pressure].floatValue; }
+			get { return state[(int)PointerControl.Pressure].value; }
 		}
 
 		#endregion

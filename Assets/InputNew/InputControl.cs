@@ -23,7 +23,7 @@ namespace UnityEngine.InputNew
 			get { return m_Index; }
 		}
 
-		public bool boolValue
+		public bool button
 		{
 			get
 			{
@@ -34,12 +34,25 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public float floatValue
+		public float value
 		{
 			get { return m_State.GetCurrentValue(m_Index); }
 		}
 
-		public Vector3 vector3Value
+		public Vector2 vector2
+		{
+			get
+			{
+				var controlData = m_State.controlProvider.controls[m_Index];
+				////TODO: typecheck control type; convert if necessary
+				return new Vector2(
+					m_State.GetCurrentValue(controlData.componentControlIndices[0])
+					, m_State.GetCurrentValue(controlData.componentControlIndices[1])
+					);
+			}
+		}
+
+		public Vector3 vector3
 		{
 			get
 			{

@@ -41,15 +41,15 @@ public class CharacterInputController
 		// Move
 		if (moveControlX)
 		{
-			var moveX = m_ControlMapInstance[moveControlX].floatValue;
-			var moveY = m_ControlMapInstance[moveControlY].floatValue;
+			var moveX = m_ControlMapInstance[moveControlX].value;
+			var moveY = m_ControlMapInstance[moveControlY].value;
 
 			m_Rigid.velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
 		}
 
 		// Look
-		var lookX = m_ControlMapInstance[lookControlX].floatValue;
-		var lookY = m_ControlMapInstance[lookControlY].floatValue;
+		var lookX = m_ControlMapInstance[lookControlX].value;
+		var lookY = m_ControlMapInstance[lookControlY].value;
 
 		// HACK UNTIL MOUSE IS RELATIVE
 		lookX = lookX - m_LastLookX;
@@ -64,7 +64,7 @@ public class CharacterInputController
 		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
 
 		// Fire
-		var fire = m_ControlMapInstance[fireControl].boolValue;
+		var fire = m_ControlMapInstance[fireControl].button;
 		if (fire)
 		{
 			var currentTime = Time.time;

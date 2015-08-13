@@ -114,7 +114,7 @@ namespace UnityEngine.InputNew
 		float GetSourceValue(InputControlDescriptor source)
 		{
 			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
-			return deviceState[source.controlIndex].floatValue;
+			return deviceState[source.controlIndex].value;
 		}
 
 		#endregion
