@@ -9,19 +9,12 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public ControlMapInstance
-			(
-			ControlMap controlMap
-			, int controlSchemeIndex
-			, List<InputControlData> controls
-			, List<InputState> deviceStates
-			)
-			: base(controls)
+		public ControlMapInstance(ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
-			this.controlSchemeIndex = controlSchemeIndex;
-			m_DeviceStates = deviceStates;
-			m_ControlMap = controlMap;
+			Setup(controlMap, controlSchemeIndex, deviceStates);
 		}
+
+		protected ControlMapInstance () {}
 
 		#endregion
 
@@ -41,6 +34,26 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
+		protected void Setup (ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		{
+			this.controlSchemeIndex = controlSchemeIndex;
+			m_DeviceStates = deviceStates;
+			m_ControlMap = controlMap;
+			
+			// Create list of controls from InputMap.
+			var controls = new List<InputControlData>();
+			foreach (var entry in controlMap.entries)
+			{
+				var control = new InputControlData
+				{
+					name = entry.controlData.name,
+					controlType = entry.controlData.controlType
+				};
+				controls.Add(control);
+			}
+			SetControls(controls);
+		}
+		
 		public void Activate()
 		{
 			var treeNode = new InputEventTree
@@ -115,6 +128,19 @@ namespace UnityEngine.InputNew
 			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
 			return deviceState[source.controlIndex].value;
 		}
+		
+		public List<InputDevice> GetUsedDevices ()
+		{
+			List<InputDevice> list = new List<InputDevice>();
+			for (int i = 0; i < m_DeviceStates.Count; i++)
+				list.Add(m_DeviceStates[i].controlProvider as InputDevice);
+			return list;
+		}
+		
+		public List<InputState> GetDeviceStates ()
+		{
+			return m_DeviceStates;
+		}
 
 		#endregion
 
@@ -136,8 +162,8 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		readonly ControlMap m_ControlMap;
-		readonly List<InputState> m_DeviceStates;
+		protected ControlMap m_ControlMap;
+		protected List<InputState> m_DeviceStates;
 
 		#endregion
 	}

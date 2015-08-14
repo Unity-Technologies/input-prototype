@@ -14,6 +14,8 @@ namespace UnityEngine.InputNew
 			m_Controls = controls;
 			m_State = new InputState(this);
 		}
+		
+		protected InputControlProvider() {}
 
 		#endregion
 
@@ -44,10 +46,16 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		protected void SetControls(List<InputControlData> controls)
+		{
+			m_Controls = controls;
+			m_State = new InputState(this);
+		}
+
 		#region Fields
 
-		readonly InputState m_State;
-		readonly List<InputControlData> m_Controls;
+		private InputState m_State;
+		private List<InputControlData> m_Controls;
 
 		#endregion
 	}

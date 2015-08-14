@@ -29,7 +29,7 @@ public class CharacterInputController
 
 	public void Awake()
 	{
-		m_ControlMapInstance = InputSystem.BindInputs(controlMap).First();
+		m_ControlMapInstance = new ControlMapCombinedInstance(controlMap);
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
 	}

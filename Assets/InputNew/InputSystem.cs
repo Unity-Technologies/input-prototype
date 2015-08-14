@@ -118,18 +118,6 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
 
-			// Create list of controls from InputMap.
-			var controls = new List<InputControlData>();
-			foreach (var entry in controlMap.entries)
-			{
-				var control = new InputControlData
-				{
-					name = entry.controlData.name
-					, controlType = entry.controlData.controlType
-				};
-				controls.Add(control);
-			}
-
 			if (localMultiplayer)
 			{
 				// Gather available devices for each type of device.
@@ -157,7 +145,7 @@ namespace UnityEngine.InputNew
 						deviceStates.Add(state);
 					}
 
-					yield return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
+					yield return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
 				}
 			}
 			else
@@ -177,7 +165,7 @@ namespace UnityEngine.InputNew
 					deviceStates.Add(state);
 				}
 
-				yield return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
+				yield return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
 			}
 		}
 
@@ -191,20 +179,8 @@ namespace UnityEngine.InputNew
 				deviceStates.Add(new InputState(device));
 			}
 
-			// Create list of controls from InputMap.
-			var controls = new List<InputControlData>();
-			foreach (var entry in controlMap.entries)
-			{
-				var control = new InputControlData
-				{
-					name = entry.controlData.name
-					, controlType = entry.controlData.controlType
-				};
-				controls.Add(control);
-			}
-
 			// Create map instance.
-			return new ControlMapInstance(controlMap, controlSchemeIndex, controls, deviceStates);
+			return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
 		}
 
 		#endregion
@@ -265,6 +241,11 @@ namespace UnityEngine.InputNew
 		public static IEnumerable<InputDevice> devices
 		{
 			get { return s_Devices.devices; }
+		}
+		
+		public static List<InputDevice> leastToMostRecentlyUsedDevices
+		{
+			get { return s_Devices.leastToMostRecentlyUsedDevices; }
 		}
 
 		#endregion

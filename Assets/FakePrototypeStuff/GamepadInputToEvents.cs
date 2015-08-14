@@ -19,6 +19,7 @@ public class GamepadInputToEvents
 	// Fake gamepad has 10 axes (index 0 - 9) and 20 buttons (index 10 - 29).
 	const int k_AxisCount = 10;
 	const int k_ButtonCount = 20;
+	private float[] m_LastValues = new float[k_AxisCount + k_ButtonCount];
 	
 	private void SendAxisEvents()
 	{
@@ -46,6 +47,10 @@ public class GamepadInputToEvents
 
 	private void SendEvent(int deviceIndex, int controlIndex, float value)
 	{
+		if (value == m_LastValues[controlIndex])
+			return;
+		m_LastValues[controlIndex] = value;
+		
 		var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
 		inputEvent.deviceType = typeof(Gamepad);
 		inputEvent.deviceIndex = deviceIndex;

@@ -97,27 +97,16 @@ namespace UnityEngine.InputNew
 		{
 			// Look up device.
 			var device = inputEvent.device;
-			if (device == null)
-				return false;
 
-			// Ignore event on device if device is disconnected.
-			if (!device.connected)
+			// Ignore event on device if device is absent or disconnected.
+			if (device == null || !device.connected)
 				return false;
 
 			// Update most-recently-used status.
-			for (var currentType = inputEvent.deviceType; currentType != typeof(InputDevice); currentType = currentType.BaseType)
-			{
-				var mostRecentlyUsedDeviceOfType = GetMostRecentlyUsedDevice(currentType);
-				if (mostRecentlyUsedDeviceOfType != device)
-				{
-					m_LeastToMostRecentlyUsedDevices.Remove(device);
-					m_LeastToMostRecentlyUsedDevices.Add(device);
+			m_LeastToMostRecentlyUsedDevices.Remove(device);
+			m_LeastToMostRecentlyUsedDevices.Add(device);
 
-					//fire event
-
-					break;
-				}
-			}
+			//fire event
 
 			// Let device process event.
 			return device.ProcessEvent(inputEvent);
@@ -185,6 +174,7 @@ namespace UnityEngine.InputNew
 			}
 
 			list.Add(device);
+			m_LeastToMostRecentlyUsedDevices.Remove(device);
 			m_LeastToMostRecentlyUsedDevices.Add(device);
 
 			var baseType = deviceType.BaseType;
@@ -245,6 +235,11 @@ namespace UnityEngine.InputNew
 					}
 				}
 			}
+		}
+		
+		public List<InputDevice> leastToMostRecentlyUsedDevices
+		{
+			get { return m_LeastToMostRecentlyUsedDevices; }
 		}
 
 		#endregion
