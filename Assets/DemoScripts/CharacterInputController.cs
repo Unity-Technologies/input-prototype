@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputNew;
+using Random = UnityEngine.Random;
 
 public class CharacterInputController
 	: MonoBehaviour
@@ -79,5 +80,6 @@ public class CharacterInputController
 		newProjectile.transform.position = head.position + head.forward * 0.6f;
 		newProjectile.transform.rotation = head.rotation;
 		newProjectile.GetComponent<Rigidbody>().AddForce(head.forward * 20f, ForceMode.Impulse);
+		newProjectile.GetComponent<MeshRenderer>().material.color = new Color( Random.value, Random.value, Random.value, 1.0f );
 	}
 }
