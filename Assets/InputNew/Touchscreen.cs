@@ -116,7 +116,8 @@ namespace UnityEngine.InputNew
 		private static TouchControl GetControlForFinger(int fingerId, TouchControl control)
 		{
 			return (TouchControl)((int)control - (int)TouchControl.Touch0Position
-				+ (fingerId * TouchControlConstants.ControlsPerTouch));
+				+ (fingerId * TouchControlConstants.ControlsPerTouch)
+				+ TouchControl.Touch0Position);
 		}
 
 		private int GetTouchIndexForFinger(int fingerId)
