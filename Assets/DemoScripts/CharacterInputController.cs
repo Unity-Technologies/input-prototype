@@ -38,17 +38,11 @@ public class CharacterInputController
 	public void Update()
 	{
 		// Move
-		if (moveControlX)
-		{
-			var moveX = m_ControlMapInstance[moveControlX].value;
-			var moveY = m_ControlMapInstance[moveControlY].value;
+		var moveX = m_ControlMapInstance[moveControlX].value;
+		var moveY = m_ControlMapInstance[moveControlY].value;
 
-			Vector3 velocity = m_Rigid.velocity;
-			float velocityY = velocity.y;
-			velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
-			velocity.y = velocityY;
-			m_Rigid.velocity = velocity;
-		}
+		Vector3 velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
+		m_Rigid.velocity = new Vector3 (velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
 		var lookX = m_ControlMapInstance[lookControlX].value;
