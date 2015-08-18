@@ -124,7 +124,7 @@ public static class CreateDemoAssets
 		
 		profile.AddDeviceName("Generic Gamepad");
 		profile.AddSupportedPlatform("OS X");
-		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >());
+		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >(), EnumHelpers.GetValueCount< GamepadControl >());
 		
 		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
 		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y");
@@ -139,10 +139,10 @@ public static class CreateDemoAssets
 		profile.SetMapping(17, GamepadControl.DPadLeft, "DPad Left");
 		profile.SetMapping(18, GamepadControl.DPadRight, "DPad Right");
 		
-		profile.SetMapping(26, GamepadControl.ButtonA, "A");
-		profile.SetMapping(27, GamepadControl.ButtonB, "B");
-		profile.SetMapping(28, GamepadControl.ButtonX, "X");
-		profile.SetMapping(29, GamepadControl.ButtonY, "Y");
+		profile.SetMapping(26, GamepadControl.Action1, "A");
+		profile.SetMapping(27, GamepadControl.Action2, "B");
+		profile.SetMapping(28, GamepadControl.Action3, "X");
+		profile.SetMapping(29, GamepadControl.Action4, "Y");
 		
 		profile.SetMapping(04, GamepadControl.LeftTrigger, "Left Trigger");
 		profile.SetMapping(05, GamepadControl.RightTrigger, "Right Trigger");

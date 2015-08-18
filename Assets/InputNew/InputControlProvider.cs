@@ -84,6 +84,13 @@ namespace UnityEngine.InputNew
 		{
 			names.Add(this[controlIndex].name);
 		}
+		
+		protected void SetControlNameOverride (int controlIndex, string nameOverride)
+		{
+			InputControlData data = m_Controls[controlIndex];
+			data.name = nameOverride;
+			m_Controls[controlIndex] = data;
+		}
 
 		public float lastEventTime { get; protected set; }
 

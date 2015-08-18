@@ -40,6 +40,19 @@ namespace UnityEngine.InputNew
 				profile.Remap(inputEvent);
 			return false;
 		}
+		
+		private void SetNameOverrides()
+		{
+			if (profile == null)
+				return;
+			
+			// Assign control override names
+			for (int i = 0; i < GetControlCount(); i++) {
+				string nameOverride = profile.GetControlNameOverride(i);
+				if (nameOverride != null)
+					SetControlNameOverride(i, nameOverride);
+			}
+		}
 
 		#endregion
 
@@ -47,10 +60,15 @@ namespace UnityEngine.InputNew
 
 		public bool connected { get; internal set; }
 
-		public InputDeviceProfile profile { get; set; }
+		public InputDeviceProfile profile
+		{
+			get { return m_Profile; } set { m_Profile = value; SetNameOverrides(); }
+		}
 
 		public string deviceName { get; private set; }
 
 		#endregion
+		
+		private InputDeviceProfile m_Profile;
 	}
 }

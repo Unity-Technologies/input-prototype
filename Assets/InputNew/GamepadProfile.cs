@@ -9,9 +9,9 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 
-		public void SetMapping(int sourceControlIndex, GamepadControl targetControlIndex, string displayName = null, Sprite displayIcon = null)
+		public void SetMapping(int sourceControlIndex, GamepadControl targetControlIndex, string displayName = null)
 		{
-			SetMapping(sourceControlIndex, (int)targetControlIndex, displayName, displayIcon);
+			SetMapping(sourceControlIndex, (int)targetControlIndex, displayName);
 		}
 
 		#endregion

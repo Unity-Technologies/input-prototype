@@ -10,6 +10,7 @@ namespace UnityEngine.InputNew
 		#region Public Properties
 
 		public JoystickControlMapping[] mappings;
+		public string[] nameOverrides;
 
 		#endregion
 
@@ -26,18 +27,26 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public void SetMappingsCount(int sourceControlCount)
+		public void SetMappingsCount(int sourceControlCount, int targetControlCount)
 		{
 			mappings = new JoystickControlMapping[sourceControlCount];
+			nameOverrides = new string[targetControlCount];
 		}
 
-		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName = null, Sprite displayIcon = null)
+		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName = null)
 		{
 			mappings[sourceControlIndex] = new JoystickControlMapping
 			{
 				targetIndex = targetControlIndex
-				, displayName = displayName
 			};
+			nameOverrides[targetControlIndex] = displayName;
+		}
+		
+		public override string GetControlNameOverride(int controlIndex)
+		{
+			if (controlIndex >= nameOverrides.Length)
+				return null;
+			return nameOverrides[controlIndex];
 		}
 
 		#endregion

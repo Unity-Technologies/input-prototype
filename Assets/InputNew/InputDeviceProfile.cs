@@ -26,6 +26,11 @@ namespace UnityEngine.InputNew
 		{
 			ArrayHelpers.AppendUnique(ref deviceRegexes, regex);
 		}
+		
+		public virtual string GetControlNameOverride (int controlIndex)
+		{
+			return null;
+		}
 
 		#endregion
 

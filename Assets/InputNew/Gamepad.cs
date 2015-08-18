@@ -36,10 +36,10 @@ namespace UnityEngine.InputNew
 			////TODO: dpad (more complicated as the source is buttons which need to be translated into a vector)
 
 			// Buttons.
-			controls[(int)GamepadControl.ButtonA] = new InputControlData { name = "A", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.ButtonB] = new InputControlData { name = "B", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.ButtonX] = new InputControlData { name = "X", controlType = InputControlType.Button };
-			controls[(int)GamepadControl.ButtonY] = new InputControlData { name = "Y", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.Action1] = new InputControlData { name = "Action 1", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.Action2] = new InputControlData { name = "Action 2", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.Action3] = new InputControlData { name = "Action 3", controlType = InputControlType.Button };
+			controls[(int)GamepadControl.Action4] = new InputControlData { name = "Action 4", controlType = InputControlType.Button };
 			controls[(int)GamepadControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
 			controls[(int)GamepadControl.Back] = new InputControlData { name = "Back", controlType = InputControlType.Button };
 			controls[(int)GamepadControl.LeftStickButton] = new InputControlData { name = "Left Stick Button", controlType = InputControlType.Button };

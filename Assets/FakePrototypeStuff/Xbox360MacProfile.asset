@@ -18,696 +18,697 @@ MonoBehaviour:
   deviceRegexes: []
   lastResortDeviceRegex: 
   mappings:
-  - displayIcon: {fileID: 0}
-    displayName: Left Stick X
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Left Stick Y
-    fromRange:
-      max: 0
-      min: 0
+  - displayName: 
     targetIndex: 1
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Right Stick X
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 3
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Right Stick Y
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 4
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Left Trigger
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 14
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Right Trigger
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 15
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 0
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: DPad Up
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 8
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: DPad Down
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 9
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: DPad Left
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 6
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: DPad Right
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 7
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Start
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 22
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Back
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 21
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Left Stick Button
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 5
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Right Stick Button
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 2
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Left Bumper
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 16
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Right Bumper
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 17
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: System
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 21
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: A
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 10
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: B
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 11
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: X
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 12
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: Y
     fromRange:
       max: 0
       min: 0
+    toRange:
+      max: 0
+      min: 0
+  - displayName: 
     targetIndex: 13
-    toRange:
-      max: 0
-      min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
-  - displayIcon: {fileID: 0}
-    displayName: 
+  - displayName: 
+    targetIndex: 0
     fromRange:
       max: 0
       min: 0
-    targetIndex: 0
     toRange:
       max: 0
       min: 0
+  - displayName: 
+    targetIndex: 0
+    fromRange:
+      max: 0
+      min: 0
+    toRange:
+      max: 0
+      min: 0
+  nameOverrides:
+  - Left Stick X
+  - Left Stick Y
+  - Right Stick Button
+  - Right Stick X
+  - Right Stick Y
+  - Left Stick Button
+  - DPad Left
+  - DPad Right
+  - DPad Up
+  - DPad Down
+  - A
+  - B
+  - X
+  - Y
+  - Left Trigger
+  - Right Trigger
+  - Left Bumper
+  - Right Bumper
+  - 
+  - 
+  - 
+  - System
+  - Start
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 

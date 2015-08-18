@@ -17,10 +17,10 @@ namespace UnityEngine.InputNew
 		DPadUp,
 		DPadDown,
 
-		ButtonA,
-		ButtonB,
-		ButtonX,
-		ButtonY,
+		Action1,
+		Action2,
+		Action3,
+		Action4,
 
 		LeftTrigger,
 		RightTrigger,
