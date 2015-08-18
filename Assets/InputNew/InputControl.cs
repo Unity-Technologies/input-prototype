@@ -47,7 +47,7 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				var controlData = m_State.controlProvider.controls[m_Index];
+				var controlData = m_State.controlProvider.GetControlData(m_Index);
 				////TODO: typecheck control type; convert if necessary
 				return new Vector2(
 					m_State.GetCurrentValue(controlData.componentControlIndices[0])
@@ -60,7 +60,7 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				var controlData = m_State.controlProvider.controls[m_Index];
+				var controlData = m_State.controlProvider.GetControlData(m_Index);
 				////TODO: typecheck control type; convert if necessary
 				return new Vector3(
 					m_State.GetCurrentValue(controlData.componentControlIndices[0])
@@ -73,6 +73,21 @@ namespace UnityEngine.InputNew
 		public bool isEnabled
 		{
 			get { return m_State.IsControlEnabled(m_Index); }
+		}
+
+		private InputControlData data
+		{
+			get { return m_State.controlProvider.GetControlData(index); }
+		}
+
+		public string name
+		{
+			get { return data.name; }
+		}
+
+		public void GetPrimarySourceNames(List<string> names)
+		{
+			m_State.controlProvider.GetPrimarySourceNames(index, names);
 		}
 
 		#endregion

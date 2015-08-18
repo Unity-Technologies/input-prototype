@@ -37,7 +37,6 @@ namespace UnityEngine.InputNew
 			{
 				targetIndex = targetControlIndex
 				, displayName = displayName
-				, displayIcon = displayIcon
 			};
 		}
 

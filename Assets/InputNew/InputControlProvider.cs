@@ -5,7 +5,6 @@ using UnityEngine;
 namespace UnityEngine.InputNew
 {
 	public class InputControlProvider
-		: IInputControlProvider
 	{
 		#region Constructors
 
@@ -26,6 +25,22 @@ namespace UnityEngine.InputNew
 			lastEventTime = inputEvent.time;
 			return false;
 		}
+		
+		public InputControl anyButton
+		{
+			get
+			{
+				int controlCount = GetControlCount();
+				for (int i = 0; i < controlCount; i++)
+				{
+					var control = this[i];
+					if (control.button)
+						return control;
+				}
+				
+				return this[0];
+			}
+		}
 
 		#endregion
 
@@ -35,11 +50,39 @@ namespace UnityEngine.InputNew
 		{
 			get { return m_State; }
 		}
-
-		////REVIEW: this view should be immutable
-		public IList<InputControlData> controls
+		
+		public InputControlData GetControlData(int index)
 		{
-			get { return m_Controls; }
+			return m_Controls[index];
+		}
+		
+		public int GetControlCount()
+		{
+			return m_Controls.Count;
+		}
+		
+		public InputControl this[int index]
+		{
+			get { return new InputControl(index, m_State); }
+		}
+		
+		public InputControl this[string controlName]
+		{
+			get
+			{
+				for (var i = 0; i < m_Controls.Count; ++ i)
+				{
+					if (m_Controls[i].name == controlName)
+						return this[i];
+				}
+				
+				throw new KeyNotFoundException(controlName);
+			}
+		}
+
+		public virtual void GetPrimarySourceNames(int controlIndex, List<string> names)
+		{
+			names.Add(this[controlIndex].name);
 		}
 
 		public float lastEventTime { get; protected set; }

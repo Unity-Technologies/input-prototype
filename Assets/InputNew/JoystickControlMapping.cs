@@ -8,10 +8,9 @@ namespace UnityEngine.InputNew
 	[Serializable]
 	public struct JoystickControlMapping
 	{
-		public Sprite displayIcon;
 		public string displayName;
-		public Range fromRange;
 		public int targetIndex;
+		public Range fromRange;
 		public Range toRange;
 	}
 }

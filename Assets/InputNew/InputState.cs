@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 		{
 			this.controlProvider = controlProvider;
 
-			var controlCount = controlProvider.controls.Count;
+			var controlCount = controlProvider.GetControlCount();
 			m_CurrentStates = new float[controlCount];
 			m_PreviousStates = new float[controlCount];
 
@@ -103,21 +103,6 @@ namespace UnityEngine.InputNew
 		public InputControl this[int index]
 		{
 			get { return new InputControl(index, this); }
-		}
-
-		public InputControl this[string controlName]
-		{
-			get
-			{
-				var controls = controlProvider.controls;
-				for (var i = 0; i < controls.Count; ++ i)
-				{
-					if (controls[i].name == controlName)
-						return this[i];
-				}
-
-				throw new KeyNotFoundException(controlName);
-			}
 		}
 
 		#endregion

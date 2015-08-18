@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 				if ( m_CachedDeviceType == null )
 					m_CachedDeviceType = Type.GetType( m_DeviceTypeName );
 
-				return m_CachedDeviceType;;
+				return m_CachedDeviceType;
 			}
 			set
 			{

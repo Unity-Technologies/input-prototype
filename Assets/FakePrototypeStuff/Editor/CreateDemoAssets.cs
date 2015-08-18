@@ -51,7 +51,8 @@ public static class CreateDemoAssets
 						controlIndex = controlIndexPositive
 					}
 				)
-			}
+			},
+			primaryIsButtonAxis = true
 		};
 	}
 	

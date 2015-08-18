@@ -129,6 +129,32 @@ namespace UnityEngine.InputNew
 			return deviceState[source.controlIndex].value;
 		}
 		
+		public override void GetPrimarySourceNames(int controlIndex, List<string> names)
+		{
+			var entry = m_ControlMap.entries[controlIndex];
+			if (entry.bindings == null || entry.bindings.Count == 0)
+				return;
+			
+			var binding = entry.bindings[controlSchemeIndex];
+			
+			names.Clear();
+			if (binding.primaryIsButtonAxis && binding.buttonAxisSources != null && binding.buttonAxisSources.Count > 0)
+			{
+				names.Add(GetSourceName(binding.buttonAxisSources[0].negative));
+				names.Add(GetSourceName(binding.buttonAxisSources[0].positive));
+			}
+			else if (binding.sources != null && binding.sources.Count > 0)
+			{
+				names.Add(GetSourceName(binding.sources[0]));
+			}
+		}
+		
+		private string GetSourceName(InputControlDescriptor source)
+		{
+			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
+			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
+		}
+		
 		public List<InputDevice> GetUsedDevices ()
 		{
 			List<InputDevice> list = new List<InputDevice>();

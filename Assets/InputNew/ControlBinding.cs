@@ -7,11 +7,12 @@ namespace UnityEngine.InputNew
 	[Serializable]
 	public class ControlBinding
 	{
-		public List<ButtonAxisSource> buttonAxisSources;
+		public List<InputControlDescriptor> sources;
 		public float deadZone = 0.3f;
+		public List<ButtonAxisSource> buttonAxisSources;
 		public float gravity = 1000;
 		public float sensitivity = 1000;
 		public bool snap = true;
-		public List<InputControlDescriptor> sources;
+		public bool primaryIsButtonAxis = false;
 	}
 }

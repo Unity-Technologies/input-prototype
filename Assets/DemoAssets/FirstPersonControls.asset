@@ -38,7 +38,9 @@ MonoBehaviour:
     controlType: 1
     name: MoveY
   bindings:
-  - buttonAxisSources:
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources:
     - negative:
         controlIndex: 18
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
@@ -47,20 +49,20 @@ MonoBehaviour:
         controlIndex: 22
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-    deadZone: .300000012
     gravity: 1000
     sensitivity: 1000
     snap: 1
-    sources: []
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
+    primaryIsButtonAxis: 1
+  - sources:
     - controlIndex: 1
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11415238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,24 +79,26 @@ MonoBehaviour:
     controlType: 1
     name: LookY
   bindings:
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
+  - sources:
     - controlIndex: 6
       m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - buttonAxisSources: []
     deadZone: .300000012
+    buttonAxisSources: []
     gravity: 1000
     sensitivity: 1000
     snap: 1
-    sources:
+    primaryIsButtonAxis: 0
+  - sources:
     - controlIndex: 4
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11427676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,24 +115,26 @@ MonoBehaviour:
     controlType: 0
     name: Fire
   bindings:
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
+  - sources:
     - controlIndex: 11
       m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - buttonAxisSources: []
     deadZone: .300000012
+    buttonAxisSources: []
     gravity: 1000
     sensitivity: 1000
     snap: 1
-    sources:
+    primaryIsButtonAxis: 0
+  - sources:
     - controlIndex: 15
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11435078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +183,9 @@ MonoBehaviour:
     controlType: 1
     name: MoveX
   bindings:
-  - buttonAxisSources:
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources:
     - negative:
         controlIndex: 0
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
@@ -186,20 +194,20 @@ MonoBehaviour:
         controlIndex: 3
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-    deadZone: .300000012
     gravity: 1000
     sensitivity: 1000
     snap: 1
-    sources: []
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
+    primaryIsButtonAxis: 1
+  - sources:
     - controlIndex: 0
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11488674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,21 +224,23 @@ MonoBehaviour:
     controlType: 1
     name: LookX
   bindings:
-  - buttonAxisSources: []
-    deadZone: .300000012
-    gravity: 1000
-    sensitivity: 1000
-    snap: 1
-    sources:
+  - sources:
     - controlIndex: 5
       m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - buttonAxisSources: []
     deadZone: .300000012
+    buttonAxisSources: []
     gravity: 1000
     sensitivity: 1000
     snap: 1
-    sources:
+    primaryIsButtonAxis: 0
+  - sources:
     - controlIndex: 3
       m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0

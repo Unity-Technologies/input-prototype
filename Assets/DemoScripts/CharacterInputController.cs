@@ -67,6 +67,25 @@ public class CharacterInputController
 			}
 		}
 	}
+	
+	public void OnGUI()
+	{
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[moveControlX]));
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[moveControlY]));
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlX]));
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlY]));
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[fireControl]));
+	}
+	
+	static List<string> s_Names = new List<string>();
+	private string GetControlHelp (InputControl control)
+	{
+		control.GetPrimarySourceNames(s_Names);
+		if (s_Names.Count == 2)
+			return string.Format("Use {0} and {1} to {2}!", s_Names[0], s_Names[1], control.name);
+		else
+			return string.Format("Use {0} to {1}!", s_Names[0], control.name);
+	}
 
 	void Fire()
 	{
