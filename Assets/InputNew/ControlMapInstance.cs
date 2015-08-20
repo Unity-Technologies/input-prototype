@@ -56,13 +56,23 @@ namespace UnityEngine.InputNew
 		
 		public void Activate()
 		{
-			var treeNode = new InputEventTree
+			if (m_TreeNode != null)
+				return;
+			m_TreeNode = new InputEventTree
 			{
 				name = "Map"
 				, processInput = ProcessEvent
 				, beginNewFrame = BeginNewFrameEvent
 			};
-			InputSystem.eventTree.children.Add(treeNode);
+			InputSystem.consumerStack.children.Add(m_TreeNode);
+		}
+		
+		public void Deactivate()
+		{
+			if (m_TreeNode == null)
+				return;
+			InputSystem.consumerStack.children.Remove(m_TreeNode);
+			m_TreeNode = null;
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)
@@ -190,6 +200,7 @@ namespace UnityEngine.InputNew
 
 		protected ControlMap m_ControlMap;
 		protected List<InputState> m_DeviceStates;
+		private InputEventTree m_TreeNode = null;
 
 		#endregion
 	}

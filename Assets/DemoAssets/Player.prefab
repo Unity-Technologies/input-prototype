@@ -319,15 +319,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlMap: {fileID: 11400000, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  moveControlX: {fileID: 11487912, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  moveControlY: {fileID: 11405628, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  lookControlX: {fileID: 11488674, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  lookControlY: {fileID: 11415238, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  fireControl: {fileID: 11427676, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  moveControlX: {fileID: 11432914, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  moveControlY: {fileID: 11467144, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lookControlX: {fileID: 11406148, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lookControlY: {fileID: 11412540, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  fireControl: {fileID: 11464394, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  menuControl: {fileID: 11403040, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
   head: {fileID: 484432}
   moveSpeed: 15
   projectile: {fileID: 171512, guid: 35bb1b2b246f2924c9e37e30f454c7ee, type: 2}
   timeBetweenShots: .100000001
+  sizer: {fileID: 0}
 --- !u!124 &12455782
 Behaviour:
   m_ObjectHideFlags: 1

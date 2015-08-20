@@ -10,6 +10,7 @@ namespace UnityEngine.InputNew
 		#region Fields
 
 		readonly List<IInputConsumer> m_Children = new List<IInputConsumer>();
+		public bool isStack { get; set; }
 
 		#endregion
 
@@ -33,10 +34,22 @@ namespace UnityEngine.InputNew
 					return true;
 			}
 
-			foreach (var child in consumer.children)
+			// Iterate in reverse order to get stack behavior.
+			if (consumer.isStack)
 			{
-				if (ProcessEventRecursive(child, inputEvent))
-					return true;
+				for (int i = consumer.children.Count - 1; i >= 0; i--)
+				{
+					if (ProcessEventRecursive(consumer.children[i], inputEvent))
+						return true;
+				}
+			}
+			else
+			{
+				for (int i = 0; i < consumer.children.Count; i++)
+				{
+					if (ProcessEventRecursive(consumer.children[i], inputEvent))
+						return true;
+				}
 			}
 
 			return false;

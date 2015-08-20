@@ -40,6 +40,13 @@ namespace UnityEngine.InputNew
 				, beginNewFrame = s_Devices.BeginNewFrameEvent
 			};
 			s_EventTree.children.Add(state);
+			
+			consumerStack = new InputEventTree
+			{
+				name = "Consumers"
+				, isStack = true
+			};
+			s_EventTree.children.Add(consumerStack);
 		}
 
 		public static void RegisterProfile(InputDeviceProfile profile)
@@ -217,6 +224,8 @@ namespace UnityEngine.InputNew
 		{
 			get { return s_EventTree; }
 		}
+
+		public static IInputConsumer consumerStack { get; set; }
 
 		public static Pointer pointer
 		{

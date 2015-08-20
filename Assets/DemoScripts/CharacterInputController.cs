@@ -21,12 +21,14 @@ public class CharacterInputController
 	public ControlMapEntry lookControlX;
 	public ControlMapEntry lookControlY;
 	public ControlMapEntry fireControl;
+	public ControlMapEntry menuControl;
 
 	[Space(10)]
 	public Transform head;
 	public float moveSpeed = 5;
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
+	public CubeSizer sizer;
 
 	public void Awake()
 	{
@@ -66,6 +68,9 @@ public class CharacterInputController
 				Fire();
 			}
 		}
+		
+		if (m_ControlMapInstance[menuControl].buttonDown)
+			sizer.ToggleMenu();
 	}
 	
 	public void OnGUI()
@@ -75,6 +80,7 @@ public class CharacterInputController
 		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlX]));
 		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlY]));
 		GUILayout.Label(GetControlHelp(m_ControlMapInstance[fireControl]));
+		GUILayout.Label(GetControlHelp(m_ControlMapInstance[menuControl]));
 	}
 	
 	static List<string> s_Names = new List<string>();
@@ -92,6 +98,8 @@ public class CharacterInputController
 		var newProjectile = Instantiate(projectile);
 		newProjectile.transform.position = head.position + head.forward * 0.6f;
 		newProjectile.transform.rotation = head.rotation;
+		newProjectile.transform.localScale *= sizer.size;
+		newProjectile.GetComponent<Rigidbody>().mass = Mathf.Pow(sizer.size, 3);
 		newProjectile.GetComponent<Rigidbody>().AddForce(head.forward * 20f, ForceMode.Impulse);
 		newProjectile.GetComponent<MeshRenderer>().material.color = new Color( Random.value, Random.value, Random.value, 1.0f );
 	}

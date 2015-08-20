@@ -102,6 +102,11 @@ public static class CreateDemoAssets
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger)
 		));
+		
+		entries.Add(CreateControl("Menu", InputControlType.Button,
+			CreateBinding(typeof(Keyboard), (int)KeyControl.Space),
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start)
+		));
 	
 		controlMap.entries = entries;
 		controlMap.schemes = new List< string > { "KeyboardMouse", "Gamepad" };
@@ -151,7 +156,7 @@ public static class CreateDemoAssets
 		
 		profile.SetMapping(19, GamepadControl.Start, "Start");
 		profile.SetMapping(20, GamepadControl.Back, "Back");
-		profile.SetMapping(25, GamepadControl.Back, "System");
+		profile.SetMapping(25, GamepadControl.System, "System");
 		
 		const string path = "Assets/FakePrototypeStuff/Xbox360MacProfile.asset";
 		AssetDatabase.CreateAsset(profile, path);

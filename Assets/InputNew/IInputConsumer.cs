@@ -8,6 +8,7 @@ namespace UnityEngine.InputNew
 	{
 		string name { get; }
 		IList<IInputConsumer> children { get; }
+		bool isStack { get; set; }
 		ProcessInputDelegate processInput { get; set; }
 		BeginNewFrameDelegate beginNewFrame { get; set; }
 	}
