@@ -32,7 +32,7 @@ namespace UnityEngine.InputNew
 			// Find control scheme with most recently used device.
 			int controlSchemeIndex = 0;
 			List<InputDevice> leastToMost = InputSystem.leastToMostRecentlyUsedDevices;
-			for (int i = leastToMost.Count - 1; i >= 0; i++)
+			for (int i = leastToMost.Count - 1; i >= 0; i--)
 			{
 				Type type = leastToMost[i].GetType();
 				bool stop = false;
