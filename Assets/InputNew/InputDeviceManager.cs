@@ -33,11 +33,13 @@ namespace UnityEngine.InputNew
 			var keyboardDevice = Keyboard.CreateDefault();
 			var touchscreenDevice = Touchscreen.CreateDefault();
 			var gamepadDevice = Gamepad.CreateDefault();
+			var virtualJoystickDevice = VirtualJoystick.CreateDefault();
 
 			RegisterDevice(touchscreenDevice); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
 			RegisterDevice(mouseDevice);
 			RegisterDevice(keyboardDevice);
 			RegisterDevice(gamepadDevice);
+			RegisterDevice(virtualJoystickDevice);
 		}
 
 		#endregion
@@ -221,6 +223,11 @@ namespace UnityEngine.InputNew
 		public Touchscreen touchscreen
 		{
 			get { return GetMostRecentlyUsedDevice<Touchscreen>(); }
+		}
+
+		public VirtualJoystick virtualJoystick
+		{
+			get { return GetMostRecentlyUsedDevice<VirtualJoystick>(); }
 		}
 
 		public IEnumerable<InputDevice> devices

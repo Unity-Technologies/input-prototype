@@ -247,6 +247,11 @@ namespace UnityEngine.InputNew
 			get { return s_Devices.touchscreen; }
 		}
 
+		public static VirtualJoystick virtualJoystick
+		{
+			get { return s_Devices.virtualJoystick; }
+		}
+
 		public static IEnumerable<InputDevice> devices
 		{
 			get { return s_Devices.devices; }

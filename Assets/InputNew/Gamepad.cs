@@ -23,13 +23,13 @@ namespace UnityEngine.InputNew
 			// Compounds.
 			controls[(int)GamepadControl.LeftStick] = new InputControlData
 			{
-				name = "LeftThumbstick"
+				name = "Left Stick"
 				, controlType = InputControlType.Vector2
 				, componentControlIndices = new[] { (int)GamepadControl.LeftStickX, (int)GamepadControl.LeftStickY }
 			};
 			controls[(int)GamepadControl.RightStick] = new InputControlData
 			{
-				name = "RightThumbstick"
+				name = "Right Stick"
 				, controlType = InputControlType.Vector2
 				, componentControlIndices = new[] { (int)GamepadControl.RightStickX, (int)GamepadControl.RightStickY }
 			};

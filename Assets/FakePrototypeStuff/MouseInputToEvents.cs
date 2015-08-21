@@ -8,6 +8,7 @@ public class MouseInputToEvents
 {
 	Vector3 m_LastMousePosition;
 	Vector3 m_LastMouseDelta;
+	bool m_Ignore = false;
 
 	public void Update()
 	{
@@ -18,13 +19,26 @@ public class MouseInputToEvents
 	void SendButtonEvents()
 	{
 		if (Input.GetKeyDown(KeyCode.Mouse0))
-			SendClickEvent(PointerControl.LeftButton, true);
+		{
+			if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject ())
+				m_Ignore = true;
+			else
+				SendClickEvent(PointerControl.LeftButton, true);
+		}
 		if (Input.GetKeyUp(KeyCode.Mouse0))
-			SendClickEvent(PointerControl.LeftButton, false);
+		{
+			if (m_Ignore)
+				m_Ignore = false;
+			else
+				SendClickEvent(PointerControl.LeftButton, false);
+		}
 	}
 
 	void SendMoveEvent()
 	{
+		if (m_Ignore)
+			return;
+		
 		var newMousePosition = Input.mousePosition;
 		var newMouseDelta = newMousePosition - m_LastMousePosition;
 		// Only don't send event if both position and delta didn't change.

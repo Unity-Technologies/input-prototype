@@ -72,44 +72,50 @@ public static class CreateDemoAssets
 	public static void CreateInputMapAsset()
 	{
 		var controlMap = ScriptableObject.CreateInstance< ControlMap >();
+		controlMap.schemes = new List< string > { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
 
 		var entries = new List< ControlMapEntry >();
 		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyControl.A, (int)KeyControl.D),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickX)
 		));
 		
 		entries.Add(CreateControl("MoveY", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyControl.S, (int)KeyControl.W),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickY)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickY),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickY)
 		));
 		
 		entries.Add(CreateControlComposite("Move", InputControlType.Vector2, new[] { 0, 1 }));
 		
 		entries.Add(CreateControl("LookX", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.DeltaX),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickX)
 		));
 		
 		entries.Add(CreateControl("LookY", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.DeltaY),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickY)
 		));
 		
 		entries.Add(CreateControlComposite("Look", InputControlType.Vector2, new[] { 3, 4 }));
 		
 		entries.Add(CreateControl("Fire", InputControlType.Button,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Action1)
 		));
 		
 		entries.Add(CreateControl("Menu", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyControl.Space),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start)
+			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start),
+			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
 		));
 	
 		controlMap.entries = entries;
-		controlMap.schemes = new List< string > { "KeyboardMouse", "Gamepad" };
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
 		AssetDatabase.CreateAsset(controlMap, path);
