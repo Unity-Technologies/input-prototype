@@ -9,18 +9,11 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
+		public Mouse()
+			: base("Mouse", null) { }
+
 		public Mouse(string deviceName, List<InputControlData> controls)
 			: base(deviceName, controls) { }
-
-		#endregion
-
-		#region Public Methods
-
-		public static Mouse CreateDefault()
-		{
-			var controls = CreateDefaultControls();
-			return new Mouse("Generic Mouse", controls);
-		}
 
 		#endregion
 	}

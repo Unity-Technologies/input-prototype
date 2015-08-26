@@ -29,11 +29,11 @@ namespace UnityEngine.InputNew
 		{
 			// In the prototype, just create a set of default devices. In the real thing, these would be registered
 			// and configured by the platform layer according to what's really available on the system.
-			var mouseDevice = Mouse.CreateDefault();
-			var keyboardDevice = Keyboard.CreateDefault();
-			var touchscreenDevice = Touchscreen.CreateDefault();
-			var gamepadDevice = Gamepad.CreateDefault();
-			var virtualJoystickDevice = VirtualJoystick.CreateDefault();
+			var mouseDevice = new Mouse();
+			var keyboardDevice = new Keyboard();
+			var touchscreenDevice = new Touchscreen();
+			var gamepadDevice = new Gamepad();
+			var virtualJoystickDevice = new VirtualJoystick();
 
 			RegisterDevice(touchscreenDevice); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
 			RegisterDevice(mouseDevice);

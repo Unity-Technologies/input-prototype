@@ -11,14 +11,14 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Gamepad(string deviceName, List<InputControlData> controls)
-			: base(deviceName, controls) { }
+		public Gamepad()
+			: this("Gamepad", null) {}
 
-		#endregion
-		
-		public static InputDevice CreateDefault()
+		public Gamepad(string deviceName, List<InputControlData> additionalControls)
 		{
-			var controls = Enumerable.Repeat(new InputControlData(), EnumHelpers.GetValueCount<GamepadControl>()).ToList();
+			this.deviceName = deviceName;
+			var controlCount = EnumHelpers.GetValueCount<GamepadControl>();
+			var controls = Enumerable.Repeat(new InputControlData(), controlCount).ToList();
 
 			// Compounds.
 			controls[(int)GamepadControl.LeftStick] = new InputControlData
@@ -59,7 +59,12 @@ namespace UnityEngine.InputNew
 			controls[(int)GamepadControl.LeftTrigger] = new InputControlData { name = "Left Trigger", controlType = InputControlType.AbsoluteAxis };
 			controls[(int)GamepadControl.RightTrigger] = new InputControlData { name = "Right Trigger", controlType = InputControlType.AbsoluteAxis };
 
-			return new Gamepad("Generic Gamepad", controls);
+			if (additionalControls != null)
+				controls.AddRange(additionalControls);
+
+			SetControls(controls);
 		}
+
+		#endregion
 	}
 }

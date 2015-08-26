@@ -15,6 +15,11 @@ namespace UnityEngine.InputNew
 			this.deviceName = deviceName;
 		}
 
+		protected InputDevice()
+		{
+			this.deviceName = "Generic Input Device";
+		}
+
 		#endregion
 
 		#region Public Methods
@@ -65,7 +70,7 @@ namespace UnityEngine.InputNew
 			get { return m_Profile; } set { m_Profile = value; SetNameOverrides(); }
 		}
 
-		public string deviceName { get; private set; }
+		public string deviceName { get; protected set; }
 
 		#endregion
 		

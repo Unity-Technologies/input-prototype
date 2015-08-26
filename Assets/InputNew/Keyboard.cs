@@ -11,8 +11,25 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Keyboard(string deviceName, List<InputControlData> controls)
-			: base(deviceName, controls) { }
+		public Keyboard()
+			: this("Keyboard", null) { }
+
+		public Keyboard(string deviceName, List<InputControlData> additionalControls)
+		{
+			this.deviceName = deviceName;
+			var controlCount = EnumHelpers.GetValueCount<KeyControl>();
+			var controls = Enumerable.Repeat(new InputControlData(), controlCount).ToList();
+
+			for (var i = 0; i < controlCount; ++ i)
+			{
+				InitKey(controls, (KeyControl)i);
+			}
+
+			if (additionalControls != null)
+				controls.AddRange(additionalControls);
+
+			SetControls(controls);
+		}
 
 		#endregion
 
@@ -43,19 +60,6 @@ namespace UnityEngine.InputNew
 				return true;
 
 			return base.ProcessEventIntoState(inputEvent, intoState);
-		}
-
-		public static Keyboard CreateDefault()
-		{
-			var controlCount = EnumHelpers.GetValueCount<KeyControl>();
-			var controls = Enumerable.Repeat(new InputControlData(), controlCount).ToList();
-
-			for (var i = 0; i < controlCount; ++ i)
-			{
-				InitKey(controls, (KeyControl)i);
-			}
-
-			return new Keyboard("Generic Keyboard", controls);
 		}
 
 		#endregion

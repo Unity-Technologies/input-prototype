@@ -11,8 +11,22 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Touchscreen(string deviceName, List<InputControlData> controls)
-			: base(deviceName, controls) { }
+		public Touchscreen()
+			: base("Touchscreen", null) { }
+
+		public Touchscreen(string deviceName, List<InputControlData> additionalControls)
+			: base(deviceName, null)
+		{
+			var controls = GetControls();
+
+			for (var i = 0; i < MaxConcurrentTouches; ++i)
+				AddControlsForTouch(i, controls);
+
+			if (additionalControls != null)
+				controls.AddRange(additionalControls);
+
+			SetControls(controls);
+		}
 
 		#endregion
 
@@ -58,16 +72,6 @@ namespace UnityEngine.InputNew
 				return true;
 
 			return base.ProcessEventIntoState(inputEvent, intoState);
-		}
-
-		public static Touchscreen CreateDefault()
-		{
-			var controls = CreateDefaultControls();
-
-			for (var i = 0; i < MaxConcurrentTouches; ++i)
-				AddControlsForTouch(i, controls);
-			
-			return new Touchscreen("Generic Touchscreen", controls);
 		}
 
 		#endregion

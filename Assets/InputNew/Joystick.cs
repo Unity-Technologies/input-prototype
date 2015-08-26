@@ -11,8 +11,21 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public Joystick(string deviceName, List<InputControlData> controls)
-			: base(deviceName, controls) { }
+		public Joystick()
+			: this("Joystick", null) { }
+
+		public Joystick(string deviceName, List<InputControlData> additionalControls)
+		{
+			this.deviceName = deviceName;
+			var controls = new List<InputControlData>();
+
+			// TODO create default joystick buttons and axes
+
+			if (additionalControls != null)
+				controls.AddRange(additionalControls);
+			
+			SetControls(controls);
+		}
 
 		#endregion
 

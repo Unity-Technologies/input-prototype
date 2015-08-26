@@ -96,6 +96,11 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		protected List<InputControlData> GetControls()
+		{
+			return m_Controls;
+		}
+
 		protected void SetControls(List<InputControlData> controls)
 		{
 			m_Controls = controls;
