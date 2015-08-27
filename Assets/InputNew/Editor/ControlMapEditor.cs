@@ -7,11 +7,44 @@ using System.Collections.Generic;
 [CustomEditor(typeof(ControlMap))]
 public class ControlMapEditor : Editor
 {
-	static Dictionary<System.Type, InputDevice> s_DeviceInstances = new Dictionary<System.Type, InputDevice>();
-	
 	ControlMap m_ControlMap;
 	
 	int m_SelectedScheme = 0;
+	ControlMapEntry m_SelectedEntry = null;
+	
+	int selectedScheme
+	{
+		get { return m_SelectedScheme; }
+		set
+		{
+			if (m_SelectedScheme == value)
+				return;
+			m_SelectedScheme = value;
+			if (m_EntryEditor != null)
+				m_EntryEditor.controlScheme = value;
+		}
+	}
+	
+	ControlMapEntry selectedEntry
+	{
+		get { return m_SelectedEntry; }
+		set
+		{
+			if (m_SelectedEntry == value)
+				return;
+			if (m_EntryEditor != null)
+				DestroyImmediate(m_EntryEditor);
+			m_SelectedEntry = value;
+			if (m_SelectedEntry != null)
+			{
+				m_EntryEditor = (ControlMapEntryEditor)Editor.CreateEditor(m_SelectedEntry, typeof(ControlMapEntryEditor));
+				m_EntryEditor.controlScheme = selectedScheme;
+				m_EntryEditor.showCommon = false;
+			}
+		}
+	}
+	
+	ControlMapEntryEditor m_EntryEditor = null;
 	
 	public void OnEnable ()
 	{
@@ -29,9 +62,9 @@ public class ControlMapEditor : Editor
 			Rect rect = EditorGUILayout.GetControlRect();
 			
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-				m_SelectedScheme = i;
+				selectedScheme = i;
 			
-			if (m_SelectedScheme == i)
+			if (selectedScheme == i)
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 			
 			EditorGUI.BeginChangeCheck();
@@ -47,11 +80,19 @@ public class ControlMapEditor : Editor
 		EditorGUILayout.Space();
 		
 		// Show high level controls
-		EditorGUILayout.LabelField("Controls", "Control Scheme Bindings");
-		EditorGUILayout.Space();
+		EditorGUILayout.LabelField("Controls", m_ControlMap.schemes[selectedScheme] + " Bindings");
+		EditorGUILayout.BeginVertical("Box");
 		foreach (var entry in m_ControlMap.entries)
 		{
-			DrawEntry(entry, m_SelectedScheme);
+			DrawEntry(entry, selectedScheme);
+		}
+		EditorGUILayout.EndVertical();
+		
+		EditorGUILayout.Space();
+		
+		if (m_EntryEditor != null)
+		{
+			m_EntryEditor.OnInspectorGUI();
 		}
 	}
 	
@@ -67,43 +108,31 @@ public class ControlMapEditor : Editor
 			buttonAxisSourceCount += binding.buttonAxisSources.Count;
 		}
 		int totalSourceCount = sourceCount + buttonAxisSourceCount;
-		int lines = Mathf.Max(2, totalSourceCount);
+		int lines = Mathf.Max(1, totalSourceCount);
 		
-		float height = EditorGUIUtility.singleLineHeight * lines + EditorGUIUtility.standardVerticalSpacing * (lines - 1) + 10;
-		Rect totalRect = EditorGUILayout.GetControlRect(true, height);
+		float height = EditorGUIUtility.singleLineHeight * lines + EditorGUIUtility.standardVerticalSpacing * (lines - 1) + 8;
+		Rect totalRect = GUILayoutUtility.GetRect(1, height);
+		
+		Rect baseRect = totalRect;
+		baseRect.yMin += 4;
+		baseRect.yMax -= 4;
+		
+		if (selectedEntry == entry)
+			GUI.DrawTexture(totalRect, EditorGUIUtility.whiteTexture);
 		
 		// Show control fields
 		
-		Rect rect = totalRect;
+		Rect rect = baseRect;
 		rect.height = EditorGUIUtility.singleLineHeight;
-		rect.width = EditorGUIUtility.labelWidth;
+		rect.width = EditorGUIUtility.labelWidth - 4;
 		
-		EditorGUI.BeginChangeCheck();
-		string name = EditorGUI.TextField(rect, entry.controlData.name);
-		if (EditorGUI.EndChangeCheck())
-		{
-			InputControlData data = entry.controlData;
-			data.name = name;
-			entry.controlData = data;
-			entry.name = name;
-		}
-		
-		rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-		
-		EditorGUI.BeginChangeCheck();
-		var type = (InputControlType)EditorGUI.EnumPopup(rect, entry.controlData.controlType);
-		if (EditorGUI.EndChangeCheck())
-		{
-			InputControlData data = entry.controlData;
-			data.controlType = type;
-			entry.controlData = data;
-		}
+		EditorGUI.LabelField(rect, entry.controlData.name);
 		
 		// Show binding fields
 		
 		if (binding != null)
 		{
-			rect = totalRect;
+			rect = baseRect;
 			rect.height = EditorGUIUtility.singleLineHeight;
 			rect.xMin += EditorGUIUtility.labelWidth;
 			
@@ -117,6 +146,12 @@ public class ControlMapEditor : Editor
 				DrawSources(ref rect, binding);
 				DrawButtonAxisSources(ref rect, binding);
 			}
+		}
+		
+		if (Event.current.type == EventType.MouseDown && totalRect.Contains(Event.current.mousePosition))
+		{
+			selectedEntry = entry;
+			Event.current.Use();
 		}
 	}
 	
@@ -150,34 +185,6 @@ public class ControlMapEditor : Editor
 	
 	string GetSourceString (InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", source.deviceType.Name, GetDeviceControlName(source.deviceType, source.controlIndex));
-	}
-	
-	static InputDevice GetDevice(System.Type type)
-	{
-		InputDevice device = null;
-		if (!s_DeviceInstances.TryGetValue(type, out device))
-		{
-			device = (InputDevice)System.Activator.CreateInstance(type);
-			s_DeviceInstances[type] = device;
-		}
-		return device;
-	}
-	
-	static string GetDeviceControlName(System.Type type, int controlIndex)
-	{
-		InputDevice device = GetDevice(type);
-		return device.GetControlData(controlIndex).name;
-	}
-	
-	static List<string> GetDeviceControlNames(System.Type type)
-	{
-		InputDevice device = GetDevice(type);
-
-		var list = new List<string>(device.GetControlCount());
-		for (int i = 0; i < device.GetControlCount(); i++)
-			list.Add(device.GetControlData(i).name);
-
-		return list;
+		return string.Format("{0} {1}", source.deviceType.Name, InputDeviceGUIUtility.GetDeviceControlName(source.deviceType, source.controlIndex));
 	}
 }
