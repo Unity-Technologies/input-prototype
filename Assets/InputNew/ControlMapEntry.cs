@@ -27,7 +27,7 @@ namespace UnityEngine.InputNew
 		}
 
 		// This is one entry for each control scheme (matching indices).
-		public List<ControlBinding> bindings;
+		public List<ControlBinding> bindings = new List<ControlBinding>();
 
 		[NonSerialized]
 		public int controlIndex;

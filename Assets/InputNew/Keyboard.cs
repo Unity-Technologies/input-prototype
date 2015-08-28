@@ -17,12 +17,12 @@ namespace UnityEngine.InputNew
 		public Keyboard(string deviceName, List<InputControlData> additionalControls)
 		{
 			this.deviceName = deviceName;
-			var controlCount = EnumHelpers.GetValueCount<KeyControl>();
+			var controlCount = EnumHelpers.GetValueCount<KeyCode>();
 			var controls = Enumerable.Repeat(new InputControlData(), controlCount).ToList();
 
 			for (var i = 0; i < controlCount; ++ i)
 			{
-				InitKey(controls, (KeyControl)i);
+				InitKey(controls, (KeyCode)i);
 			}
 
 			if (additionalControls != null)
@@ -35,7 +35,7 @@ namespace UnityEngine.InputNew
 
 		#region Non-Public Methods
 
-		static void InitKey(List<InputControlData> controls, KeyControl key)
+		static void InitKey(List<InputControlData> controls, KeyCode key)
 		{
 			controls[(int)key] = new InputControlData
 			{

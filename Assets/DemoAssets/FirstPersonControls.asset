@@ -41,7 +41,7 @@ MonoBehaviour:
     name: Menu
   bindings:
   - sources:
-    - controlIndex: 45
+    - controlIndex: 32
       m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     deadZone: .300000012
@@ -106,11 +106,19 @@ MonoBehaviour:
     deadZone: .300000012
     buttonAxisSources:
     - negative:
-        controlIndex: 0
+        controlIndex: 97
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       positive:
-        controlIndex: 3
+        controlIndex: 100
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+    - negative:
+        controlIndex: 276
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      positive:
+        controlIndex: 275
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
     gravity: 1000
@@ -203,11 +211,19 @@ MonoBehaviour:
     deadZone: .300000012
     buttonAxisSources:
     - negative:
-        controlIndex: 18
+        controlIndex: 115
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       positive:
-        controlIndex: 22
+        controlIndex: 119
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+    - negative:
+        controlIndex: 274
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      positive:
+        controlIndex: 273
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
     gravity: 1000

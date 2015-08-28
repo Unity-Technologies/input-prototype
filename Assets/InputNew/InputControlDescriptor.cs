@@ -3,7 +3,7 @@ using System;
 namespace UnityEngine.InputNew
 {
 	[ Serializable ]
-	public struct InputControlDescriptor
+	public class InputControlDescriptor
 	{
 		public int controlIndex;
 
@@ -12,8 +12,11 @@ namespace UnityEngine.InputNew
 			get
 			{
 				if ( m_CachedDeviceType == null )
+				{
+					if (m_DeviceTypeName == null)
+						return null;
 					m_CachedDeviceType = Type.GetType( m_DeviceTypeName );
-
+				}
 				return m_CachedDeviceType;
 			}
 			set

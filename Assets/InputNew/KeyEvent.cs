@@ -9,8 +9,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Properties
 
-		public KeyControl rawKey { get; set; }
-		public KeyControl localizedKey { get; set; }
+		public KeyCode rawKey { get; set; }
+		public KeyCode localizedKey { get; set; }
 		public bool isPress { get; private set; }
 		public bool isRelease { get; private set; }
 		public bool isRepeat { get; private set; }

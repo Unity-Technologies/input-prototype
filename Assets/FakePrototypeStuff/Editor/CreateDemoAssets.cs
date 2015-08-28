@@ -33,27 +33,31 @@ public static class CreateDemoAssets
 		};
 	}
 	
-	private static ControlBinding CreateButtonAxisBinding (System.Type deviceType, int controlIndexNegative, int controlIndexPositive)
+	private static ControlBinding CreateButtonAxisBinding (System.Type deviceType, params int[] controlIndices)
 	{
-		return new ControlBinding 
+		if (controlIndices.Length % 2 != 0)
+			throw new System.Exception("Number of indices must be even.");
+		var binding = new ControlBinding();
+		binding.primaryIsButtonAxis = true;
+		binding.buttonAxisSources = new List<ButtonAxisSource>();
+		for (int i = 0; i < controlIndices.Length; i += 2)
 		{
-			buttonAxisSources = new List< ButtonAxisSource >
-			{
+			binding.buttonAxisSources.Add(
 				new ButtonAxisSource(
 					new InputControlDescriptor
 					{
 						deviceType = deviceType,
-						controlIndex = controlIndexNegative
+						controlIndex = controlIndices[i]
 					},
 					new InputControlDescriptor
 					{
 						deviceType = deviceType,
-						controlIndex = controlIndexPositive
+						controlIndex = controlIndices[i + 1]
 					}
 				)
-			},
-			primaryIsButtonAxis = true
-		};
+			);
+		}
+		return binding;
 	}
 	
 	private static ControlMapEntry CreateControlComposite (string name, InputControlType controlType, int[] indices)
@@ -76,13 +80,13 @@ public static class CreateDemoAssets
 
 		var entries = new List< ControlMapEntry >();
 		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
-			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyControl.A, (int)KeyControl.D),
+			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickX)
 		));
 		
 		entries.Add(CreateControl("MoveY", InputControlType.RelativeAxis,
-			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyControl.S, (int)KeyControl.W),
+			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.S, (int)KeyCode.W, (int)KeyCode.DownArrow, (int)KeyCode.UpArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickY),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickY)
 		));
@@ -110,7 +114,7 @@ public static class CreateDemoAssets
 		));
 		
 		entries.Add(CreateControl("Menu", InputControlType.Button,
-			CreateBinding(typeof(Keyboard), (int)KeyControl.Space),
+			CreateBinding(typeof(Keyboard), (int)KeyCode.Space),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
 		));
