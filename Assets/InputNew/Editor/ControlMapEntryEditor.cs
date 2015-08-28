@@ -3,97 +3,19 @@ using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Reflection;
 using System;
 using System.Linq;
-
-internal static class InputDeviceGUIUtility
-{
-	static Dictionary<System.Type, InputDevice> s_DeviceInstances = new Dictionary<System.Type, InputDevice>();
-	static Dictionary<System.Type, string[]> s_DeviceControlNames = new Dictionary<System.Type, string[]>();
-	
-	static string[] s_DeviceNames = null;
-	static Type[] s_DeviceTypes = null;
-	static Dictionary<Type, int> s_IndicesOfDevices = null;
-	
-	public static InputDevice GetDevice(System.Type type)
-	{
-		InputDevice device = null;
-		if (!s_DeviceInstances.TryGetValue(type, out device))
-		{
-			device = (InputDevice)System.Activator.CreateInstance(type);
-			s_DeviceInstances[type] = device;
-		}
-		return device;
-	}
-	
-	public static string GetDeviceControlName(System.Type type, int controlIndex)
-	{
-		return GetDeviceControlNames(type)[controlIndex];
-	}
-	
-	public static string[] GetDeviceControlNames(System.Type type)
-	{
-		string[] names = null;
-		if (!s_DeviceControlNames.TryGetValue(type, out names))
-		{
-			InputDevice device = GetDevice(type);
-			names = new string[device.GetControlCount()];
-			for (int i = 0; i < names.Length; i++)
-				names[i] = device.GetControlData(i).name;
-			s_DeviceControlNames[type] = names;
-		}
-		return names;
-	}
-	
-	static void InitDevices()
-	{
-		if (s_DeviceTypes != null)
-			return;
-		
-		s_DeviceTypes = (
-			from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-			from assemblyType in domainAssembly.GetExportedTypes()
-			where assemblyType.IsSubclassOf(typeof(InputDevice))
-			select assemblyType
-		).OrderBy(e => GetInheritancePath(e)).ToArray();
-		
-		s_DeviceNames = s_DeviceTypes.Select(e => e.Name).ToArray();
-		
-		s_IndicesOfDevices = new Dictionary<Type, int>();
-		for (int i = 0; i < s_DeviceTypes.Length; i++)
-			s_IndicesOfDevices[s_DeviceTypes[i]] = i;
-	}
-	
-	public static string[] GetDeviceNames()
-	{
-		InitDevices();
-		return s_DeviceNames;
-	}
-	
-	public static int GetDeviceIndex(Type type)
-	{
-		InitDevices();
-		return s_IndicesOfDevices[type];
-	}
-	
-	public static Type GetDeviceType(int index)
-	{
-		InitDevices();
-		return s_DeviceTypes[index];
-	}
-	
-	static string GetInheritancePath(Type type)
-	{
-		if (type.BaseType == typeof(InputDevice))
-			return type.Name;
-		return GetInheritancePath(type.BaseType) + "/" + type.Name;
-	}
-}
 
 [CustomEditor(typeof(ControlMapEntry))]
 public class ControlMapEntryEditor : Editor
 {
+	static class Styles
+	{
+		public static GUIContent iconToolbarPlus =	EditorGUIUtility.IconContent ("Toolbar Plus", "Add to list");
+		public static GUIContent iconToolbarMinus =	EditorGUIUtility.IconContent ("Toolbar Minus", "Remove from list");
+		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent ("Toolbar Plus More", "Choose to add to list");
+	}
+	
 	int m_ControlScheme = 0;
 	bool m_ShowCommon = true;
 	
@@ -109,6 +31,8 @@ public class ControlMapEntryEditor : Editor
 	
 	public override void OnInspectorGUI()
 	{
+		EditorGUI.BeginChangeCheck();
+		
 		EditorGUI.BeginChangeCheck();
 		string name = EditorGUILayout.TextField("Name", m_Entry.controlData.name);
 		if (EditorGUI.EndChangeCheck())
@@ -146,9 +70,12 @@ public class ControlMapEntryEditor : Editor
 			if (controlScheme >= 0 && controlScheme < m_Entry.bindings.Count)
 			DrawBinding(m_Entry.bindings[controlScheme]);
 		}
+		
+		if (EditorGUI.EndChangeCheck())
+			EditorUtility.SetDirty(m_Entry);
 	}
 	
-	void DrawBinding (ControlBinding binding)
+	void DrawBinding(ControlBinding binding)
 	{
 		if (binding.primaryIsButtonAxis)
 		{
@@ -160,6 +87,34 @@ public class ControlMapEntryEditor : Editor
 			DrawSources(binding);
 			DrawButtonAxisSources(binding);
 		}
+		EditorGUILayout.BeginHorizontal();
+		GUILayout.Space(15 * EditorGUI.indentLevel);
+		GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none);
+		Rect r = GUILayoutUtility.GetRect(Styles.iconToolbarPlusMore, GUIStyle.none);
+		if (GUI.Button(r, Styles.iconToolbarPlusMore, GUIStyle.none))
+			ShowAddOptions(r, binding);
+		GUILayout.FlexibleSpace();
+		EditorGUILayout.EndHorizontal();
+	}
+	
+	void ShowAddOptions(Rect rect, ControlBinding binding)
+	{
+		GenericMenu menu = new GenericMenu();
+		menu.AddItem(new GUIContent("Regular Source"), false, AddSource, binding);
+		menu.AddItem(new GUIContent("Button Axis Source"), false, AddButtonAxisSource, binding);
+		menu.DropDown(rect);
+	}
+	
+	void AddSource(object data)
+	{
+		ControlBinding binding = (ControlBinding)data;
+		binding.sources.Add(new InputControlDescriptor());
+	}
+	
+	void AddButtonAxisSource(object data)
+	{
+		ControlBinding binding = (ControlBinding)data;
+		binding.buttonAxisSources.Add(new ButtonAxisSource(new InputControlDescriptor(), new InputControlDescriptor()));
 	}
 	
 	void DrawSources(ControlBinding binding)
@@ -186,8 +141,8 @@ public class ControlMapEntryEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(ButtonAxisSource source)
 	{
-		DrawSourceSummary("Source (-)", source.negative);
-		DrawSourceSummary("Source (+)", source.positive);
+		DrawSourceSummary("Source (negative)", source.negative);
+		DrawSourceSummary("Source (positive)", source.positive);
 		EditorGUILayout.Space();
 	}
 	
@@ -219,6 +174,6 @@ public class ControlMapEntryEditor : Editor
 	
 	string GetSourceString (InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", source.deviceType.Name, InputDeviceGUIUtility.GetDeviceControlName(source.deviceType, source.controlIndex));
+		return string.Format("{0} {1}", source.deviceType.Name, InputDeviceGUIUtility.GetDeviceControlName(source));
 	}
 }

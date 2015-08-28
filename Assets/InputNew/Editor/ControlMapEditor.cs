@@ -53,6 +53,8 @@ public class ControlMapEditor : Editor
 	
 	public override void OnInspectorGUI ()
 	{
+		EditorGUI.BeginChangeCheck();
+		
 		// Show schemes
 		EditorGUILayout.LabelField("Control Schemes");
 		EditorGUIUtility.GetControlID(FocusType.Passive);
@@ -94,6 +96,9 @@ public class ControlMapEditor : Editor
 		{
 			m_EntryEditor.OnInspectorGUI();
 		}
+		
+		if (EditorGUI.EndChangeCheck())
+			EditorUtility.SetDirty(m_ControlMap);
 	}
 	
 	void DrawEntry(ControlMapEntry entry, int controlScheme)
@@ -180,11 +185,20 @@ public class ControlMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		EditorGUI.LabelField(rect, string.Format("{0} - {1}", GetSourceString(source.negative), GetSourceString(source.positive)));
+		if (source.negative.deviceType == source.positive.deviceType)
+			EditorGUI.LabelField(rect,
+				string.Format("{0} {1} & {2}",
+					InputDeviceGUIUtility.GetDeviceName(source.negative),
+					InputDeviceGUIUtility.GetDeviceControlName(source.negative),
+					InputDeviceGUIUtility.GetDeviceControlName(source.positive)
+				)
+			);
+		else
+			EditorGUI.LabelField(rect, string.Format("{0} & {1}", GetSourceString(source.negative), GetSourceString(source.positive)));
 	}
 	
 	string GetSourceString (InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", source.deviceType.Name, InputDeviceGUIUtility.GetDeviceControlName(source.deviceType, source.controlIndex));
+		return string.Format("{0} {1}", InputDeviceGUIUtility.GetDeviceName(source), InputDeviceGUIUtility.GetDeviceControlName(source));
 	}
 }
