@@ -14,620 +14,543 @@ MonoBehaviour:
   supportedPlatforms:
   - OS X
   deviceNames:
-  - Generic Gamepad
+  - Gamepad
   deviceRegexes: []
   lastResortDeviceRegex: 
   mappings:
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 1
+  - targetIndex: 1
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 3
+  - targetIndex: 3
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 4
+  - targetIndex: 4
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 14
+  - targetIndex: 14
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 15
+  - targetIndex: 15
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 8
+  - targetIndex: 8
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 9
+  - targetIndex: 9
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 6
+  - targetIndex: 6
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 7
+  - targetIndex: 7
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 22
+  - targetIndex: 22
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 21
+  - targetIndex: 21
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 5
+  - targetIndex: 5
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 2
+  - targetIndex: 2
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 16
+  - targetIndex: 16
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 17
+  - targetIndex: 17
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 21
+  - targetIndex: 21
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 10
+  - targetIndex: 10
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 11
+  - targetIndex: 11
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 12
+  - targetIndex: 12
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 13
+  - targetIndex: 13
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0
     toRange:
       max: 0
       min: 0
-  - displayName: 
-    targetIndex: 0
+  - targetIndex: 0
     fromRange:
       max: 0
       min: 0

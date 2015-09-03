@@ -34,7 +34,7 @@ namespace UnityEngine.InputNew
 				for (int i = 0; i < controlCount; i++)
 				{
 					var control = this[i];
-					if (control.button)
+					if (control.controlType == InputControlType.Button && control.button)
 						return control;
 				}
 				

@@ -163,7 +163,7 @@ MonoBehaviour:
   bindings:
   - sources:
     - controlIndex: 5
-      m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+      m_DeviceTypeName: UnityEngine.InputNew.Mouse, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     deadZone: .300000012
     buttonAxisSources: []
@@ -284,7 +284,7 @@ MonoBehaviour:
   bindings:
   - sources:
     - controlIndex: 11
-      m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+      m_DeviceTypeName: UnityEngine.InputNew.Mouse, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     deadZone: .300000012
     buttonAxisSources: []
@@ -330,7 +330,7 @@ MonoBehaviour:
   bindings:
   - sources:
     - controlIndex: 6
-      m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+      m_DeviceTypeName: UnityEngine.InputNew.Mouse, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     deadZone: .300000012
     buttonAxisSources: []

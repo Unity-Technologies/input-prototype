@@ -84,6 +84,11 @@ namespace UnityEngine.InputNew
 		{
 			get { return data.name; }
 		}
+		
+		public InputControlType controlType
+		{
+			get { return data.controlType; }
+		}
 
 		public string GetPrimarySourceName(string buttonAxisFormattingString = "{0} & {1}")
 		{
@@ -96,7 +101,7 @@ namespace UnityEngine.InputNew
 
 		readonly int m_Index;
 		readonly InputState m_State;
-		const float k_buttonThreshold = 0.001f;
+		const float k_buttonThreshold = 0.5f;
 
 		#endregion
 	}
