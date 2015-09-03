@@ -12,4 +12,17 @@ namespace UnityEngine.InputNew
 		ProcessInputDelegate processInput { get; set; }
 		BeginNewFrameDelegate beginNewFrame { get; set; }
 	}
+
+	public static class InputConsumerExtensions
+	{
+		public static void AddChild(this IInputConsumer consumer, ProcessInputDelegate processInput, string name = "")
+		{
+			consumer.children.Add(new InputEventTree
+			{
+				name = name
+				, processInput = processInput
+			});
+		}
+	}
 }
+

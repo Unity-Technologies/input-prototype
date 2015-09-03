@@ -22,10 +22,10 @@ namespace UnityEngine.InputNew
 			for (int i = 0; i < m_MapInstances.Count; i++)
 			{
 				ControlMapInstance instance = m_MapInstances[i];
-				List<InputDevice> devices = instance.GetUsedDevices();
-				for (int d = 0; d < devices.Count; d++)
+				var devices = m_ControlMap.GetUsedDeviceTypes(instance.controlSchemeIndex);
+				foreach (var device in devices)
 				{
-					m_DeviceTypeToControlSchemeIndex[devices[d].GetType()] = instance.controlSchemeIndex;
+					m_DeviceTypeToControlSchemeIndex[device] = instance.controlSchemeIndex;
 				}
 			}
 			
@@ -60,14 +60,18 @@ namespace UnityEngine.InputNew
 				return true;
 			
 			// Check if it could have been used with another control scheme.
-			int otherControlSchemeIndex = -1;
-			if (m_DeviceTypeToControlSchemeIndex.TryGetValue(inputEvent.deviceType, out otherControlSchemeIndex))
+			for (var type = inputEvent.deviceType; type != typeof(InputDevice) || type == null; type = type.BaseType)
 			{
-				if (otherControlSchemeIndex != controlSchemeIndex)
+				int otherControlSchemeIndex = -1;
+				if (m_DeviceTypeToControlSchemeIndex.TryGetValue(type, out otherControlSchemeIndex))
 				{
-					// Try to switch to other control scheme and process event again.
-					Rebind();
-					return base.ProcessEvent(inputEvent);
+						////TODO: prevent from constantly toggling
+					//if (otherControlSchemeIndex != controlSchemeIndex)
+					{
+						// Try to switch to other control scheme and process event again.
+						Rebind();
+						return base.ProcessEvent(inputEvent);
+					}
 				}
 			}
 			

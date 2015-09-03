@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 		{
 			this.controlProvider = controlProvider;
 
-			var controlCount = controlProvider.GetControlCount();
+			var controlCount = controlProvider.controlCount;
 			m_CurrentStates = new float[controlCount];
 			m_PreviousStates = new float[controlCount];
 
@@ -54,6 +54,10 @@ namespace UnityEngine.InputNew
 
 		public bool SetCurrentValue(int index, float value)
 		{
+			if (index < 0 || index >= m_CurrentStates.Length)
+				throw new ArgumentOutOfRangeException("index",
+					string.Format("Control index {0} is out of range; state has {1} entries", index, m_CurrentStates.Length));
+
 			if (!IsControlEnabled(index))
 				return false;
 
@@ -89,8 +93,13 @@ namespace UnityEngine.InputNew
 			var stateCount = m_Enabled.Length;
 			for (var index = 0; index < stateCount; ++index)
 			{
-				if (m_Enabled[index])
-					m_PreviousStates[index] = m_CurrentStates[index];
+				if (!m_Enabled[index])
+					continue;
+				
+				m_PreviousStates[index] = m_CurrentStates[index];
+
+				if ((controlProvider[index].flags & InputControlFlags.AutomaticallyResetsAfterFrame) == InputControlFlags.AutomaticallyResetsAfterFrame)
+					m_CurrentStates[index] = 0.0f;
 			}
 		}
 
@@ -99,6 +108,11 @@ namespace UnityEngine.InputNew
 		#region Public Properties
 
 		public InputControlProvider controlProvider { get; set; }
+
+		public int Count
+		{
+			get { return m_CurrentStates.Length; }
+		}
 
 		public InputControl this[int index]
 		{

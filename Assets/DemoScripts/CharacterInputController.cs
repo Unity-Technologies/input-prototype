@@ -22,6 +22,8 @@ public class CharacterInputController
 	public ControlMapEntry lookControlY;
 	public ControlMapEntry fireControl;
 	public ControlMapEntry menuControl;
+	public ControlMapEntry lockCursorControl;
+	public ControlMapEntry unlockCursorControl;
 
 	[Space(10)]
 	public Transform head;
@@ -35,6 +37,7 @@ public class CharacterInputController
 		m_ControlMapInstance = new ControlMapCombinedInstance(controlMap);
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
+		LockCursor();
 	}
 	
 	public void SetupPlayer(ControlMapInstance controlMapInstance)
@@ -54,14 +57,17 @@ public class CharacterInputController
 		m_Rigid.velocity = new Vector3 (velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
-		var lookX = m_ControlMapInstance[lookControlX].value;
-		var lookY = m_ControlMapInstance[lookControlY].value;
+		if (IsCursorLocked)
+		{
+			var lookX = m_ControlMapInstance[lookControlX].value;
+			var lookY = m_ControlMapInstance[lookControlY].value;
 
-		m_Rotation.y += lookX;
-		transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);
+			m_Rotation.y += lookX;
+			transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);
 
-		m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
-		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
+			m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
+			head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
+		}
 
 		// Fire
 		var fire = m_ControlMapInstance[fireControl].button;
@@ -75,6 +81,12 @@ public class CharacterInputController
 				Fire();
 			}
 		}
+
+		if (m_ControlMapInstance[lockCursorControl].buttonDown)
+			LockCursor();
+
+		if (m_ControlMapInstance[unlockCursorControl].buttonDown)
+			UnlockCursor();
 		
 		if (m_ControlMapInstance[menuControl].buttonDown)
 			sizer.ToggleMenu();
@@ -105,5 +117,22 @@ public class CharacterInputController
 		newProjectile.GetComponent<Rigidbody>().mass = Mathf.Pow(size, 3);
 		newProjectile.GetComponent<Rigidbody>().AddForce(head.forward * 20f, ForceMode.Impulse);
 		newProjectile.GetComponent<MeshRenderer>().material.color = new Color( Random.value, Random.value, Random.value, 1.0f );
+	}
+
+	void LockCursor()
+	{
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
+	}
+
+	void UnlockCursor()
+	{
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+	}
+
+	bool IsCursorLocked
+	{
+		get { return Cursor.lockState == CursorLockMode.Locked; }
 	}
 }

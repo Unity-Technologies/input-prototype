@@ -10,7 +10,7 @@ namespace UnityEngine.InputNew
 		#region Constructors
 
 		public Mouse()
-			: base("Mouse", null) { }
+			: this("Mouse", null) { }
 
 		public Mouse(string deviceName, List<InputControlData> controls)
 			: base(deviceName, controls) { }

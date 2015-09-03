@@ -22,7 +22,6 @@ namespace UnityEngine.InputNew
 
 		public InputDeviceManager()
 		{
-			
 		}
 		
 		public void InitAfterProfiles()

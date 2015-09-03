@@ -30,8 +30,8 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-				int controlCount = GetControlCount();
-				for (int i = 0; i < controlCount; i++)
+				int count = controlCount;
+				for (int i = 0; i < count; i++)
 				{
 					var control = this[i];
 					if (control.controlType == InputControlType.Button && control.button)
@@ -56,9 +56,9 @@ namespace UnityEngine.InputNew
 			return m_Controls[index];
 		}
 		
-		public int GetControlCount()
+		public int controlCount
 		{
-			return m_Controls.Count;
+			get { return m_Controls.Count; }
 		}
 		
 		public InputControl this[int index]

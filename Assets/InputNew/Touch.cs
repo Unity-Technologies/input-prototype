@@ -13,5 +13,11 @@ namespace UnityEngine.InputNew
 		public Vector2 delta;
 		public float diameter;
 		public float deltaTime;
+		public float time;
+
+		public bool isValid
+		{
+			get { return fingerId != 0; }
+		}
 	}
 }

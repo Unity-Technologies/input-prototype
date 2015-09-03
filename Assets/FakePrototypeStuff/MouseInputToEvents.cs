@@ -6,8 +6,6 @@ using UnityEngine.InputNew;
 public class MouseInputToEvents
 	: MonoBehaviour
 {
-	Vector3 m_LastMousePosition;
-	Vector3 m_LastMouseDelta;
 	bool m_Ignore = false;
 
 	public void Update()
@@ -39,22 +37,20 @@ public class MouseInputToEvents
 		if (m_Ignore)
 			return;
 		
-		var newMousePosition = Input.mousePosition;
-		var newMouseDelta = newMousePosition - m_LastMousePosition;
-		// Only don't send event if both position and delta didn't change.
-		if (newMouseDelta == Vector3.zero && m_LastMouseDelta == Vector3.zero)
+		var deltaX = Input.GetAxis("Mouse X");
+		var deltaY = Input.GetAxis("Mouse Y");
+
+		// Don't send events if the mouse hasn't moved.
+		if (deltaX == 0.0f && deltaY == 0.0f)
 			return;
 
 		var inputEvent = InputSystem.CreateEvent<PointerMoveEvent>();
 		inputEvent.deviceType = typeof(Mouse);
 		inputEvent.deviceIndex = 0;
-		inputEvent.delta = newMouseDelta;
-		inputEvent.position = newMousePosition;
+		inputEvent.delta = new Vector3(deltaX, deltaY, 0.0f);
+		inputEvent.position = Input.mousePosition;
 
 		InputSystem.QueueEvent(inputEvent);
-
-		m_LastMousePosition = newMousePosition;
-		m_LastMouseDelta = newMouseDelta;
 	}
 
 	void SendClickEvent(PointerControl controlIndex, bool clicked)

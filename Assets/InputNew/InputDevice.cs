@@ -26,7 +26,7 @@ namespace UnityEngine.InputNew
 
 		////REVIEW: right now the devices don't check whether the event was really meant for them; they go purely by the
 		////  type of event they receive. should they check more closely?
-
+		
 		public override sealed bool ProcessEvent(InputEvent inputEvent)
 		{
 			ProcessEventIntoState(inputEvent, state);
@@ -52,7 +52,7 @@ namespace UnityEngine.InputNew
 				return;
 			
 			// Assign control override names
-			for (int i = 0; i < GetControlCount(); i++) {
+			for (int i = 0; i < controlCount; i++) {
 				string nameOverride = profile.GetControlNameOverride(i);
 				if (nameOverride != null)
 					SetControlNameOverride(i, nameOverride);

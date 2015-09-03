@@ -20,6 +20,8 @@ MonoBehaviour:
   - {fileID: 11474274}
   - {fileID: 11475006}
   - {fileID: 11401696}
+  - {fileID: 11405548}
+  - {fileID: 11423282}
   schemes:
   - KeyboardMouse
   - Gamepad
@@ -38,6 +40,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
+    flags: 0
     name: Menu
   bindings:
   - sources:
@@ -70,6 +73,47 @@ MonoBehaviour:
     sensitivity: 1000
     snap: 1
     primaryIsButtonAxis: 0
+--- !u!114 &11405548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: UnlockCursor
+  m_EditorClassIdentifier: 
+  m_ControlData:
+    componentControlIndices: 
+    controlType: 0
+    flags: 0
+    name: UnlockCursor
+  bindings:
+  - sources:
+    - controlIndex: 27
+      m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11410820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,8 +128,50 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 0000000001000000
     controlType: 3
+    flags: 0
     name: Move
   bindings: []
+--- !u!114 &11423282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eba7b4b2e3ea134991ccbff5f47c2c8, type: 3}
+  m_Name: LockCursor
+  m_EditorClassIdentifier: 
+  m_ControlData:
+    componentControlIndices: 
+    controlType: 0
+    flags: 0
+    name: LockCursor
+  bindings:
+  - sources:
+    - controlIndex: 11
+      m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
+  - sources: []
+    deadZone: .300000012
+    buttonAxisSources: []
+    gravity: 1000
+    sensitivity: 1000
+    snap: 1
+    primaryIsButtonAxis: 0
 --- !u!114 &11428232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +186,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
+    flags: 0
     name: MoveX
   bindings:
   - sources: []
@@ -159,6 +246,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
+    flags: 1
     name: LookX
   bindings:
   - sources:
@@ -205,6 +293,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
+    flags: 0
     name: MoveY
   bindings:
   - sources: []
@@ -264,6 +353,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 0300000004000000
     controlType: 3
+    flags: 0
     name: Look
   bindings: []
 --- !u!114 &11475006
@@ -280,6 +370,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
+    flags: 0
     name: Fire
   bindings:
   - sources:
@@ -326,6 +417,7 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
+    flags: 1
     name: LookY
   bindings:
   - sources:

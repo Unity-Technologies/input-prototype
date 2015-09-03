@@ -38,9 +38,9 @@ namespace UnityEngine.InputNew
 					, componentControlIndices = new[] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
 			});
 			
-			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
+			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
+			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
 			controls.Add(new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis });
@@ -82,7 +82,18 @@ namespace UnityEngine.InputNew
 			var clickEvent = inputEvent as GenericControlEvent;
 			if (clickEvent != null)
 			{
-				consumed |= intoState.SetCurrentValue((int)PointerControl.LeftButton, clickEvent.value);
+				switch ((PointerControl)clickEvent.controlIndex)
+				{
+				case PointerControl.LeftButton:
+					consumed |= intoState.SetCurrentValue((int)PointerControl.LeftButton, clickEvent.value);
+					break;
+				case PointerControl.MiddleButton:
+					consumed |= intoState.SetCurrentValue((int)PointerControl.MiddleButton, clickEvent.value);
+					break;
+				case PointerControl.RightButton:
+					consumed |= intoState.SetCurrentValue((int)PointerControl.RightButton, clickEvent.value);
+					break;
+				}
 
 				return consumed;
 			}

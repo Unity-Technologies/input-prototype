@@ -33,6 +33,13 @@ namespace UnityEngine.InputNew
 			};
 			s_EventTree.children.Add(remap);
 
+			rewriterStack = new InputEventTree
+			{
+				name = "Rewriters"
+				, isStack = true
+			};
+			s_EventTree.children.Add(rewriterStack);
+
 			var state = new InputEventTree
 			{
 				name = "State"
@@ -47,6 +54,8 @@ namespace UnityEngine.InputNew
 				, isStack = true
 			};
 			s_EventTree.children.Add(consumerStack);
+
+			simulateMouseWithTouches = true;
 		}
 
 		public static void RegisterProfile(InputDeviceProfile profile)
@@ -216,6 +225,15 @@ namespace UnityEngine.InputNew
 			nativeEvents.Clear();
 		}
 
+		private static bool SendSimulatedMouseEvents(InputEvent inputEvent)
+		{
+			////FIXME: should take actual touchdevice in inputEvent into account
+			var touchEvent = inputEvent as TouchEvent;
+			if (touchEvent != null)
+				touchscreen.SendSimulatedPointerEvents(touchEvent, Cursor.lockState == CursorLockMode.Locked);
+			return false;
+		}
+
 		#endregion
 
 		#region Public Properties
@@ -225,7 +243,8 @@ namespace UnityEngine.InputNew
 			get { return s_EventTree; }
 		}
 
-		public static IInputConsumer consumerStack { get; set; }
+		public static IInputConsumer consumerStack { get; private set; }
+		public static IInputConsumer rewriterStack { get; private set; }
 
 		public static Pointer pointer
 		{
@@ -262,6 +281,35 @@ namespace UnityEngine.InputNew
 			get { return s_Devices.leastToMostRecentlyUsedDevices; }
 		}
 
+		public static bool simulateMouseWithTouches
+		{
+			get { return s_SimulateMouseWithTouches; }
+			set
+			{
+				if (value == s_SimulateMouseWithTouches)
+					return;
+
+				if (value)
+				{
+					if (s_SimulateMouseWithTouchesProcess == null)
+						s_SimulateMouseWithTouchesProcess = new InputEventTree
+						{
+							name = "SimulateMouseWithTouches"
+							, processInput = SendSimulatedMouseEvents
+						};
+
+					rewriterStack.children.Add(s_SimulateMouseWithTouchesProcess);
+				}
+				else
+				{
+					if (s_SimulateMouseWithTouchesProcess != null)
+						rewriterStack.children.Remove(s_SimulateMouseWithTouchesProcess);
+				}
+
+				s_SimulateMouseWithTouches = value;
+			}
+		}
+
 		#endregion
 
 		#region Fields
@@ -270,6 +318,8 @@ namespace UnityEngine.InputNew
 		static InputEventQueue s_EventQueue;
 		static InputEventPool s_EventPool;
 		static InputEventTree s_EventTree;
+		static bool s_SimulateMouseWithTouches;
+		static InputEventTree s_SimulateMouseWithTouchesProcess;
 
 		#endregion
 	}

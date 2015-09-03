@@ -27,10 +27,10 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public void SetMappingsCount(int sourceControlCount, int targetControlCount)
+		public void SetMappingsCount(int sourceControlCount, int tarcontrolCount)
 		{
 			mappings = new JoystickControlMapping[sourceControlCount];
-			nameOverrides = new string[targetControlCount];
+			nameOverrides = new string[tarcontrolCount];
 		}
 
 		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName = null)

@@ -325,6 +325,9 @@ MonoBehaviour:
   lookControlY: {fileID: 11483428, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
   fireControl: {fileID: 11475006, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
   menuControl: {fileID: 11401696, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lockCursorControl: {fileID: 11423282, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  unlockCursorControl: {fileID: 11405548, guid: 24548a596fd7f47dfa0d33e0d38d0dbd,
+    type: 2}
   head: {fileID: 484432}
   moveSpeed: 15
   projectile: {fileID: 171512, guid: 35bb1b2b246f2924c9e37e30f454c7ee, type: 2}

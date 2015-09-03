@@ -53,7 +53,7 @@ internal static class InputDeviceGUIUtility
 		if (!s_DeviceControlNames.TryGetValue(type, out names))
 		{
 			InputDevice device = GetDevice(type);
-			names = new string[device.GetControlCount()];
+			names = new string[device.controlCount];
 			for (int i = 0; i < names.Length; i++)
 				names[i] = device.GetControlData(i).name;
 			s_DeviceControlNames[type] = names;

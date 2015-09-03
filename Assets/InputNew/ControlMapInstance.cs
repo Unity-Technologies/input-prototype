@@ -44,10 +44,13 @@ namespace UnityEngine.InputNew
 			var controls = new List<InputControlData>();
 			foreach (var entry in controlMap.entries)
 			{
+				////REVIEW: why are we making copies here?
 				var control = new InputControlData
 				{
 					name = entry.controlData.name,
-					controlType = entry.controlData.controlType
+					controlType = entry.controlData.controlType,
+					flags = entry.controlData.flags
+					////REVIEW: doesn't handle compounds
 				};
 				controls.Add(control);
 			}
@@ -166,7 +169,7 @@ namespace UnityEngine.InputNew
 			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
 		}
 		
-		public List<InputDevice> GetUsedDevices ()
+		public List<InputDevice> GetUsedDevices()
 		{
 			List<InputDevice> list = new List<InputDevice>();
 			for (int i = 0; i < m_DeviceStates.Count; i++)
@@ -174,17 +177,23 @@ namespace UnityEngine.InputNew
 			return list;
 		}
 		
-		public List<InputState> GetDeviceStates ()
+		public List<InputState> GetDeviceStates()
 		{
 			return m_DeviceStates;
 		}
 
 		#endregion
 
-		void BeginNewFrameEvent ()
+		#region Non-Public Methods
+
+		void BeginNewFrameEvent()
 		{
-			state.BeginNewFrame ();
+			state.BeginNewFrame();
+			foreach (var deviceState in m_DeviceStates)
+				deviceState.BeginNewFrame();
 		}
+
+		#endregion
 
 		#region Public Properties
 

@@ -22,7 +22,7 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public IEnumerable<Type> GetUsedDeviceType(int controlSchemeIndex)
+		public IEnumerable<Type> GetUsedDeviceTypes(int controlSchemeIndex)
 		{
 			if (entries == null)
 				return Enumerable.Empty<Type>();
@@ -30,6 +30,9 @@ namespace UnityEngine.InputNew
 			var deviceTypes = new HashSet<Type>();
 			foreach (var entry in entries)
 			{
+				if (controlSchemeIndex >= entry.bindings.Count)
+					continue;
+
 				var binding = entry.bindings[controlSchemeIndex];
 
 				foreach (var source in binding.sources)

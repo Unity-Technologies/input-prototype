@@ -33,6 +33,7 @@ public class TouchInputToEvents : MonoBehaviour
 				, delta = touch.deltaPosition
 				, deltaTime = touch.deltaTime
 				, phase = touch.phase
+				, time = Time.time
 			};
 
 			SendTouchEvent(newTouch);
