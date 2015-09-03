@@ -85,9 +85,9 @@ namespace UnityEngine.InputNew
 			get { return data.name; }
 		}
 
-		public void GetPrimarySourceNames(List<string> names)
+		public string GetPrimarySourceName(string buttonAxisFormattingString = "{0} & {1}")
 		{
-			m_State.controlProvider.GetPrimarySourceNames(index, names);
+			return m_State.controlProvider.GetPrimarySourceName(index, buttonAxisFormattingString);
 		}
 
 		#endregion

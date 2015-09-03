@@ -80,9 +80,9 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public virtual void GetPrimarySourceNames(int controlIndex, List<string> names)
+		public virtual string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
-			names.Add(this[controlIndex].name);
+			return this[controlIndex].name;
 		}
 		
 		protected void SetControlNameOverride (int controlIndex, string nameOverride)

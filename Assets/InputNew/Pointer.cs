@@ -27,9 +27,9 @@ namespace UnityEngine.InputNew
 					, componentControlIndices = new[] { (int)PointerControl.PositionX, (int)PointerControl.PositionY, (int)PointerControl.PositionZ }
 			});
 			
-			controls.Add(new InputControlData { name = "PositionX", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "PositionY", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "PositionZ", controlType = InputControlType.AbsoluteAxis });
+			controls.Add(new InputControlData { name = "Position X", controlType = InputControlType.AbsoluteAxis });
+			controls.Add(new InputControlData { name = "Position Y", controlType = InputControlType.AbsoluteAxis });
+			controls.Add(new InputControlData { name = "Position Z", controlType = InputControlType.AbsoluteAxis });
 			
 			controls.Add(item: new InputControlData
 			{
@@ -38,15 +38,15 @@ namespace UnityEngine.InputNew
 					, componentControlIndices = new[] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
 			});
 			
-			controls.Add(new InputControlData { name = "DeltaX", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "DeltaY", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "DeltaZ", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis });
 			controls.Add(new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "LeftButton", controlType = InputControlType.Button });
-			controls.Add(new InputControlData { name = "RightButton", controlType = InputControlType.Button });
-			controls.Add(new InputControlData { name = "MiddleButton", controlType = InputControlType.Button });
+			controls.Add(new InputControlData { name = "Left Button", controlType = InputControlType.Button });
+			controls.Add(new InputControlData { name = "Right Button", controlType = InputControlType.Button });
+			controls.Add(new InputControlData { name = "Middle Button", controlType = InputControlType.Button });
 			
 			if (additionalControls != null)
 				controls.AddRange(additionalControls);

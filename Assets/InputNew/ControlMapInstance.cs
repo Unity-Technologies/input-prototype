@@ -139,24 +139,25 @@ namespace UnityEngine.InputNew
 			return deviceState[source.controlIndex].value;
 		}
 		
-		public override void GetPrimarySourceNames(int controlIndex, List<string> names)
+		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
 			var entry = m_ControlMap.entries[controlIndex];
 			if (entry.bindings == null || entry.bindings.Count == 0)
-				return;
+				return string.Empty;
 			
 			var binding = entry.bindings[controlSchemeIndex];
 			
-			names.Clear();
 			if (binding.primaryIsButtonAxis && binding.buttonAxisSources != null && binding.buttonAxisSources.Count > 0)
 			{
-				names.Add(GetSourceName(binding.buttonAxisSources[0].negative));
-				names.Add(GetSourceName(binding.buttonAxisSources[0].positive));
+				return string.Format(buttonAxisFormattingString,
+					GetSourceName(binding.buttonAxisSources[0].negative),
+					GetSourceName(binding.buttonAxisSources[0].positive));
 			}
 			else if (binding.sources != null && binding.sources.Count > 0)
 			{
-				names.Add(GetSourceName(binding.sources[0]));
+				return GetSourceName(binding.sources[0]);
 			}
+			return string.Empty;
 		}
 		
 		private string GetSourceName(InputControlDescriptor source)

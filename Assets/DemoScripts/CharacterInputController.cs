@@ -83,14 +83,9 @@ public class CharacterInputController
 		GUILayout.Label(GetControlHelp(m_ControlMapInstance[menuControl]));
 	}
 	
-	static List<string> s_Names = new List<string>();
 	private string GetControlHelp (InputControl control)
 	{
-		control.GetPrimarySourceNames(s_Names);
-		if (s_Names.Count == 2)
-			return string.Format("Use {0} and {1} to {2}!", s_Names[0], s_Names[1], control.name);
-		else
-			return string.Format("Use {0} to {1}!", s_Names[0], control.name);
+		return string.Format("Use {0} to {1}!", control.GetPrimarySourceName(), control.name);
 	}
 
 	void Fire()
