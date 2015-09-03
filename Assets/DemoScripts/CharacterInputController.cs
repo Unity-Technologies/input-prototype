@@ -36,6 +36,13 @@ public class CharacterInputController
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
 	}
+	
+	public void SetupPlayer(ControlMapInstance controlMapInstance)
+	{
+		if (m_ControlMapInstance != null)
+			m_ControlMapInstance.Deactivate();
+		m_ControlMapInstance = controlMapInstance;
+	}
 
 	public void Update()
 	{
@@ -93,8 +100,9 @@ public class CharacterInputController
 		var newProjectile = Instantiate(projectile);
 		newProjectile.transform.position = head.position + head.forward * 0.6f;
 		newProjectile.transform.rotation = head.rotation;
-		newProjectile.transform.localScale *= sizer.size;
-		newProjectile.GetComponent<Rigidbody>().mass = Mathf.Pow(sizer.size, 3);
+		float size = (sizer == null ? 1 : sizer.size);
+		newProjectile.transform.localScale *= size;
+		newProjectile.GetComponent<Rigidbody>().mass = Mathf.Pow(size, 3);
 		newProjectile.GetComponent<Rigidbody>().AddForce(head.forward * 20f, ForceMode.Impulse);
 		newProjectile.GetComponent<MeshRenderer>().material.color = new Color( Random.value, Random.value, Random.value, 1.0f );
 	}
