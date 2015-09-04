@@ -40,8 +40,7 @@ public class CharacterInputController
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
 		
-		if (supportCursorLocking)
-			LockCursor();
+		LockCursor();
 	}
 	
 	public void SetupPlayer(ControlMapInstance controlMapInstance)
@@ -61,7 +60,7 @@ public class CharacterInputController
 		m_Rigid.velocity = new Vector3 (velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
-		if (!supportCursorLocking || isCursorLocked)
+		if (isCursorLocked)
 		{
 			var lookX = m_ControlMapInstance[lookControlX].value;
 			var lookY = m_ControlMapInstance[lookControlY].value;
@@ -86,14 +85,11 @@ public class CharacterInputController
 			}
 		}
 
-		if (supportCursorLocking)
-		{
-			if (m_ControlMapInstance[lockCursorControl].buttonDown)
-				LockCursor();
+		if (m_ControlMapInstance[lockCursorControl].buttonDown)
+			LockCursor();
 
-			if (m_ControlMapInstance[unlockCursorControl].buttonDown)
-				UnlockCursor();
-		}
+		if (m_ControlMapInstance[unlockCursorControl].buttonDown)
+			UnlockCursor();
 		
 		if (m_ControlMapInstance[menuControl].buttonDown)
 			sizer.ToggleMenu();
@@ -146,15 +142,5 @@ public class CharacterInputController
 	bool isCursorLocked
 	{
 		get { return Cursor.lockState == CursorLockMode.Locked; }
-	}
-
-	bool supportCursorLocking
-	{
-		// Cursor lock is badly broken in the editor and on OSX.
-#if UNITY_EDITOR || UNITY_STANDALONE_OSX
-		get { return false; }
-#else
-		get { return true; }
-#endif
 	}
 }
