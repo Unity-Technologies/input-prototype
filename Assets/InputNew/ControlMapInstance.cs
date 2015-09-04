@@ -49,7 +49,6 @@ namespace UnityEngine.InputNew
 				{
 					name = entry.controlData.name,
 					controlType = entry.controlData.controlType,
-					flags = entry.controlData.flags
 					////REVIEW: doesn't handle compounds
 				};
 				controls.Add(control);

@@ -7,6 +7,7 @@ public class MouseInputToEvents
 	: MonoBehaviour
 {
 	bool m_Ignore = false;
+	private bool m_HaveSentResetEvent;
 
 	public void Update()
 	{
@@ -40,8 +41,8 @@ public class MouseInputToEvents
 		var deltaX = Input.GetAxis("Mouse X");
 		var deltaY = Input.GetAxis("Mouse Y");
 
-		// Don't send events if the mouse hasn't moved.
-		if (deltaX == 0.0f && deltaY == 0.0f)
+		var deltaZero = (deltaX == 0.0f && deltaY == 0.0f);
+		if (deltaZero && m_HaveSentResetEvent)
 			return;
 
 		var inputEvent = InputSystem.CreateEvent<PointerMoveEvent>();
@@ -51,6 +52,11 @@ public class MouseInputToEvents
 		inputEvent.position = Input.mousePosition;
 
 		InputSystem.QueueEvent(inputEvent);
+
+		if (deltaZero)
+			m_HaveSentResetEvent = deltaZero;
+		else
+			m_HaveSentResetEvent = false;
 	}
 
 	void SendClickEvent(PointerControl controlIndex, bool clicked)

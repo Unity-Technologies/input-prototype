@@ -56,15 +56,6 @@ public class ControlMapEntryEditor : Editor
 			m_Entry.controlData = data;
 		}
 
-		EditorGUI.BeginChangeCheck();
-		var flags = (InputControlFlags)EditorGUILayout.EnumPopup("Flags", m_Entry.controlData.flags);
-		if (EditorGUI.EndChangeCheck())
-		{
-			InputControlData data = m_Entry.controlData;
-			data.flags = flags;
-			m_Entry.controlData = data;
-		}
-		
 		EditorGUILayout.Space();
 		
 		if (showCommon)

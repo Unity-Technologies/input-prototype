@@ -75,11 +75,6 @@ namespace UnityEngine.InputNew
 			get { return m_State.IsControlEnabled(m_Index); }
 		}
 
-		public InputControlFlags flags
-		{
-			get { return data.flags; }
-		}
-
 		private InputControlData data
 		{
 			get { return m_State.controlProvider.GetControlData(index); }

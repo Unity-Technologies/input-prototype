@@ -9,7 +9,6 @@ namespace UnityEngine.InputNew
 	{
 		public int[] componentControlIndices;
 		public InputControlType controlType;
-		public InputControlFlags flags;
 		public string name;
 	}
 }

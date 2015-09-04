@@ -97,9 +97,6 @@ namespace UnityEngine.InputNew
 					continue;
 				
 				m_PreviousStates[index] = m_CurrentStates[index];
-
-				if ((controlProvider[index].flags & InputControlFlags.AutomaticallyResetsAfterFrame) == InputControlFlags.AutomaticallyResetsAfterFrame)
-					m_CurrentStates[index] = 0.0f;
 			}
 		}
 

@@ -101,13 +101,11 @@ namespace UnityEngine.InputNew
 			{
 				  name = prefix + "DeltaX"
 				, controlType = InputControlType.AbsoluteAxis
-				, flags = InputControlFlags.AutomaticallyResetsAfterFrame
 			});
 			controls.Add(new InputControlData
 			{
 				  name = prefix + "DeltaY"
 				, controlType = InputControlType.AbsoluteAxis
-				, flags = InputControlFlags.AutomaticallyResetsAfterFrame
 			});
 		}
 

@@ -38,9 +38,9 @@ namespace UnityEngine.InputNew
 					, componentControlIndices = new[] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
 			});
 			
-			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
-			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
-			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis, flags = InputControlFlags.AutomaticallyResetsAfterFrame });
+			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis });
 			controls.Add(new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis });
