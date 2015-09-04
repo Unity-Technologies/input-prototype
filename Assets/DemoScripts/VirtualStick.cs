@@ -21,8 +21,10 @@ namespace UnityStandardAssets.CrossPlatformInput
 		public VirtualJoystickControl m_VerticalControl = VirtualJoystickControl.LeftStickY;
 
 		Vector3 m_StartPos;
+		Vector2 m_PointerDownPos;
 		bool m_UseX; // Toggle for using the x axis
 		bool m_UseY; // Toggle for using the Y axis
+		Camera m_EventCamera;
 
 		void OnEnable()
 		{
@@ -31,7 +33,10 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 		void Start()
 		{
-			m_StartPos = transform.position;
+			m_StartPos = (transform as RectTransform).anchoredPosition;
+			Canvas canvas = GetComponentInParent<Canvas>();
+			if (canvas)
+				m_EventCamera = canvas.worldCamera;
 		}
 
 		void UpdateVirtualAxes(Vector3 delta)
@@ -50,9 +55,16 @@ namespace UnityStandardAssets.CrossPlatformInput
 			m_UseY = (m_AxesToUse == AxisOption.Both || m_AxesToUse == AxisOption.OnlyVertical);
 		}
 
+		public void OnPointerDown(PointerEventData data)
+		{
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(transform.parent as RectTransform, data.position, m_EventCamera, out m_PointerDownPos);
+		}
+
 		public void OnDrag(PointerEventData data)
 		{
-			Vector2 delta = data.position - (Vector2)m_StartPos;
+			Vector2 position;
+			RectTransformUtility.ScreenPointToLocalPointInRectangle(transform.parent as RectTransform, data.position, m_EventCamera, out position);
+			Vector2 delta = position - m_PointerDownPos;
 
 			if (!m_UseX)
 				delta.x = 0;
@@ -62,18 +74,14 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 			delta = Vector2.ClampMagnitude(delta, m_MovementRange);
 
-			transform.position = m_StartPos + (Vector3)delta;
+			(transform as RectTransform).anchoredPosition = m_StartPos + (Vector3)delta;
 			UpdateVirtualAxes(delta / m_MovementRange);
 		}
 
-
 		public void OnPointerUp(PointerEventData data)
 		{
-			transform.position = m_StartPos;
+			(transform as RectTransform).anchoredPosition = m_StartPos;
 			UpdateVirtualAxes(Vector2.zero);
 		}
-
-
-		public void OnPointerDown(PointerEventData data) { }
 	}
 }
