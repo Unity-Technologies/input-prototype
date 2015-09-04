@@ -20,543 +20,543 @@ MonoBehaviour:
   mappings:
   - targetIndex: 0
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 1
     fromRange:
-      max: 0
-      min: 0
+      min: 1
+      max: -1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 3
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 4
     fromRange:
-      max: 0
-      min: 0
+      min: 1
+      max: -1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 14
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
       min: 0
+      max: 1
   - targetIndex: 15
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
       min: 0
+      max: 1
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 8
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 9
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 6
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 7
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 22
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 21
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 5
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 2
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 16
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 17
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
-  - targetIndex: 21
+      min: -1
+      max: 1
+  - targetIndex: 24
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 10
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 11
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 12
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 13
     fromRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
     toRange:
-      max: 0
-      min: 0
+      min: -1
+      max: 1
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   - targetIndex: 0
     fromRange:
-      max: 0
       min: 0
+      max: 0
     toRange:
-      max: 0
       min: 0
+      max: 0
   nameOverrides:
   - Left Stick X
   - Left Stick Y
@@ -582,7 +582,7 @@ MonoBehaviour:
   - Back
   - Start
   - 
-  - 
+  - System
   - 
   - 
   - 

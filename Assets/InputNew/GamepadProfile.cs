@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using Assets.Utilities;
 
 namespace UnityEngine.InputNew
 {
@@ -9,9 +8,14 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 
-		public void SetMapping(int sourceControlIndex, GamepadControl targetControlIndex, string displayName = null)
+		public void SetMapping(int sourceControlIndex, GamepadControl targetControlIndex, string displayName)
 		{
-			SetMapping(sourceControlIndex, (int)targetControlIndex, displayName);
+			SetMapping(sourceControlIndex, (int)targetControlIndex, displayName, Range.full, Range.full);
+		}
+
+		public void SetMapping(int sourceControlIndex, GamepadControl targetControlIndex, string displayName, Range sourceRange, Range targetRange)
+		{
+			SetMapping(sourceControlIndex, (int)targetControlIndex, displayName, sourceRange, targetRange);
 		}
 
 		#endregion

@@ -135,18 +135,18 @@ public static class CreateDemoAssets
 
 	static void CreateXbox360MacProfileAsset()
 	{
-		var profile = ScriptableObject.CreateInstance< GamepadProfile >();
+		var profile = ScriptableObject.CreateInstance<GamepadProfile>();
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("OS X");
 		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >(), EnumHelpers.GetValueCount< GamepadControl >());
 		
 		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
-		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y");
+		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);
 		profile.SetMapping(21, GamepadControl.LeftStickButton, "Left Stick Button");
 		
 		profile.SetMapping(02, GamepadControl.RightStickX, "Right Stick X");
-		profile.SetMapping(03, GamepadControl.RightStickY, "Right Stick Y");
+		profile.SetMapping(03, GamepadControl.RightStickY, "Right Stick Y", Range.fullInverse, Range.full);
 		profile.SetMapping(22, GamepadControl.RightStickButton, "Right Stick Button");
 		
 		profile.SetMapping(15, GamepadControl.DPadUp, "DPad Up");
@@ -159,8 +159,8 @@ public static class CreateDemoAssets
 		profile.SetMapping(28, GamepadControl.Action3, "X");
 		profile.SetMapping(29, GamepadControl.Action4, "Y");
 		
-		profile.SetMapping(04, GamepadControl.LeftTrigger, "Left Trigger");
-		profile.SetMapping(05, GamepadControl.RightTrigger, "Right Trigger");
+		profile.SetMapping(04, GamepadControl.LeftTrigger, "Left Trigger", Range.full, Range.positive);
+		profile.SetMapping(05, GamepadControl.RightTrigger, "Right Trigger", Range.full, Range.positive);
 		profile.SetMapping(23, GamepadControl.LeftBumper, "Left Bumper");
 		profile.SetMapping(24, GamepadControl.RightBumper, "Right Bumper");
 		

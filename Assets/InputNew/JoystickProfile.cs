@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using Assets.Utilities;
 
 namespace UnityEngine.InputNew
 {
@@ -23,7 +22,11 @@ namespace UnityEngine.InputNew
 			{
 				var mapping = mappings[controlEvent.controlIndex];
 				if (mapping.targetIndex != -1)
+				{
 					controlEvent.controlIndex = mapping.targetIndex;
+					controlEvent.value = Mathf.InverseLerp(mapping.fromRange.min, mapping.fromRange.max, controlEvent.value);
+					controlEvent.value = Mathf.Lerp(mapping.toRange.min, mapping.toRange.max, controlEvent.value);
+				}
 			}
 		}
 
@@ -33,11 +36,13 @@ namespace UnityEngine.InputNew
 			nameOverrides = new string[tarcontrolCount];
 		}
 
-		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName = null)
+		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName, Range sourceRange, Range targetRange)
 		{
 			mappings[sourceControlIndex] = new JoystickControlMapping
 			{
-				targetIndex = targetControlIndex
+				targetIndex = targetControlIndex,
+				fromRange = sourceRange,
+				toRange = targetRange
 			};
 			nameOverrides[targetControlIndex] = displayName;
 		}
