@@ -54,7 +54,7 @@ public class MouseInputToEvents
 		InputSystem.QueueEvent(inputEvent);
 
 		if (deltaZero)
-			m_HaveSentResetEvent = deltaZero;
+			m_HaveSentResetEvent = true;
 		else
 			m_HaveSentResetEvent = false;
 	}
