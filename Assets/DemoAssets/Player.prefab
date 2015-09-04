@@ -336,6 +336,7 @@ GameObject:
   - 222: {fileID: 22274860}
   - 114: {fileID: 11439398}
   - 114: {fileID: 11443796}
+  - 225: {fileID: 22577894}
   m_Layer: 5
   m_Name: ControlsText
   m_TagString: Untagged
@@ -1345,6 +1346,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!225 &22577894
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 197318}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
