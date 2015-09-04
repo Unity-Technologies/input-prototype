@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputNew;
 using Random = UnityEngine.Random;
 
@@ -31,6 +32,7 @@ public class CharacterInputController
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
 	public CubeSizer sizer;
+	public Text controlsText;
 
 	public void Awake()
 	{
@@ -90,16 +92,21 @@ public class CharacterInputController
 		
 		if (m_ControlMapInstance[menuControl].buttonDown)
 			sizer.ToggleMenu();
+		
+		HandleControlsText();
 	}
 	
-	public void OnGUI()
+	void HandleControlsText()
 	{
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[moveControlX]));
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[moveControlY]));
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlX]));
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[lookControlY]));
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[fireControl]));
-		GUILayout.Label(GetControlHelp(m_ControlMapInstance[menuControl]));
+		string help = string.Empty;
+		
+		help += GetControlHelp(m_ControlMapInstance[moveControlX]) + "\n";
+		help += GetControlHelp(m_ControlMapInstance[moveControlY]) + "\n";
+		help += GetControlHelp(m_ControlMapInstance[lookControlX]) + "\n";
+		help += GetControlHelp(m_ControlMapInstance[lookControlY]) + "\n";
+		help += GetControlHelp(m_ControlMapInstance[fireControl]) + "\n";
+		help += GetControlHelp(m_ControlMapInstance[menuControl]);
+		controlsText.text = help;
 	}
 	
 	private string GetControlHelp (InputControl control)

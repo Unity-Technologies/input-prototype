@@ -307,6 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 129762, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
   controlMap: {fileID: 11400000, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  hubCamera: {fileID: 1351372090}
   readyControl: {fileID: 11475006, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
   leaveControl: {fileID: 11401696, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
   navigateControl: {fileID: 11428232, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}

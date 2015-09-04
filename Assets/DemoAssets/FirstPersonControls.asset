@@ -40,7 +40,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
-    flags: 0
     name: Menu
   bindings:
   - sources:
@@ -87,7 +86,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
-    flags: 0
     name: UnlockCursor
   bindings:
   - sources:
@@ -128,7 +126,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 0000000001000000
     controlType: 3
-    flags: 0
     name: Move
   bindings: []
 --- !u!114 &11423282
@@ -145,7 +142,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
-    flags: 0
     name: LockCursor
   bindings:
   - sources:
@@ -186,7 +182,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    flags: 0
     name: MoveX
   bindings:
   - sources: []
@@ -246,7 +241,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    flags: 1
     name: LookX
   bindings:
   - sources:
@@ -293,7 +287,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    flags: 0
     name: MoveY
   bindings:
   - sources: []
@@ -353,7 +346,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 0300000004000000
     controlType: 3
-    flags: 0
     name: Look
   bindings: []
 --- !u!114 &11475006
@@ -370,7 +362,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 0
-    flags: 0
     name: Fire
   bindings:
   - sources:
@@ -417,7 +408,6 @@ MonoBehaviour:
   m_ControlData:
     componentControlIndices: 
     controlType: 1
-    flags: 1
     name: LookY
   bindings:
   - sources:
