@@ -37,10 +37,10 @@ namespace UnityStandardAssets.CrossPlatformInput
 		void UpdateVirtualAxes(Vector3 delta)
 		{
 			if (m_UseX)
-				InputSystem.virtualJoystick.SetAxisValue((int)m_HorizontalControl, delta.x);
+				VirtualJoystick.current.SetAxisValue((int)m_HorizontalControl, delta.x);
 
 			if (m_UseY)
-				InputSystem.virtualJoystick.SetAxisValue((int)m_VerticalControl, delta.y);
+				VirtualJoystick.current.SetAxisValue((int)m_VerticalControl, delta.y);
 		}
 
 		void CreateVirtualAxes()

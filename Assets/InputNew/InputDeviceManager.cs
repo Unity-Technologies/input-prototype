@@ -204,31 +204,6 @@ namespace UnityEngine.InputNew
 
 		#region Public Properties
 
-		public Pointer pointer
-		{
-			get { return GetMostRecentlyUsedDevice<Pointer>(); }
-		}
-
-		public Mouse mouse
-		{
-			get { return GetMostRecentlyUsedDevice<Mouse>(); }
-		}
-
-		public Keyboard keyboard
-		{
-			get { return GetMostRecentlyUsedDevice<Keyboard>(); }
-		}
-
-		public Touchscreen touchscreen
-		{
-			get { return GetMostRecentlyUsedDevice<Touchscreen>(); }
-		}
-
-		public VirtualJoystick virtualJoystick
-		{
-			get { return GetMostRecentlyUsedDevice<VirtualJoystick>(); }
-		}
-
 		public IEnumerable<InputDevice> devices
 		{
 			get

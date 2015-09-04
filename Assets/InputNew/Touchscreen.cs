@@ -34,6 +34,8 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Methods
+		
+		public new static Touchscreen current { get { return InputSystem.GetMostRecentlyUsedDevice<Touchscreen>(); } }
 
 		public void SendSimulatedPointerEvents(TouchEvent touchEvent, bool cursorLocked)
 		{

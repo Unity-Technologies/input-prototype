@@ -57,6 +57,8 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Methods
+		
+		public static Pointer current { get { return InputSystem.GetMostRecentlyUsedDevice<Pointer>(); } }
 
 		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{

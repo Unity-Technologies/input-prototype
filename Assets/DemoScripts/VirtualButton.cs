@@ -19,14 +19,14 @@ namespace UnityStandardAssets.CrossPlatformInput
 		public void OnPointerUp(PointerEventData data)
 		{
 			m_Down = false;
-			InputSystem.virtualJoystick.SetButtonValue((int)m_ButtonControl, m_Down);
+			VirtualJoystick.current.SetButtonValue((int)m_ButtonControl, m_Down);
 		}
 
 
 		public void OnPointerDown(PointerEventData data)
 		{
 			m_Down = true;
-			InputSystem.virtualJoystick.SetButtonValue((int)m_ButtonControl, m_Down);
+			VirtualJoystick.current.SetButtonValue((int)m_ButtonControl, m_Down);
 		}
 	}
 }

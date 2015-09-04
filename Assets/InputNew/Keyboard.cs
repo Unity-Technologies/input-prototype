@@ -47,6 +47,8 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Methods
+		
+		public static Keyboard current { get { return InputSystem.GetMostRecentlyUsedDevice<Keyboard>(); } }
 
 		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{

@@ -16,5 +16,7 @@ namespace UnityEngine.InputNew
 			: base(deviceName, controls) { }
 
 		#endregion
+		
+		public new static Mouse current { get { return InputSystem.GetMostRecentlyUsedDevice<Mouse>(); } }
 	}
 }

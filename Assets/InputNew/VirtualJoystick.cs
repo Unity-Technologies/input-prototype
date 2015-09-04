@@ -63,6 +63,8 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
+		public static VirtualJoystick current { get { return InputSystem.GetMostRecentlyUsedDevice<VirtualJoystick>(); } }
+		
 		public void SetAxisValue(int controlIndex, float value)
 		{
 			float currentValue = this[controlIndex].value;

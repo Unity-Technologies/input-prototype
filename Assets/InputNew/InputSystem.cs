@@ -230,7 +230,7 @@ namespace UnityEngine.InputNew
 			////FIXME: should take actual touchdevice in inputEvent into account
 			var touchEvent = inputEvent as TouchEvent;
 			if (touchEvent != null)
-				touchscreen.SendSimulatedPointerEvents(touchEvent, Cursor.lockState == CursorLockMode.Locked);
+				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, Cursor.lockState == CursorLockMode.Locked);
 			return false;
 		}
 
@@ -246,34 +246,15 @@ namespace UnityEngine.InputNew
 		public static IInputConsumer consumerStack { get; private set; }
 		public static IInputConsumer rewriterStack { get; private set; }
 
-		public static Pointer pointer
-		{
-			get { return s_Devices.pointer; }
-		}
-
-		public static Keyboard keyboard
-		{
-			get { return s_Devices.keyboard; }
-		}
-
-		public static Mouse mouse
-		{
-			get { return s_Devices.mouse; }
-		}
-
-		public static Touchscreen touchscreen
-		{
-			get { return s_Devices.touchscreen; }
-		}
-
-		public static VirtualJoystick virtualJoystick
-		{
-			get { return s_Devices.virtualJoystick; }
-		}
-
 		public static IEnumerable<InputDevice> devices
 		{
 			get { return s_Devices.devices; }
+		}
+		
+		public static TDevice GetMostRecentlyUsedDevice<TDevice>()
+			where TDevice : InputDevice
+		{
+			return s_Devices.GetMostRecentlyUsedDevice<TDevice>();
 		}
 		
 		public static List<InputDevice> leastToMostRecentlyUsedDevices
