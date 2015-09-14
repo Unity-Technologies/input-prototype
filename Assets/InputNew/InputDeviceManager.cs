@@ -159,7 +159,8 @@ namespace UnityEngine.InputNew
 				{
 					foreach (var deviceName in profile.deviceNames)
 					{
-						if (string.Compare(deviceName, device.deviceName, StringComparison.InvariantCulture) == 0)
+						if (string.Compare(deviceName, device.deviceName, StringComparison.InvariantCulture) == 0 &&
+							IsProfileSupportedOnThisPlatform(profile))
 							return profile;
 					}
 				}
