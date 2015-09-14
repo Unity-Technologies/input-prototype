@@ -31,13 +31,15 @@ namespace UnityEngine.InputNew
 			var mouseDevice = new Mouse();
 			var keyboardDevice = new Keyboard();
 			var touchscreenDevice = new Touchscreen();
-			var gamepadDevice = new Gamepad();
+			var gamepadDevice1 = new Gamepad();
+			var gamepadDevice2 = new Gamepad();
 			var virtualJoystickDevice = new VirtualJoystick();
 
 			RegisterDevice(touchscreenDevice); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
 			RegisterDevice(mouseDevice);
 			RegisterDevice(keyboardDevice);
-			RegisterDevice(gamepadDevice);
+			RegisterDevice(gamepadDevice1);
+			RegisterDevice(gamepadDevice2);
 			RegisterDevice(virtualJoystickDevice);
 		}
 
