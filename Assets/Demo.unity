@@ -686,6 +686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profiles:
   - {fileID: 11400000, guid: 1f0b6f1051a864d66ab7abeff1df6464, type: 2}
+  - {fileID: 11400000, guid: 891fa6df0f6fd4f2da335b1f251f3a84, type: 2}
 --- !u!114 &1320763609
 MonoBehaviour:
   m_ObjectHideFlags: 0

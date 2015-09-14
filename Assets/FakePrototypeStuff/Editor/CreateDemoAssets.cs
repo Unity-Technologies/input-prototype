@@ -131,6 +131,7 @@ public static class CreateDemoAssets
 	public static void CreateDeviceProfileAsset()
 	{
 		CreateXbox360MacProfileAsset();
+		CreateXbox360WinProfileAsset();
 	}
 
 	static void CreateXbox360MacProfileAsset()
@@ -169,6 +170,44 @@ public static class CreateDemoAssets
 		profile.SetMapping(25, GamepadControl.System, "System");
 		
 		const string path = "Assets/FakePrototypeStuff/Xbox360MacProfile.asset";
+		AssetDatabase.CreateAsset(profile, path);
+	}
+	
+	static void CreateXbox360WinProfileAsset()
+	{
+		var profile = ScriptableObject.CreateInstance<GamepadProfile>();
+		
+		profile.AddDeviceName("Gamepad");
+		profile.AddSupportedPlatform("Windows");
+		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >(), EnumHelpers.GetValueCount< GamepadControl >());
+		
+		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
+		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(18, GamepadControl.LeftStickButton, "Left Stick Button");
+		
+		profile.SetMapping(03, GamepadControl.RightStickX, "Right Stick X");
+		profile.SetMapping(04, GamepadControl.RightStickY, "Right Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(19, GamepadControl.RightStickButton, "Right Stick Button");
+		
+		profile.SetMapping(06, GamepadControl.DPadUp, "DPad Up");
+		profile.SetMapping(06, GamepadControl.DPadDown, "DPad Down");
+		profile.SetMapping(05, GamepadControl.DPadLeft, "DPad Left");
+		profile.SetMapping(05, GamepadControl.DPadRight, "DPad Right"); //  TODO map one input to two outputs
+		
+		profile.SetMapping(10, GamepadControl.Action1, "A");
+		profile.SetMapping(11, GamepadControl.Action2, "B");
+		profile.SetMapping(12, GamepadControl.Action3, "X");
+		profile.SetMapping(13, GamepadControl.Action4, "Y");
+		
+		profile.SetMapping(08, GamepadControl.LeftTrigger, "Left Trigger", Range.full, Range.positive);
+		profile.SetMapping(09, GamepadControl.RightTrigger, "Right Trigger", Range.full, Range.positive);
+		profile.SetMapping(14, GamepadControl.LeftBumper, "Left Bumper");
+		profile.SetMapping(15, GamepadControl.RightBumper, "Right Bumper");
+		
+		profile.SetMapping(17, GamepadControl.Start, "Start");
+		profile.SetMapping(16, GamepadControl.Back, "Back");
+		
+		const string path = "Assets/FakePrototypeStuff/Xbox360WinProfile.asset";
 		AssetDatabase.CreateAsset(profile, path);
 	}
 }

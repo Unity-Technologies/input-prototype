@@ -165,6 +165,20 @@ namespace UnityEngine.InputNew
 			return null;
 		}
 
+		public bool IsProfileSupportedOnThisPlatform (InputDeviceProfile profile)
+		{
+			if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
+				return true;
+			
+			foreach (var platform in profile.supportedPlatforms)
+			{
+				if (m_Platform.Contains(platform.ToUpper()))
+					return true;
+			}
+			
+			return false;
+		}
+
 		void RegisterDeviceInternal(Type deviceType, InputDevice device)
 		{
 			List<InputDevice> list;
@@ -230,6 +244,7 @@ namespace UnityEngine.InputNew
 		readonly Dictionary<Type, List<InputDevice>> m_Devices = new Dictionary<Type, List<InputDevice>>();
 		readonly List<InputDevice> m_LeastToMostRecentlyUsedDevices = new List<InputDevice>();
 		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
+		readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
 
 		#endregion
 	}
