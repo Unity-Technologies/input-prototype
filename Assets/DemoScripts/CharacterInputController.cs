@@ -36,7 +36,7 @@ public class CharacterInputController
 
 	public void Awake()
 	{
-		m_ControlMapInstance = new ControlMapCombinedInstance(controlMap);
+		m_ControlMapInstance = InputSystem.CreateMapInstance(controlMap);
 		sizer.referenceControlMapInstance = m_ControlMapInstance;
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();

@@ -28,7 +28,7 @@ public class CubeSizer : MonoBehaviour {
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_ControlMapInstance = InputSystem.BindInputs(controlMap, referenceControlMapInstance);
+		m_ControlMapInstance = InputSystem.CreateMapInstance(controlMap, referenceControlMapInstance);
 		m_ControlMapInstance.Activate();
 	}
 	

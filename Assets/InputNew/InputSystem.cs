@@ -88,30 +88,18 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static IEnumerable<ControlMapInstance> BindInputs(ControlMap controlMap, bool localMultiplayer = false)
+		public static IEnumerable<ControlMapInstance> CreateMapInstances(ControlMap controlMap, bool onlySingleInstancePerScheme = false)
 		{
 			for (var i = 0; i < controlMap.schemes.Count; ++ i)
 			{
-				foreach (var instance in BindInputs(controlMap, localMultiplayer, i))
+				foreach (var instance in CreateMapInstances(controlMap, i, onlySingleInstancePerScheme))
 				{
 					yield return instance;
 				}
 			}
 		}
 
-		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
-		{
-			List<int> entries;
-			if (!perDeviceTypeMapEntries.TryGetValue(control.deviceType, out entries))
-			{
-				entries = new List<int>();
-				perDeviceTypeMapEntries[control.deviceType] = entries;
-			}
-
-			entries.Add(control.controlIndex);
-		}
-
-		public static IEnumerable<ControlMapInstance> BindInputs(ControlMap controlMap, bool localMultiplayer, int controlSchemeIndex)
+		public static IEnumerable<ControlMapInstance> CreateMapInstances(ControlMap controlMap, int controlSchemeIndex, bool onlySingleInstancePerScheme = false)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
@@ -134,7 +122,7 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
 
-			if (localMultiplayer)
+			if (!onlySingleInstancePerScheme)
 			{
 				// Gather available devices for each type of device.
 				var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
@@ -166,8 +154,6 @@ namespace UnityEngine.InputNew
 			}
 			else
 			{
-				////TODO: make ControlMapInstance hook into MRU device change event and respond by updating its device states
-
 				var deviceStates = new List<InputState>();
 
 				// Create device states for most recently used device of given types.
@@ -185,23 +171,25 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		// This is for having explicit control over what devices go into a ControlMapInstance.
-		public static ControlMapInstance BindInputs(ControlMap controlMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
+		public static ControlMapInstance CreateMapInstance(ControlMap controlMap)
 		{
-			// Create state for every device.
-			var deviceStates = new List<InputState>();
-			foreach (var device in devices)
-			{
-				deviceStates.Add(new InputState(device));
-			}
-
-			// Create map instance.
-			return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
+			return new ControlMapCombinedInstance(controlMap);
 		}
-		
+
+		// This is for creating an instance of a control map that matches the same devices as another control map instance.
+		// If the otherControlMapInstance listens to all devices, the new one will too.
+		// If the otherControlMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
+		public static ControlMapInstance CreateMapInstance(ControlMap controlMap, ControlMapInstance otherControlMapInstance)
+		{
+			if (otherControlMapInstance is ControlMapCombinedInstance)
+				return new ControlMapCombinedInstance(controlMap);
+			
+			return CreateMapInstance(controlMap, otherControlMapInstance.GetUsedDevices());
+		}
+
 		// This is for having explicit control over what devices go into a ControlMapInstance,
 		// and automatically determining the control scheme based on it.
-		public static ControlMapInstance BindInputs(ControlMap controlMap, IEnumerable<InputDevice> devices)
+		public static ControlMapInstance CreateMapInstance(ControlMap controlMap, IEnumerable<InputDevice> devices)
 		{
 			int matchingControlSchemeIndex = -1;
 			for (int scheme = 0; scheme < controlMap.schemes.Count; scheme++)
@@ -237,18 +225,33 @@ namespace UnityEngine.InputNew
 			if (matchingControlSchemeIndex == -1)
 				return null;
 			
-			return BindInputs(controlMap, devices, matchingControlSchemeIndex);
+			return CreateMapInstance(controlMap, devices, matchingControlSchemeIndex);
 		}
-		
-		// This is for creating an instance of a control map that matches the same devices as another control map instance.
-		// If the otherControlMapInstance listens to all devices, the new one will too.
-		// If the otherControlMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
-		public static ControlMapInstance BindInputs(ControlMap controlMap, ControlMapInstance otherControlMapInstance)
+
+		// This is for having explicit control over what devices go into a ControlMapInstance.
+		public static ControlMapInstance CreateMapInstance(ControlMap controlMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
 		{
-			if (otherControlMapInstance is ControlMapCombinedInstance)
-				return new ControlMapCombinedInstance(controlMap);
+			// Create state for every device.
+			var deviceStates = new List<InputState>();
+			foreach (var device in devices)
+			{
+				deviceStates.Add(new InputState(device));
+			}
 			
-			return BindInputs(controlMap, otherControlMapInstance.GetUsedDevices());
+			// Create map instance.
+			return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
+		}
+
+		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
+		{
+			List<int> entries;
+			if (!perDeviceTypeMapEntries.TryGetValue(control.deviceType, out entries))
+			{
+				entries = new List<int>();
+				perDeviceTypeMapEntries[control.deviceType] = entries;
+			}
+			
+			entries.Add(control.controlIndex);
 		}
 
 		#endregion

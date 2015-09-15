@@ -30,7 +30,7 @@ public class MultiplayerManager
 	
 	public void Start()
 	{
-		var potentialPlayerInputs = InputSystem.BindInputs(controlMap, true).ToList();
+		var potentialPlayerInputs = InputSystem.CreateMapInstances(controlMap).ToList();
 		for (int i = 0; i < potentialPlayerInputs.Count; i++)
 		{
 			potentialPlayerInputs[i].Activate();
