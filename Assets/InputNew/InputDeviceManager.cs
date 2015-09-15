@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 
 		#region Public Events
 
-		public DeviceConnectDisconnectEvent deviceConnectedDisconnected;
+		public DeviceConnectDisconnectEvent deviceConnectedDisconnected = null;
 
 		#endregion
 
