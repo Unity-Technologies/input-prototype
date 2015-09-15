@@ -7,8 +7,8 @@ using UnityEngine.InputNew;
 // since it's not integrated with the Input System prototype at this point.
 // UI is only used for graphics.
 
-public class CubeSizer : MonoBehaviour {
-
+public class CubeSizer : MonoBehaviour
+{
 	ControlMapInstance m_ControlMapInstance;
 	
 	public ControlMap controlMap;

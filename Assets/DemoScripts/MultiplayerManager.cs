@@ -105,7 +105,7 @@ public class MultiplayerManager
 			GUILayout.Space(20);
 			
 			GUI.color = colors[player.colorIndex];
-			GUILayout.Button (GUIContent.none, GUILayout.Height(50));
+			GUILayout.Button(GUIContent.none, GUILayout.Height(50));
 			GUI.color = Color.white;
 			
 			GUILayout.BeginVertical();

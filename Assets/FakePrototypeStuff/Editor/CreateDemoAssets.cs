@@ -6,9 +6,9 @@ using Assets.Utilities;
 
 public static class CreateDemoAssets
 {
-	private static ControlMapEntry CreateControl (string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
+	private static ControlMapEntry CreateControl(string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
 	{
-		var entry = ScriptableObject.CreateInstance< ControlMapEntry >();
+		var entry = ScriptableObject.CreateInstance<ControlMapEntry>();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -18,11 +18,11 @@ public static class CreateDemoAssets
 		return entry;
 	}
 	
-	private static ControlBinding CreateBinding (System.Type deviceType, int controlIndex)
+	private static ControlBinding CreateBinding(System.Type deviceType, int controlIndex)
 	{
 		return new ControlBinding 
 		{
-			sources = new List< InputControlDescriptor >
+			sources = new List<InputControlDescriptor>
 			{
 				new InputControlDescriptor
 				{
@@ -33,7 +33,7 @@ public static class CreateDemoAssets
 		};
 	}
 	
-	private static ControlBinding CreateButtonAxisBinding (System.Type deviceType, params int[] controlIndices)
+	private static ControlBinding CreateButtonAxisBinding(System.Type deviceType, params int[] controlIndices)
 	{
 		if (controlIndices.Length % 2 != 0)
 			throw new System.Exception("Number of indices must be even.");
@@ -60,9 +60,9 @@ public static class CreateDemoAssets
 		return binding;
 	}
 	
-	private static ControlMapEntry CreateControlComposite (string name, InputControlType controlType, int[] indices)
+	private static ControlMapEntry CreateControlComposite(string name, InputControlType controlType, int[] indices)
 	{
-		var entry = ScriptableObject.CreateInstance< ControlMapEntry >();
+		var entry = ScriptableObject.CreateInstance<ControlMapEntry>();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -75,10 +75,10 @@ public static class CreateDemoAssets
 	[ MenuItem("Tools/Create Input Map Asset") ]
 	public static void CreateInputMapAsset()
 	{
-		var controlMap = ScriptableObject.CreateInstance< ControlMap >();
-		controlMap.schemes = new List< string > { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
+		var controlMap = ScriptableObject.CreateInstance<ControlMap>();
+		controlMap.schemes = new List<string> { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
 
-		var entries = new List< ControlMapEntry >();
+		var entries = new List<ControlMapEntry>();
 		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
@@ -147,7 +147,7 @@ public static class CreateDemoAssets
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("OS X");
-		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >(), EnumHelpers.GetValueCount< GamepadControl >());
+		profile.SetMappingsCount(EnumHelpers.GetValueCount<GamepadControl>(), EnumHelpers.GetValueCount<GamepadControl>());
 		
 		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
 		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);
@@ -186,7 +186,7 @@ public static class CreateDemoAssets
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("Windows");
-		profile.SetMappingsCount(EnumHelpers.GetValueCount< GamepadControl >(), EnumHelpers.GetValueCount< GamepadControl >());
+		profile.SetMappingsCount(EnumHelpers.GetValueCount<GamepadControl>(), EnumHelpers.GetValueCount<GamepadControl>());
 		
 		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
 		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);

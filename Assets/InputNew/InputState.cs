@@ -88,7 +88,7 @@ namespace UnityEngine.InputNew
 
 		#region Non-Public Methods
 
-		internal void BeginNewFrame ()
+		internal void BeginNewFrame()
 		{
 			var stateCount = m_Enabled.Length;
 			for (var index = 0; index < stateCount; ++index)

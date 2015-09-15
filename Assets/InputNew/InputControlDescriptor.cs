@@ -31,7 +31,7 @@ namespace UnityEngine.InputNew
 
 		private Type m_CachedDeviceType;
 		
-		public override string ToString ()
+		public override string ToString()
 		{
 			return string.Format( "(device:{0}, control:{1})", deviceType.Name, controlIndex );
 		}

@@ -12,7 +12,7 @@ namespace UnityEngine.InputNew
 	{
 		#region Public Methods
 
-		public override string ToString ()
+		public override string ToString()
 		{
 			if (deviceType == null)
 				return base.ToString ();
@@ -55,7 +55,7 @@ namespace UnityEngine.InputNew
 			get
 			{
 				if (m_CachedDevice == null && deviceType != null)
-					m_CachedDevice = InputSystem.LookupDevice (deviceType, deviceIndex);
+					m_CachedDevice = InputSystem.LookupDevice(deviceType, deviceIndex);
 
 				return m_CachedDevice;
 			}

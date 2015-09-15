@@ -270,9 +270,9 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		internal static void BeginNewFrame ()
+		internal static void BeginNewFrame()
 		{
-			s_EventTree.BeginNewFrame (s_EventTree);
+			s_EventTree.BeginNewFrame(s_EventTree);
 		}
 
 		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)

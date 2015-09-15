@@ -15,6 +15,6 @@ public class InputManager
 
 	public void Update()
 	{
-		InputSystem.BeginNewFrame ();
+		InputSystem.BeginNewFrame();
 	}
 }

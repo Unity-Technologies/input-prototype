@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 			Setup(controlMap, controlSchemeIndex, deviceStates);
 		}
 
-		protected ControlMapInstance () {}
+		protected ControlMapInstance() {}
 
 		#endregion
 
@@ -34,7 +34,7 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
-		protected void Setup (ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		protected void Setup(ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
 			this.controlSchemeIndex = controlSchemeIndex;
 			m_DeviceStates = deviceStates;

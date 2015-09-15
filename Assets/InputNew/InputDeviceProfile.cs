@@ -27,7 +27,7 @@ namespace UnityEngine.InputNew
 			ArrayHelpers.AppendUnique(ref deviceRegexes, regex);
 		}
 		
-		public virtual string GetControlNameOverride (int controlIndex)
+		public virtual string GetControlNameOverride(int controlIndex)
 		{
 			return null;
 		}

@@ -7,13 +7,13 @@ namespace UnityEngine.InputNew
 {
 	public class ControlMapCombinedInstance : ControlMapInstance
 	{
-		public ControlMapCombinedInstance (ControlMap controlMap)
+		public ControlMapCombinedInstance(ControlMap controlMap)
 		{
 			m_ControlMap = controlMap;
 			Rebind();
 		}
 		
-		public void Rebind ()
+		public void Rebind()
 		{
 			m_MapInstances = InputSystem.CreateMapInstances(m_ControlMap, true).ToList();
 			
@@ -50,7 +50,7 @@ namespace UnityEngine.InputNew
 					break;
 			}
 			
-			Setup (m_ControlMap, controlSchemeIndex, m_MapInstances[controlSchemeIndex].GetDeviceStates());
+			Setup(m_ControlMap, controlSchemeIndex, m_MapInstances[controlSchemeIndex].GetDeviceStates());
 		}
 		
 		public override bool ProcessEvent(InputEvent inputEvent)

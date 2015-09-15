@@ -55,14 +55,14 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		internal void BeginNewFrame (IInputConsumer consumer)
+		internal void BeginNewFrame(IInputConsumer consumer)
 		{
 			var callback = consumer.beginNewFrame;
 			if (callback != null)
-				callback ();
+				callback();
 
 			foreach (var child in consumer.children)
-				BeginNewFrame (child);
+				BeginNewFrame(child);
 		}
 
 		#endregion

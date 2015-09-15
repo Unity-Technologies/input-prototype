@@ -19,7 +19,7 @@ public class MouseInputToEvents
 	{
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
-			if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject ())
+			if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 				m_Ignore = true;
 			else
 				SendClickEvent(PointerControl.LeftButton, true);

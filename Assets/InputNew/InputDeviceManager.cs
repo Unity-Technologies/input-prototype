@@ -168,7 +168,7 @@ namespace UnityEngine.InputNew
 			return null;
 		}
 
-		public bool IsProfileSupportedOnThisPlatform (InputDeviceProfile profile)
+		public bool IsProfileSupportedOnThisPlatform(InputDeviceProfile profile)
 		{
 			if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
 				return true;
@@ -211,7 +211,7 @@ namespace UnityEngine.InputNew
 				handler(device, connected);
 		}
 
-		internal void BeginNewFrameEvent ()
+		internal void BeginNewFrameEvent()
 		{
 			foreach (var device in devices)
 				device.state.BeginNewFrame ();

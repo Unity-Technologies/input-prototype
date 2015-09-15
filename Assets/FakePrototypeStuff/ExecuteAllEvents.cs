@@ -8,11 +8,11 @@ public class ExecuteAllEvents
 {
 	public void Update()
 	{
-		InputSystem.ExecuteEvents ();
+		InputSystem.ExecuteEvents();
 	}
 
 	public void FixedUpdate()
 	{
-		InputSystem.ExecuteEvents ();
+		InputSystem.ExecuteEvents();
 	}
 }

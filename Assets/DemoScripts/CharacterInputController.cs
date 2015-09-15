@@ -59,7 +59,7 @@ public class CharacterInputController
 		var moveY = m_ControlMapInstance[moveControlY].value;
 
 		Vector3 velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
-		m_Rigid.velocity = new Vector3 (velocity.x, m_Rigid.velocity.y, velocity.z);
+		m_Rigid.velocity = new Vector3(velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
 		var lookX = m_ControlMapInstance[lookControlX].value;
@@ -109,7 +109,7 @@ public class CharacterInputController
 		controlsText.text = help;
 	}
 	
-	private string GetControlHelp (InputControl control)
+	private string GetControlHelp(InputControl control)
 	{
 		return string.Format("Use {0} to {1}!", control.GetPrimarySourceName(), control.name);
 	}

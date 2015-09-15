@@ -85,7 +85,7 @@ namespace UnityEngine.InputNew
 			return this[controlIndex].name;
 		}
 		
-		protected void SetControlNameOverride (int controlIndex, string nameOverride)
+		protected void SetControlNameOverride(int controlIndex, string nameOverride)
 		{
 			InputControlData data = m_Controls[controlIndex];
 			data.name = nameOverride;
