@@ -41,7 +41,7 @@ public class CharacterInputController
 		m_ControlMapInstance.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
 		
-		LockCursor();
+		LockCursor(true);
 	}
 	
 	public void SetupPlayer(ControlMapInstance controlMapInstance)
@@ -62,14 +62,11 @@ public class CharacterInputController
 		m_Rigid.velocity = new Vector3 (velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
-		if (isCursorLocked)
-		{
-			var lookX = m_ControlMapInstance[lookControlX].value;
-			var lookY = m_ControlMapInstance[lookControlY].value;
+		var lookX = m_ControlMapInstance[lookControlX].value;
+		var lookY = m_ControlMapInstance[lookControlY].value;
 
-			m_Rotation.y += lookX;
-			m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
-		}
+		m_Rotation.y += lookX;
+		m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
 
 		transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);
 		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
@@ -88,10 +85,10 @@ public class CharacterInputController
 		}
 
 		if (m_ControlMapInstance[lockCursorControl].buttonDown)
-			LockCursor();
+			LockCursor(true);
 
 		if (m_ControlMapInstance[unlockCursorControl].buttonDown)
-			UnlockCursor();
+			LockCursor(false);
 		
 		if (m_ControlMapInstance[menuControl].buttonDown)
 			sizer.ToggleMenu();
@@ -129,20 +126,10 @@ public class CharacterInputController
 		newProjectile.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value, 1.0f);
 	}
 
-	void LockCursor()
+	void LockCursor(bool value)
 	{
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-	}
-
-	void UnlockCursor()
-	{
-		Cursor.lockState = CursorLockMode.None;
-		Cursor.visible = true;
-	}
-
-	bool isCursorLocked
-	{
-		get { return Cursor.lockState == CursorLockMode.Locked; }
+		var mouse = Mouse.current;
+		if (mouse != null)
+			mouse.cursor.isLocked = value;
 	}
 }

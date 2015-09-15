@@ -207,7 +207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &152886
 GameObject:
   m_ObjectHideFlags: 1
@@ -441,7 +441,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
-  m_StereoMirrorMode: 0
 --- !u!23 &2317320
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -844,14 +843,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlMap: {fileID: 11400000, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  moveControlX: {fileID: 11428232, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  moveControlY: {fileID: 11450262, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  lookControlX: {fileID: 11443680, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  lookControlY: {fileID: 11483428, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  fireControl: {fileID: 11475006, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  menuControl: {fileID: 11401696, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  lockCursorControl: {fileID: 11423282, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  unlockCursorControl: {fileID: 11405548, guid: 24548a596fd7f47dfa0d33e0d38d0dbd,
+  moveControlX: {fileID: 11406540, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  moveControlY: {fileID: 11440746, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lookControlX: {fileID: 11448860, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lookControlY: {fileID: 11425290, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  fireControl: {fileID: 11449250, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  menuControl: {fileID: 11448490, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  lockCursorControl: {fileID: 11409432, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  unlockCursorControl: {fileID: 11410556, guid: 24548a596fd7f47dfa0d33e0d38d0dbd,
     type: 2}
   head: {fileID: 484432}
   moveSpeed: 15
@@ -927,9 +926,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fbb736be73a4e8b89a33bf81127c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlMap: {fileID: 11400000, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  moveControlX: {fileID: 11428232, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
-  menuControl: {fileID: 11401696, guid: 24548a596fd7f47dfa0d33e0d38d0dbd, type: 2}
+  controlMap: {fileID: 0}
+  moveControlX: {fileID: 0}
+  menuControl: {fileID: 0}
   menu: {fileID: 193818}
   slider: {fileID: 11459234}
 --- !u!114 &11481914
@@ -1269,8 +1268,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22489918}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: 0}
-  m_AnchorMax: {x: .5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: .5, y: .5}
@@ -1304,7 +1303,7 @@ RectTransform:
   m_Father: {fileID: 22419846}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: .5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: .5, y: .5}

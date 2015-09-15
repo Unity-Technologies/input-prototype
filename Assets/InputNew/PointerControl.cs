@@ -16,6 +16,11 @@ namespace UnityEngine.InputNew
 		DeltaY,
 		DeltaZ,
 
+		LockedDelta,
+		LockedDeltaX,
+		LockedDeltaY,
+		LockedDeltaZ,
+
 		Pressure,
 		Tilt,
 		Rotation,

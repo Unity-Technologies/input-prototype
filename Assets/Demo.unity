@@ -199,9 +199,33 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 151014, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 22489858, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22489858, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22469428, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22469428, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22469428, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22489858, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 84.615387
+      objectReference: {fileID: 0}
+    - target: {fileID: 22469428, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 59.2307739
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fb8afa4e7f37746b191b1080b74a8737, type: 2}
@@ -961,7 +985,6 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
-  m_RepeatDelay: .5
   m_AllowActivationOnMobileDevice: 0
 --- !u!114 &1688383110
 MonoBehaviour:

@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 		
 		public void Rebind ()
 		{
-			m_MapInstances = new List<ControlMapInstance>(InputSystem.CreateMapInstances(m_ControlMap, true));
+			m_MapInstances = InputSystem.CreateMapInstances(m_ControlMap).ToList();
 			
 			// Record which control schemes use which device types.
 			m_DeviceTypeToControlSchemeIndex.Clear();

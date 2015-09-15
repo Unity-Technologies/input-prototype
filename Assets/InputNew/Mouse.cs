@@ -13,7 +13,10 @@ namespace UnityEngine.InputNew
 			: this("Mouse", null) { }
 
 		public Mouse(string deviceName, List<InputControlData> controls)
-			: base(deviceName, controls) { }
+			: base(deviceName, controls) 
+		{
+			cursor = new Cursor();
+		}
 
 		#endregion
 		

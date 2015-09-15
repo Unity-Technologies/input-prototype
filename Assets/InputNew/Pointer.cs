@@ -41,13 +41,22 @@ namespace UnityEngine.InputNew
 			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis });
 			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis });
 			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis });
+			controls.Add(item: new InputControlData
+			{
+				name = "Locked Delta"
+					, controlType = InputControlType.Vector3
+					, componentControlIndices = new[] { (int)PointerControl.LockedDeltaX, (int)PointerControl.LockedDeltaY, (int)PointerControl.LockedDeltaZ }
+			});
+			controls.Add(new InputControlData { name = "Locked Delta X", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Locked Delta Y", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Locked Delta Z", controlType = InputControlType.RelativeAxis });
 			controls.Add(new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis });
 			controls.Add(new InputControlData { name = "Left Button", controlType = InputControlType.Button });
 			controls.Add(new InputControlData { name = "Right Button", controlType = InputControlType.Button });
 			controls.Add(new InputControlData { name = "Middle Button", controlType = InputControlType.Button });
-			
+
 			if (additionalControls != null)
 				controls.AddRange(additionalControls);
 			
@@ -77,6 +86,19 @@ namespace UnityEngine.InputNew
 				consumed |= intoState.SetCurrentValue((int)PointerControl.DeltaX, moveEvent.delta.x);
 				consumed |= intoState.SetCurrentValue((int)PointerControl.DeltaY, moveEvent.delta.y);
 				consumed |= intoState.SetCurrentValue((int)PointerControl.DeltaZ, moveEvent.delta.z);
+
+				if (cursor == null || cursor.isLocked)
+				{
+					consumed |= intoState.SetCurrentValue((int)PointerControl.LockedDeltaX, moveEvent.delta.x);
+					consumed |= intoState.SetCurrentValue((int)PointerControl.LockedDeltaY, moveEvent.delta.y);
+					consumed |= intoState.SetCurrentValue((int)PointerControl.LockedDeltaZ, moveEvent.delta.z);
+				}
+				else
+				{
+					intoState.SetCurrentValue((int)PointerControl.LockedDeltaX, 0.0f);
+					intoState.SetCurrentValue((int)PointerControl.LockedDeltaY, 0.0f);
+					intoState.SetCurrentValue((int)PointerControl.LockedDeltaZ, 0.0f);
+				}
 
 				return consumed;
 			}
@@ -117,6 +139,10 @@ namespace UnityEngine.InputNew
 			get { return state[(int)PointerControl.Pressure].value; }
 		}
 
+		////REVIEW: okay, maybe the concept of a per-pointer cursor is bogus after all...
+		public Cursor cursor { get; protected set; }
+
 		#endregion
 	}
+
 }

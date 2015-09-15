@@ -105,7 +105,7 @@ namespace UnityEngine.InputNew
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
 			foreach (var entry in controlMap.entries)
 			{
-				if (entry.bindings == null || entry.bindings.Count == 0)
+				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
 
 				foreach (var control in entry.bindings[controlSchemeIndex].sources)
@@ -161,7 +161,9 @@ namespace UnityEngine.InputNew
 				{
 					var device = s_Devices.GetMostRecentlyUsedDevice(entry.Key);
 					if (device == null)
+					{
 						yield break; // Can't satisfy this ControlMap; no available device of given type.
+					}
 
 					var state = new InputState(device, entry.Value);
 					deviceStates.Add(state);
@@ -285,7 +287,7 @@ namespace UnityEngine.InputNew
 			////FIXME: should take actual touchdevice in inputEvent into account
 			var touchEvent = inputEvent as TouchEvent;
 			if (touchEvent != null)
-				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, Cursor.lockState == CursorLockMode.Locked);
+				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, UnityEngine.Cursor.lockState == CursorLockMode.Locked);
 			return false;
 		}
 

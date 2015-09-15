@@ -94,13 +94,13 @@ public static class CreateDemoAssets
 		entries.Add(CreateControlComposite("Move", InputControlType.Vector2, new[] { 0, 1 }));
 		
 		entries.Add(CreateControl("LookX", InputControlType.RelativeAxis,
-			CreateBinding(typeof(Mouse), (int)PointerControl.DeltaX),
+			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaX),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickX)
 		));
 		
 		entries.Add(CreateControl("LookY", InputControlType.RelativeAxis,
-			CreateBinding(typeof(Mouse), (int)PointerControl.DeltaY),
+			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaY),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickY)
 		));
@@ -108,7 +108,7 @@ public static class CreateDemoAssets
 		entries.Add(CreateControlComposite("Look", InputControlType.Vector2, new[] { 3, 4 }));
 		
 		entries.Add(CreateControl("Fire", InputControlType.Button,
-			CreateBinding(typeof(Mouse), (int)PointerControl.LeftButton),
+			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Action1)
 		));
@@ -119,6 +119,13 @@ public static class CreateDemoAssets
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
 		));
 	
+		entries.Add(CreateControl("LockCursor", InputControlType.Button,
+			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton)
+		));
+		entries.Add(CreateControl("UnlockCursor", InputControlType.Button,
+			CreateBinding(typeof(Keyboard), (int)KeyCode.Escape)
+		));
+		
 		controlMap.entries = entries;
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
