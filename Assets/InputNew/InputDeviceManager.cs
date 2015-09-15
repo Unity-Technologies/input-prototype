@@ -35,8 +35,8 @@ namespace UnityEngine.InputNew
 			var gamepadDevice2 = new Gamepad();
 			var virtualJoystickDevice = new VirtualJoystick();
 
-			RegisterDevice(touchscreenDevice); // Register before mouse; we don't have code yet to handle MRU correctly for ControlMaps
 			RegisterDevice(mouseDevice);
+			RegisterDevice(touchscreenDevice); // Register after mouse; multiplayer code will pick the first applicable device. It doesn't use MRU.
 			RegisterDevice(keyboardDevice);
 			RegisterDevice(gamepadDevice1);
 			RegisterDevice(gamepadDevice2);
