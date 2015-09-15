@@ -186,7 +186,7 @@ namespace UnityEngine.InputNew
 		}
 
 		// This is for having explicit control over what devices go into a ControlMapInstance.
-		public static ControlMapInstance BindInputs(ControlMap controlMap, int controlSchemeIndex, IEnumerable<InputDevice> devices)
+		public static ControlMapInstance BindInputs(ControlMap controlMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -197,6 +197,58 @@ namespace UnityEngine.InputNew
 
 			// Create map instance.
 			return new ControlMapInstance(controlMap, controlSchemeIndex, deviceStates);
+		}
+		
+		// This is for having explicit control over what devices go into a ControlMapInstance,
+		// and automatically determining the control scheme based on it.
+		public static ControlMapInstance BindInputs(ControlMap controlMap, IEnumerable<InputDevice> devices)
+		{
+			int matchingControlSchemeIndex = -1;
+			for (int scheme = 0; scheme < controlMap.schemes.Count; scheme++)
+			{
+				var types = controlMap.GetUsedDeviceTypes(scheme);
+				bool matchesAll = true;
+				foreach (var type in types)
+				{
+					bool foundMatch = false;
+					foreach (var device in devices)
+					{
+						if (type.IsInstanceOfType(device))
+						{
+							foundMatch = true;
+							break;
+						}
+					}
+					
+					if (!foundMatch)
+					{
+						matchesAll = false;
+						break;
+					}
+				}
+				
+				if (matchesAll)
+				{
+					matchingControlSchemeIndex = scheme;
+					break;
+				}
+			}
+			
+			if (matchingControlSchemeIndex == -1)
+				return null;
+			
+			return BindInputs(controlMap, devices, matchingControlSchemeIndex);
+		}
+		
+		// This is for creating an instance of a control map that matches the same devices as another control map instance.
+		// If the otherControlMapInstance listens to all devices, the new one will too.
+		// If the otherControlMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
+		public static ControlMapInstance BindInputs(ControlMap controlMap, ControlMapInstance otherControlMapInstance)
+		{
+			if (otherControlMapInstance is ControlMapCombinedInstance)
+				return new ControlMapCombinedInstance(controlMap);
+			
+			return BindInputs(controlMap, otherControlMapInstance.GetUsedDevices());
 		}
 
 		#endregion

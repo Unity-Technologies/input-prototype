@@ -12,6 +12,7 @@ public class CubeSizer : MonoBehaviour {
 	ControlMapInstance m_ControlMapInstance;
 	
 	public ControlMap controlMap;
+	public ControlMapInstance referenceControlMapInstance;
 	
 	[Space(10)]
 	public ControlMapEntry moveControlX;
@@ -27,7 +28,7 @@ public class CubeSizer : MonoBehaviour {
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_ControlMapInstance = new ControlMapCombinedInstance(controlMap);
+		m_ControlMapInstance = InputSystem.BindInputs(controlMap, referenceControlMapInstance);
 		m_ControlMapInstance.Activate();
 	}
 	
