@@ -107,7 +107,7 @@ namespace UnityEngine.InputNew
 			for (var entryIndex = 0; entryIndex < m_ControlMap.entries.Count; ++ entryIndex)
 			{
 				var entry = m_ControlMap.entries[entryIndex];
-				if (entry.bindings == null || entry.bindings.Count == 0)
+				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
 
 				var binding = entry.bindings[controlSchemeIndex];
