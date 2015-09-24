@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Utilities;
 using UnityEngine;
 
@@ -18,7 +18,9 @@ namespace UnityEngine.InputNew
 		{
 			this.deviceName = deviceName;
 			var controlCount = EnumHelpers.GetValueCount<GamepadControl>();
-			var controls = Enumerable.Repeat(new InputControlData(), controlCount).ToList();
+			var controls = new List<InputControlData>(controlCount);
+			for (int i = 0; i < controlCount; i++)
+				controls.Add(new InputControlData());
 			
 			// Compounds.
 			controls[(int)VirtualJoystickControl.LeftStick] = new InputControlData

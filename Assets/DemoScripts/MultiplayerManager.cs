@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputNew;
 using Random = UnityEngine.Random;
@@ -48,6 +48,8 @@ public class MultiplayerManager
 	
 	public void Update()
 	{
+		int joinedCount = 0;
+		int readyCount = 0;
 		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
 		{
 			var player = potentialPlayers[i];
@@ -81,9 +83,14 @@ public class MultiplayerManager
 					break;
 				}
 			}
+			
+			if (player.status == PlayerStatus.Joined)
+				joinedCount++;
+			else if (player.status == PlayerStatus.Ready)
+				readyCount++;
 		}
 		
-		if (potentialPlayers.Count(p => p.status == PlayerStatus.Ready) > 1 && potentialPlayers.Count(p => p.status == PlayerStatus.Joined) == 0)
+		if (readyCount > 1 && joinedCount == 0)
 			StartGame();
 	}
 	
@@ -125,7 +132,11 @@ public class MultiplayerManager
 	{
 		hubCamera.SetActive(false);
 		
-		int playerCount = potentialPlayers.Count(p => p.status == PlayerStatus.Ready);
+		int playerCount = 0;
+		for (int i = 0; i < potentialPlayers.Count; i++)
+			if (potentialPlayers[i].status == PlayerStatus.Ready)
+				playerCount++;
+		
 		int playerNum = 0;
 		float fraction = 1f / playerCount;
 		for (int i = 0; i < potentialPlayers.Count; i++)
