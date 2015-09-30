@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class ControlMapInstance
+	public class PlayerInput
 		: InputControlProvider
 	{
 		#region Constructors
 
-		public ControlMapInstance(ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		public PlayerInput(ActionMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
 			Setup(controlMap, controlSchemeIndex, deviceStates);
 		}
 
-		protected ControlMapInstance() {}
+		protected PlayerInput() {}
 
 		#endregion
 
@@ -34,7 +34,7 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
-		protected void Setup(ControlMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		protected void Setup(ActionMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
 			this.controlSchemeIndex = controlSchemeIndex;
 			m_DeviceStates = deviceStates;
@@ -198,7 +198,7 @@ namespace UnityEngine.InputNew
 
 		public int controlSchemeIndex { get; private set; }
 
-		public InputControl this[ControlMapEntry entry]
+		public InputControl this[InputAction entry]
 		{
 			get { return state[entry.controlIndex]; }
 		}
@@ -207,7 +207,7 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		protected ControlMap m_ControlMap;
+		protected ActionMap m_ControlMap;
 		protected List<InputState> m_DeviceStates;
 		private InputEventTree m_TreeNode = null;
 

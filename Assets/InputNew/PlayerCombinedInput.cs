@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class ControlMapCombinedInstance : ControlMapInstance
+	public class PlayerCombinedInput : PlayerInput
 	{
-		public ControlMapCombinedInstance(ControlMap controlMap)
+		public PlayerCombinedInput(ActionMap controlMap)
 		{
 			m_ControlMap = controlMap;
 			Rebind();
@@ -21,7 +21,7 @@ namespace UnityEngine.InputNew
 			m_DeviceTypeToControlSchemeIndex.Clear();
 			for (int i = 0; i < m_MapInstances.Count; i++)
 			{
-				ControlMapInstance instance = m_MapInstances[i];
+				PlayerInput instance = m_MapInstances[i];
 				var devices = m_ControlMap.GetUsedDeviceTypes(instance.controlSchemeIndex);
 				foreach (var device in devices)
 				{
@@ -79,6 +79,6 @@ namespace UnityEngine.InputNew
 		}
 		
 		private Dictionary<Type, int> m_DeviceTypeToControlSchemeIndex = new Dictionary<Type, int>();
-		private List<ControlMapInstance> m_MapInstances;
+		private List<PlayerInput> m_MapInstances;
 	}
 }

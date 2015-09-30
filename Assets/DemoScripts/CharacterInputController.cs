@@ -9,22 +9,22 @@ using Random = UnityEngine.Random;
 public class CharacterInputController
 	: MonoBehaviour
 {
-	ControlMapInstance m_ControlMapInstance;
+	PlayerInput m_ControlMapInstance;
 	Rigidbody m_Rigid;
 	Vector2 m_Rotation = Vector2.zero;
 	float m_TimeOfLastShot;
 
-	public ControlMap controlMap;
+	public ActionMap controlMap;
 
 	[Space(10)]
-	public ControlMapEntry moveControlX;
-	public ControlMapEntry moveControlY;
-	public ControlMapEntry lookControlX;
-	public ControlMapEntry lookControlY;
-	public ControlMapEntry fireControl;
-	public ControlMapEntry menuControl;
-	public ControlMapEntry lockCursorControl;
-	public ControlMapEntry unlockCursorControl;
+	public InputAction moveControlX;
+	public InputAction moveControlY;
+	public InputAction lookControlX;
+	public InputAction lookControlY;
+	public InputAction fireControl;
+	public InputAction menuControl;
+	public InputAction lockCursorControl;
+	public InputAction unlockCursorControl;
 
 	[Space(10)]
 	public Transform head;
@@ -44,7 +44,7 @@ public class CharacterInputController
 		LockCursor(true);
 	}
 	
-	public void SetupPlayer(ControlMapInstance controlMapInstance)
+	public void SetupPlayer(PlayerInput controlMapInstance)
 	{
 		if (m_ControlMapInstance != null)
 			m_ControlMapInstance.Deactivate();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class ControlMapEntry
+	public class InputAction
 		: ScriptableObject
 	{
 		#region Fields

@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class ControlMap
+	public class ActionMap
 		: ScriptableObject
 	{
-		public List<ControlMapEntry> entries;
+		public List<InputAction> entries;
 		public List<string> schemes;
 
 		public void OnEnable()

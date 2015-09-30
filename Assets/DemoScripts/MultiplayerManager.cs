@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,19 +9,19 @@ public class MultiplayerManager
 	: MonoBehaviour
 {
 	public GameObject playerPrefab;
-	public ControlMap controlMap;
+	public ActionMap controlMap;
 	public GameObject hubCamera;
 	
 	[Space(10)]
-	public ControlMapEntry readyControl;
-	public ControlMapEntry leaveControl;
-	public ControlMapEntry navigateControl;
+	public InputAction readyControl;
+	public InputAction leaveControl;
+	public InputAction navigateControl;
 
 	enum PlayerStatus { Inactive, Joined, Ready }
 	
 	class PlayerInfo
 	{
-		public ControlMapInstance controls;
+		public PlayerInput controls;
 		public PlayerStatus status;
 		public int colorIndex;
 	}

@@ -9,14 +9,14 @@ using UnityEngine.InputNew;
 
 public class CubeSizer : MonoBehaviour
 {
-	ControlMapInstance m_ControlMapInstance;
+	PlayerInput m_ControlMapInstance;
 	
-	public ControlMap controlMap;
-	public ControlMapInstance referenceControlMapInstance;
+	public ActionMap controlMap;
+	public PlayerInput referenceControlMapInstance;
 	
 	[Space(10)]
-	public ControlMapEntry moveControlX;
-	public ControlMapEntry menuControl;
+	public InputAction moveControlX;
+	public InputAction menuControl;
 	
 	[Space(10)]
 	public GameObject menu;

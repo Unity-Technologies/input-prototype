@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections;
@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-[CustomEditor(typeof(ControlMapEntry))]
-public class ControlMapEntryEditor : Editor
+[CustomEditor(typeof(InputAction))]
+public class InputActionEditor : Editor
 {
 	static class Styles
 	{
@@ -25,11 +25,11 @@ public class ControlMapEntryEditor : Editor
 	public int controlScheme { get { return m_ControlScheme; } set { m_ControlScheme = value; } }
 	public bool showCommon { get { return m_ShowCommon; } set { m_ShowCommon = value; } }
 	
-	ControlMapEntry m_Entry;
+	InputAction m_Entry;
 	
 	void Awake()
 	{
-		m_Entry = (ControlMapEntry)serializedObject.targetObject;
+		m_Entry = (InputAction)serializedObject.targetObject;
 	}
 	
 	public override void OnInspectorGUI()

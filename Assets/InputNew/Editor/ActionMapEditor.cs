@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(ControlMap))]
-public class ControlMapEditor : Editor
+[CustomEditor(typeof(ActionMap))]
+public class ActionMapEditor : Editor
 {
 	static class Styles
 	{
@@ -14,10 +14,10 @@ public class ControlMapEditor : Editor
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
 	}
 	
-	ControlMap m_ControlMap;
+	ActionMap m_ControlMap;
 	
 	int m_SelectedScheme = 0;
-	ControlMapEntry m_SelectedEntry = null;
+	InputAction m_SelectedEntry = null;
 	
 	int selectedScheme
 	{
@@ -32,7 +32,7 @@ public class ControlMapEditor : Editor
 		}
 	}
 	
-	ControlMapEntry selectedEntry
+	InputAction selectedEntry
 	{
 		get { return m_SelectedEntry; }
 		set
@@ -44,18 +44,18 @@ public class ControlMapEditor : Editor
 			m_SelectedEntry = value;
 			if (m_SelectedEntry != null)
 			{
-				m_EntryEditor = (ControlMapEntryEditor)Editor.CreateEditor(m_SelectedEntry, typeof(ControlMapEntryEditor));
+				m_EntryEditor = (InputActionEditor)Editor.CreateEditor(m_SelectedEntry, typeof(InputActionEditor));
 				m_EntryEditor.controlScheme = selectedScheme;
 				m_EntryEditor.showCommon = false;
 			}
 		}
 	}
 	
-	ControlMapEntryEditor m_EntryEditor = null;
+	InputActionEditor m_EntryEditor = null;
 	
 	public void OnEnable()
 	{
-		m_ControlMap = (ControlMap)serializedObject.targetObject;
+		m_ControlMap = (ActionMap)serializedObject.targetObject;
 	}
 	
 	public override void OnInspectorGUI()
@@ -95,7 +95,7 @@ public class ControlMapEditor : Editor
 			
 			for (int i = 0; i < m_ControlMap.entries.Count; i++)
 			{
-				ControlMapEntry entry = m_ControlMap.entries[i];
+				InputAction entry = m_ControlMap.entries[i];
 				if (entry.bindings.Count > selectedScheme)
 					entry.bindings.RemoveAt(selectedScheme);
 				while (entry.bindings.Count > m_ControlMap.schemes.Count)
@@ -109,7 +109,7 @@ public class ControlMapEditor : Editor
 			m_ControlMap.schemes.Add("New Control Scheme");
 			for (int i = 0; i < m_ControlMap.entries.Count; i++)
 			{
-				ControlMapEntry entry = m_ControlMap.entries[i];
+				InputAction entry = m_ControlMap.entries[i];
 				while (entry.bindings.Count < m_ControlMap.schemes.Count)
 					entry.bindings.Add(new ControlBinding());
 			}
@@ -142,7 +142,7 @@ public class ControlMapEditor : Editor
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			var entry = ScriptableObject.CreateInstance<ControlMapEntry>();
+			var entry = ScriptableObject.CreateInstance<InputAction>();
 			entry.controlData = new InputControlData() { name = "New Control" };
 			entry.name = entry.controlData.name;
 			entry.bindings = new List<ControlBinding>();
@@ -167,7 +167,7 @@ public class ControlMapEditor : Editor
 			EditorUtility.SetDirty(m_ControlMap);
 	}
 	
-	void DrawEntry(ControlMapEntry entry, int controlScheme)
+	void DrawEntry(InputAction entry, int controlScheme)
 	{
 		ControlBinding binding = (entry.bindings.Count > controlScheme ? entry.bindings[controlScheme] : null);
 		

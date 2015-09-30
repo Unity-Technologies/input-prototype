@@ -6,9 +6,9 @@ using Assets.Utilities;
 
 public static class CreateDemoAssets
 {
-	private static ControlMapEntry CreateControl(string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
+	private static InputAction CreateControl(string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
 	{
-		var entry = ScriptableObject.CreateInstance<ControlMapEntry>();
+		var entry = ScriptableObject.CreateInstance<InputAction>();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -60,9 +60,9 @@ public static class CreateDemoAssets
 		return binding;
 	}
 	
-	private static ControlMapEntry CreateControlComposite(string name, InputControlType controlType, int[] indices)
+	private static InputAction CreateControlComposite(string name, InputControlType controlType, int[] indices)
 	{
-		var entry = ScriptableObject.CreateInstance<ControlMapEntry>();
+		var entry = ScriptableObject.CreateInstance<InputAction>();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -75,10 +75,10 @@ public static class CreateDemoAssets
 	[ MenuItem("Tools/Create Input Map Asset") ]
 	public static void CreateInputMapAsset()
 	{
-		var controlMap = ScriptableObject.CreateInstance<ControlMap>();
+		var controlMap = ScriptableObject.CreateInstance<ActionMap>();
 		controlMap.schemes = new List<string> { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
 
-		var entries = new List<ControlMapEntry>();
+		var entries = new List<InputAction>();
 		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
