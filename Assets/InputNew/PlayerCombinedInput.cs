@@ -7,22 +7,22 @@ namespace UnityEngine.InputNew
 {
 	public class PlayerCombinedInput : PlayerInput
 	{
-		public PlayerCombinedInput(ActionMap controlMap)
+		public PlayerCombinedInput(ActionMap actionMap)
 		{
-			m_ControlMap = controlMap;
+			m_ActionMap = actionMap;
 			Rebind();
 		}
 		
 		public void Rebind()
 		{
-			m_MapInstances = InputSystem.CreateMapInstances(m_ControlMap, true).ToList();
+			m_MapInstances = InputSystem.CreateAllPotentialPlayers(m_ActionMap, true).ToList();
 			
 			// Record which control schemes use which device types.
 			m_DeviceTypeToControlSchemeIndex.Clear();
 			for (int i = 0; i < m_MapInstances.Count; i++)
 			{
 				PlayerInput instance = m_MapInstances[i];
-				var devices = m_ControlMap.GetUsedDeviceTypes(instance.controlSchemeIndex);
+				var devices = m_ActionMap.GetUsedDeviceTypes(instance.controlSchemeIndex);
 				foreach (var device in devices)
 				{
 					m_DeviceTypeToControlSchemeIndex[device] = instance.controlSchemeIndex;
@@ -50,7 +50,7 @@ namespace UnityEngine.InputNew
 					break;
 			}
 			
-			Setup(m_ControlMap, controlSchemeIndex, m_MapInstances[controlSchemeIndex].GetDeviceStates());
+			Setup(m_ActionMap, controlSchemeIndex, m_MapInstances[controlSchemeIndex].GetDeviceStates());
 		}
 		
 		public override bool ProcessEvent(InputEvent inputEvent)

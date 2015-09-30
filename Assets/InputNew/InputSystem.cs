@@ -88,22 +88,22 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static IEnumerable<PlayerInput> CreateMapInstances(ActionMap controlMap, bool onlySingleInstancePerScheme = false)
+		public static IEnumerable<PlayerInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
 		{
-			for (var i = 0; i < controlMap.schemes.Count; ++ i)
+			for (var i = 0; i < actionMap.schemes.Count; ++ i)
 			{
-				foreach (var instance in CreateMapInstances(controlMap, i, onlySingleInstancePerScheme))
+				foreach (var instance in CreateAllPotentialPlayers(actionMap, i, onlyOnePlayerPerScheme))
 				{
 					yield return instance;
 				}
 			}
 		}
 
-		public static IEnumerable<PlayerInput> CreateMapInstances(ActionMap controlMap, int controlSchemeIndex, bool onlySingleInstancePerScheme = false)
+		public static IEnumerable<PlayerInput> CreateAllPotentialPlayers(ActionMap actionMap, int controlSchemeIndex, bool onlyOnePlayerPerScheme = false)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
-			foreach (var entry in controlMap.entries)
+			foreach (var entry in actionMap.entries)
 			{
 				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
@@ -122,7 +122,7 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
 
-			if (!onlySingleInstancePerScheme)
+			if (!onlyOnePlayerPerScheme)
 			{
 				// Gather available devices for each type of device.
 				var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
@@ -149,7 +149,7 @@ namespace UnityEngine.InputNew
 						deviceStates.Add(state);
 					}
 
-					yield return new PlayerInput(controlMap, controlSchemeIndex, deviceStates);
+					yield return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
 				}
 			}
 			else
@@ -162,41 +162,41 @@ namespace UnityEngine.InputNew
 					var device = s_Devices.GetMostRecentlyUsedDevice(entry.Key);
 					if (device == null)
 					{
-						yield break; // Can't satisfy this ControlMap; no available device of given type.
+						yield break; // Can't satisfy this ActionMap; no available device of given type.
 					}
 
 					var state = new InputState(device, entry.Value);
 					deviceStates.Add(state);
 				}
 
-				yield return new PlayerInput(controlMap, controlSchemeIndex, deviceStates);
+				yield return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
 			}
 		}
 
-		public static PlayerInput CreateMapInstance(ActionMap controlMap)
+		public static PlayerInput CreatePlayer(ActionMap actionMap)
 		{
-			return new PlayerCombinedInput(controlMap);
+			return new PlayerCombinedInput(actionMap);
 		}
 
 		// This is for creating an instance of a control map that matches the same devices as another control map instance.
-		// If the otherControlMapInstance listens to all devices, the new one will too.
-		// If the otherControlMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
-		public static PlayerInput CreateMapInstance(ActionMap controlMap, PlayerInput otherControlMapInstance)
+		// If the otherActionMapInstance listens to all devices, the new one will too.
+		// If the otherActionMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
+		public static PlayerInput CreatePlayer(ActionMap actionMap, PlayerInput otherPlayerInput)
 		{
-			if (otherControlMapInstance is PlayerCombinedInput)
-				return new PlayerCombinedInput(controlMap);
+			if (otherPlayerInput is PlayerCombinedInput)
+				return new PlayerCombinedInput(actionMap);
 			
-			return CreateMapInstance(controlMap, otherControlMapInstance.GetUsedDevices());
+			return CreatePlayer(actionMap, otherPlayerInput.GetUsedDevices());
 		}
 
-		// This is for having explicit control over what devices go into a ControlMapInstance,
+		// This is for having explicit control over what devices go into a ActionMapInstance,
 		// and automatically determining the control scheme based on it.
-		public static PlayerInput CreateMapInstance(ActionMap controlMap, IEnumerable<InputDevice> devices)
+		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices)
 		{
 			int matchingControlSchemeIndex = -1;
-			for (int scheme = 0; scheme < controlMap.schemes.Count; scheme++)
+			for (int scheme = 0; scheme < actionMap.schemes.Count; scheme++)
 			{
-				var types = controlMap.GetUsedDeviceTypes(scheme);
+				var types = actionMap.GetUsedDeviceTypes(scheme);
 				bool matchesAll = true;
 				foreach (var type in types)
 				{
@@ -227,11 +227,11 @@ namespace UnityEngine.InputNew
 			if (matchingControlSchemeIndex == -1)
 				return null;
 			
-			return CreateMapInstance(controlMap, devices, matchingControlSchemeIndex);
+			return CreatePlayer(actionMap, devices, matchingControlSchemeIndex);
 		}
 
-		// This is for having explicit control over what devices go into a ControlMapInstance.
-		public static PlayerInput CreateMapInstance(ActionMap controlMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
+		// This is for having explicit control over what devices go into a ActionMapInstance.
+		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -241,7 +241,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			// Create map instance.
-			return new PlayerInput(controlMap, controlSchemeIndex, deviceStates);
+			return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
 		}
 
 		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)

@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.InputNew;
+using UnityEngine.Serialization;
 
 // This sizer does not use the UI event system,
 // since it's not integrated with the Input System prototype at this point.
@@ -9,10 +10,11 @@ using UnityEngine.InputNew;
 
 public class CubeSizer : MonoBehaviour
 {
-	PlayerInput m_ControlMapInstance;
+	PlayerInput m_PlayerInput;
 	
-	public ActionMap controlMap;
-	public PlayerInput referenceControlMapInstance;
+	[FormerlySerializedAs("controlMap")]
+	public ActionMap actionMap;
+	public PlayerInput referencePlayerInput;
 	
 	[Space(10)]
 	public InputAction moveControlX;
@@ -28,13 +30,13 @@ public class CubeSizer : MonoBehaviour
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_ControlMapInstance = InputSystem.CreateMapInstance(controlMap, referenceControlMapInstance);
-		m_ControlMapInstance.Activate();
+		m_PlayerInput = InputSystem.CreatePlayer(actionMap, referencePlayerInput);
+		m_PlayerInput.Activate();
 	}
 	
 	public void CloseMenu()
 	{
-		m_ControlMapInstance.Deactivate();
+		m_PlayerInput.Deactivate();
 		menu.SetActive(false);
 		enabled = false;
 	}
@@ -49,8 +51,8 @@ public class CubeSizer : MonoBehaviour
 	
 	void Update()
 	{
-		slider.value += m_ControlMapInstance[moveControlX].value * 0.05f;
-		if (m_ControlMapInstance[menuControl].buttonDown)
+		slider.value += m_PlayerInput[moveControlX].value * 0.05f;
+		if (m_PlayerInput[menuControl].buttonDown)
 			ToggleMenu();
 	}
 }

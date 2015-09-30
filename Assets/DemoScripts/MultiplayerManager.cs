@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputNew;
 using Random = UnityEngine.Random;
+using UnityEngine.Serialization;
 
 public class MultiplayerManager
 	: MonoBehaviour
 {
 	public GameObject playerPrefab;
-	public ActionMap controlMap;
+	[FormerlySerializedAs("controlMap")]
+	public ActionMap actionMap;
 	public GameObject hubCamera;
 	
 	[Space(10)]
@@ -30,11 +32,11 @@ public class MultiplayerManager
 	
 	public void Start()
 	{
-		var potentialPlayerInputs = InputSystem.CreateMapInstances(controlMap);
-		foreach (var mapInstance in potentialPlayerInputs)
+		var potentialPlayerInputs = InputSystem.CreateAllPotentialPlayers(actionMap);
+		foreach (var playerInput in potentialPlayerInputs)
 		{
-			mapInstance.Activate();
-			potentialPlayers.Add(new PlayerInfo() { controls = mapInstance });
+			playerInput.Activate();
+			potentialPlayers.Add(new PlayerInfo() { controls = playerInput });
 		}
 	}
 	

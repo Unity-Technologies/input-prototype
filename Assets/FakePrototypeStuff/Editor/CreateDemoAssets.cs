@@ -75,8 +75,8 @@ public static class CreateDemoAssets
 	[ MenuItem("Tools/Create Input Map Asset") ]
 	public static void CreateInputMapAsset()
 	{
-		var controlMap = ScriptableObject.CreateInstance<ActionMap>();
-		controlMap.schemes = new List<string> { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
+		var actionMap = ScriptableObject.CreateInstance<ActionMap>();
+		actionMap.schemes = new List<string> { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
 
 		var entries = new List<InputAction>();
 		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
@@ -126,10 +126,10 @@ public static class CreateDemoAssets
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Escape)
 		));
 		
-		controlMap.entries = entries;
+		actionMap.entries = entries;
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
-		AssetDatabase.CreateAsset(controlMap, path);
+		AssetDatabase.CreateAsset(actionMap, path);
 		for (int i = 0; i < entries.Count; i++)
 			AssetDatabase.AddObjectToAsset(entries[i], path);
 	}

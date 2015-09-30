@@ -90,7 +90,7 @@ namespace UnityEngine.InputNew
 // ------------------------------------------------------------------------
 
 // Three different naming approaches:
-// 1. ControlMap, ControlMapEntry
+// 1. ActionMap, ActionMapEntry
 // 2. InputActionMap, InputAction
 // 3. InputActivityMap, InputActivity
 

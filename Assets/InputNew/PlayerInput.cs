@@ -9,9 +9,9 @@ namespace UnityEngine.InputNew
 	{
 		#region Constructors
 
-		public PlayerInput(ActionMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		public PlayerInput(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
-			Setup(controlMap, controlSchemeIndex, deviceStates);
+			Setup(actionMap, controlSchemeIndex, deviceStates);
 		}
 
 		protected PlayerInput() {}
@@ -34,15 +34,15 @@ namespace UnityEngine.InputNew
 
 		#region Public Methods
 
-		protected void Setup(ActionMap controlMap, int controlSchemeIndex, List<InputState> deviceStates)
+		protected void Setup(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
 		{
 			this.controlSchemeIndex = controlSchemeIndex;
 			m_DeviceStates = deviceStates;
-			m_ControlMap = controlMap;
+			m_ActionMap = actionMap;
 			
 			// Create list of controls from InputMap.
 			var controls = new List<InputControlData>();
-			foreach (var entry in controlMap.entries)
+			foreach (var entry in actionMap.entries)
 			{
 				////REVIEW: why are we making copies here?
 				var control = new InputControlData
@@ -103,10 +103,10 @@ namespace UnityEngine.InputNew
 				return false;
 
 			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
-			// Synchronize the ControlMapInstance's own state.
-			for (var entryIndex = 0; entryIndex < m_ControlMap.entries.Count; ++ entryIndex)
+			// Synchronize the ActionMapInstance's own state.
+			for (var entryIndex = 0; entryIndex < m_ActionMap.entries.Count; ++ entryIndex)
 			{
-				var entry = m_ControlMap.entries[entryIndex];
+				var entry = m_ActionMap.entries[entryIndex];
 				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
 
@@ -143,7 +143,7 @@ namespace UnityEngine.InputNew
 		
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
-			var entry = m_ControlMap.entries[controlIndex];
+			var entry = m_ActionMap.entries[controlIndex];
 			if (entry.bindings == null || entry.bindings.Count == 0)
 				return string.Empty;
 			
@@ -207,7 +207,7 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		protected ActionMap m_ControlMap;
+		protected ActionMap m_ActionMap;
 		protected List<InputState> m_DeviceStates;
 		private InputEventTree m_TreeNode = null;
 

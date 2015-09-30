@@ -14,7 +14,7 @@ public class ActionMapEditor : Editor
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
 	}
 	
-	ActionMap m_ControlMap;
+	ActionMap m_ActionMap;
 	
 	int m_SelectedScheme = 0;
 	InputAction m_SelectedEntry = null;
@@ -55,19 +55,19 @@ public class ActionMapEditor : Editor
 	
 	public void OnEnable()
 	{
-		m_ControlMap = (ActionMap)serializedObject.targetObject;
+		m_ActionMap = (ActionMap)serializedObject.targetObject;
 	}
 	
 	public override void OnInspectorGUI()
 	{
 		EditorGUI.BeginChangeCheck();
 		
-		if (selectedScheme >= m_ControlMap.schemes.Count)
-			selectedScheme = m_ControlMap.schemes.Count - 1;
+		if (selectedScheme >= m_ActionMap.schemes.Count)
+			selectedScheme = m_ActionMap.schemes.Count - 1;
 		
 		// Show schemes
 		EditorGUIUtility.GetControlID(FocusType.Passive);
-		for (int i = 0; i < m_ControlMap.schemes.Count; i++)
+		for (int i = 0; i < m_ActionMap.schemes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
 			
@@ -78,9 +78,9 @@ public class ActionMapEditor : Editor
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 			
 			EditorGUI.BeginChangeCheck();
-			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ControlMap.schemes[i]);
+			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMap.schemes[i]);
 			if (EditorGUI.EndChangeCheck())
-				m_ControlMap.schemes[i] = schemeName;
+				m_ActionMap.schemes[i] = schemeName;
 			
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 				Event.current.Use();
@@ -91,29 +91,29 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ControlMap.schemes.RemoveAt(selectedScheme);
+			m_ActionMap.schemes.RemoveAt(selectedScheme);
 			
-			for (int i = 0; i < m_ControlMap.entries.Count; i++)
+			for (int i = 0; i < m_ActionMap.entries.Count; i++)
 			{
-				InputAction entry = m_ControlMap.entries[i];
+				InputAction entry = m_ActionMap.entries[i];
 				if (entry.bindings.Count > selectedScheme)
 					entry.bindings.RemoveAt(selectedScheme);
-				while (entry.bindings.Count > m_ControlMap.schemes.Count)
+				while (entry.bindings.Count > m_ActionMap.schemes.Count)
 					entry.bindings.RemoveAt(entry.bindings.Count - 1);
 			}
-			if (selectedScheme >= m_ControlMap.schemes.Count)
-				selectedScheme = m_ControlMap.schemes.Count - 1;
+			if (selectedScheme >= m_ActionMap.schemes.Count)
+				selectedScheme = m_ActionMap.schemes.Count - 1;
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			m_ControlMap.schemes.Add("New Control Scheme");
-			for (int i = 0; i < m_ControlMap.entries.Count; i++)
+			m_ActionMap.schemes.Add("New Control Scheme");
+			for (int i = 0; i < m_ActionMap.entries.Count; i++)
 			{
-				InputAction entry = m_ControlMap.entries[i];
-				while (entry.bindings.Count < m_ControlMap.schemes.Count)
+				InputAction entry = m_ActionMap.entries[i];
+				while (entry.bindings.Count < m_ActionMap.schemes.Count)
 					entry.bindings.Add(new ControlBinding());
 			}
-			selectedScheme = m_ControlMap.schemes.Count - 1;
+			selectedScheme = m_ActionMap.schemes.Count - 1;
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
@@ -121,9 +121,9 @@ public class ActionMapEditor : Editor
 		EditorGUILayout.Space();
 		
 		// Show high level controls
-		EditorGUILayout.LabelField("Controls", m_ControlMap.schemes[selectedScheme] + " Bindings");
+		EditorGUILayout.LabelField("Controls", m_ActionMap.schemes[selectedScheme] + " Bindings");
 		EditorGUILayout.BeginVertical("Box");
-		foreach (var entry in m_ControlMap.entries)
+		foreach (var entry in m_ActionMap.entries)
 		{
 			DrawEntry(entry, selectedScheme);
 		}
@@ -134,11 +134,11 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ControlMap.entries.Remove(selectedEntry);
+			m_ActionMap.entries.Remove(selectedEntry);
 			DestroyImmediate(selectedEntry, true);
-			if (!m_ControlMap.entries.Contains(selectedEntry))
-				selectedEntry = m_ControlMap.entries[m_ControlMap.entries.Count - 1];
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ControlMap));
+			if (!m_ActionMap.entries.Contains(selectedEntry))
+				selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
+			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ActionMap));
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
@@ -146,12 +146,12 @@ public class ActionMapEditor : Editor
 			entry.controlData = new InputControlData() { name = "New Control" };
 			entry.name = entry.controlData.name;
 			entry.bindings = new List<ControlBinding>();
-			while (entry.bindings.Count < m_ControlMap.schemes.Count)
+			while (entry.bindings.Count < m_ActionMap.schemes.Count)
 				entry.bindings.Add(new ControlBinding());
-			m_ControlMap.entries.Add(entry);
-			AssetDatabase.AddObjectToAsset(entry, m_ControlMap);
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ControlMap));
-			selectedEntry = m_ControlMap.entries[m_ControlMap.entries.Count - 1];
+			m_ActionMap.entries.Add(entry);
+			AssetDatabase.AddObjectToAsset(entry, m_ActionMap);
+			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ActionMap));
+			selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
@@ -164,7 +164,7 @@ public class ActionMapEditor : Editor
 		}
 		
 		if (EditorGUI.EndChangeCheck())
-			EditorUtility.SetDirty(m_ControlMap);
+			EditorUtility.SetDirty(m_ActionMap);
 	}
 	
 	void DrawEntry(InputAction entry, int controlScheme)
