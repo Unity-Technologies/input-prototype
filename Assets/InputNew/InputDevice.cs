@@ -7,11 +7,17 @@ namespace UnityEngine.InputNew
 	public abstract class InputDevice
 		: InputControlProvider
 	{
+		private List<InputControlData> m_Controls;
+		private InputState m_State;
+		
+		public override List<InputControlData> controls { get { return m_Controls; } }
+		public override InputState state { get { return m_State; } }
+		
 		#region Constructors
 
 		protected InputDevice(string deviceName, List<InputControlData> controls)
-			: base(controls)
 		{
+			SetControls(controls);
 			this.deviceName = deviceName;
 		}
 
@@ -26,6 +32,12 @@ namespace UnityEngine.InputNew
 
 		////REVIEW: right now the devices don't check whether the event was really meant for them; they go purely by the
 		////  type of event they receive. should they check more closely?
+		
+		protected void SetControls(List<InputControlData> controls)
+		{
+			m_Controls = controls;
+			m_State = new InputState(this);
+		}
 		
 		public override sealed bool ProcessEvent(InputEvent inputEvent)
 		{

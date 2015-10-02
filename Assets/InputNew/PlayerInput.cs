@@ -4,25 +4,17 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class PlayerInput
-		: InputControlProvider
+	public abstract class PlayerInput : InputControlProvider
 	{
-		#region Constructors
+		public abstract ActionMap actionMap { get; }
+		public abstract int controlSchemeIndex { get; }
+		protected abstract List<InputState> deviceStates { get; }
 
-		public PlayerInput(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
-		{
-			Setup(actionMap, controlSchemeIndex, deviceStates);
-		}
-
-		protected PlayerInput() {}
-
-		#endregion
-
-		#region Non-Public Methods
+		private InputEventTree treeNode { get; set; }
 
 		InputState GetDeviceStateForDeviceType(Type deviceType)
 		{
-			foreach (var deviceState in m_DeviceStates)
+			foreach (var deviceState in deviceStates)
 			{
 				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
 					return deviceState;
@@ -30,51 +22,25 @@ namespace UnityEngine.InputNew
 			throw new ArgumentException("deviceType");
 		}
 
-		#endregion
-
-		#region Public Methods
-
-		protected void Setup(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
-		{
-			this.controlSchemeIndex = controlSchemeIndex;
-			m_DeviceStates = deviceStates;
-			m_ActionMap = actionMap;
-			
-			// Create list of controls from InputMap.
-			var controls = new List<InputControlData>();
-			foreach (var entry in actionMap.entries)
-			{
-				////REVIEW: why are we making copies here?
-				var control = new InputControlData
-				{
-					name = entry.controlData.name,
-					controlType = entry.controlData.controlType,
-					////REVIEW: doesn't handle compounds
-				};
-				controls.Add(control);
-			}
-			SetControls(controls);
-		}
-		
 		public void Activate()
 		{
-			if (m_TreeNode != null)
+			if (treeNode != null)
 				return;
-			m_TreeNode = new InputEventTree
+			treeNode = new InputEventTree
 			{
 				name = "Map"
 				, processInput = ProcessEvent
 				, beginNewFrame = BeginNewFrameEvent
 			};
-			InputSystem.consumerStack.children.Add(m_TreeNode);
+			InputSystem.consumerStack.children.Add(treeNode);
 		}
 		
 		public void Deactivate()
 		{
-			if (m_TreeNode == null)
+			if (treeNode == null)
 				return;
-			InputSystem.consumerStack.children.Remove(m_TreeNode);
-			m_TreeNode = null;
+			InputSystem.consumerStack.children.Remove(treeNode);
+			treeNode = null;
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)
@@ -82,7 +48,7 @@ namespace UnityEngine.InputNew
 			var consumed = false;
 
 			// Update device state (if event actually goes to one of the devices we talk to).
-			foreach (var deviceState in m_DeviceStates)
+			foreach (var deviceState in deviceStates)
 			{
 				////FIXME: should refer to proper type
 				var device = (InputDevice)deviceState.controlProvider;
@@ -104,9 +70,9 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
 			// Synchronize the ActionMapInstance's own state.
-			for (var entryIndex = 0; entryIndex < m_ActionMap.entries.Count; ++ entryIndex)
+			for (var entryIndex = 0; entryIndex < actionMap.entries.Count; ++ entryIndex)
 			{
-				var entry = m_ActionMap.entries[entryIndex];
+				var entry = actionMap.entries[entryIndex];
 				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
 
@@ -143,7 +109,7 @@ namespace UnityEngine.InputNew
 		
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
-			var entry = m_ActionMap.entries[controlIndex];
+			var entry = actionMap.entries[controlIndex];
 			if (entry.bindings == null || entry.bindings.Count == 0)
 				return string.Empty;
 			
@@ -171,46 +137,26 @@ namespace UnityEngine.InputNew
 		public List<InputDevice> GetUsedDevices()
 		{
 			List<InputDevice> list = new List<InputDevice>();
-			for (int i = 0; i < m_DeviceStates.Count; i++)
-				list.Add(m_DeviceStates[i].controlProvider as InputDevice);
+			for (int i = 0; i < deviceStates.Count; i++)
+				list.Add(deviceStates[i].controlProvider as InputDevice);
 			return list;
 		}
 		
 		public List<InputState> GetDeviceStates()
 		{
-			return m_DeviceStates;
+			return deviceStates;
 		}
-
-		#endregion
-
-		#region Non-Public Methods
 
 		void BeginNewFrameEvent()
 		{
 			state.BeginNewFrame();
-			foreach (var deviceState in m_DeviceStates)
+			foreach (var deviceState in deviceStates)
 				deviceState.BeginNewFrame();
 		}
-
-		#endregion
-
-		#region Public Properties
-
-		public int controlSchemeIndex { get; private set; }
 
 		public InputControl this[InputAction entry]
 		{
 			get { return state[entry.controlIndex]; }
 		}
-
-		#endregion
-
-		#region Fields
-
-		protected ActionMap m_ActionMap;
-		protected List<InputState> m_DeviceStates;
-		private InputEventTree m_TreeNode = null;
-
-		#endregion
 	}
 }

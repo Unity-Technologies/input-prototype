@@ -4,28 +4,17 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class InputControlProvider
+	public abstract class InputControlProvider
 	{
-		#region Constructors
-
-		public InputControlProvider(List<InputControlData> controls)
-		{
-			m_Controls = controls;
-			m_State = new InputState(this);
-		}
-		
-		protected InputControlProvider() {}
-
-		#endregion
-
-		#region Public Methods
+		public abstract InputState state { get; }
+		public abstract List<InputControlData> controls { get; }
 
 		public virtual bool ProcessEvent(InputEvent inputEvent)
 		{
 			lastEventTime = inputEvent.time;
 			return false;
 		}
-		
+
 		public InputControl anyButton
 		{
 			get
@@ -42,37 +31,28 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		#endregion
-
-		#region Public Properties
-
-		public InputState state
-		{
-			get { return m_State; }
-		}
-		
 		public InputControlData GetControlData(int index)
 		{
-			return m_Controls[index];
+			return controls[index];
 		}
 		
 		public int controlCount
 		{
-			get { return m_Controls.Count; }
+			get { return controls.Count; }
 		}
 		
 		public InputControl this[int index]
 		{
-			get { return new InputControl(index, m_State); }
+			get { return new InputControl(index, state); }
 		}
 		
 		public InputControl this[string controlName]
 		{
 			get
 			{
-				for (var i = 0; i < m_Controls.Count; ++ i)
+				for (var i = 0; i < controls.Count; ++ i)
 				{
-					if (m_Controls[i].name == controlName)
+					if (controls[i].name == controlName)
 						return this[i];
 				}
 				
@@ -87,31 +67,16 @@ namespace UnityEngine.InputNew
 		
 		protected void SetControlNameOverride(int controlIndex, string nameOverride)
 		{
-			InputControlData data = m_Controls[controlIndex];
+			InputControlData data = controls[controlIndex];
 			data.name = nameOverride;
-			m_Controls[controlIndex] = data;
+			controls[controlIndex] = data;
 		}
 
 		public float lastEventTime { get; protected set; }
 
-		#endregion
-
 		protected List<InputControlData> GetControls()
 		{
-			return m_Controls;
+			return controls;
 		}
-
-		protected void SetControls(List<InputControlData> controls)
-		{
-			m_Controls = controls;
-			m_State = new InputState(this);
-		}
-
-		#region Fields
-
-		private InputState m_State;
-		private List<InputControlData> m_Controls;
-
-		#endregion
 	}
 }

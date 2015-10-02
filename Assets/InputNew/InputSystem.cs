@@ -88,6 +88,11 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
+		public static PlayerInput CreateAllPotentialPlayers<T>(ActionMap actionMap) where T : PlayerCustomInput
+		{
+			return (T)Activator.CreateInstance(typeof(T), new object[] { CreateAllPotentialPlayers(actionMap) });
+		}
+
 		public static IEnumerable<PlayerInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
 		{
 			for (var i = 0; i < actionMap.schemes.Count; ++ i)
@@ -149,7 +154,7 @@ namespace UnityEngine.InputNew
 						deviceStates.Add(state);
 					}
 
-					yield return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
+					yield return new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates);
 				}
 			}
 			else
@@ -169,8 +174,13 @@ namespace UnityEngine.InputNew
 					deviceStates.Add(state);
 				}
 
-				yield return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
+				yield return new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates);
 			}
+		}
+
+		public static PlayerInput CreatePlayer<T>(ActionMap actionMap) where T : PlayerCustomInput
+		{
+			return (T)Activator.CreateInstance(typeof(T), new object[] { CreatePlayer(actionMap) });
 		}
 
 		public static PlayerInput CreatePlayer(ActionMap actionMap)
@@ -241,7 +251,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			// Create map instance.
-			return new PlayerInput(actionMap, controlSchemeIndex, deviceStates);
+			return new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates);
 		}
 
 		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
