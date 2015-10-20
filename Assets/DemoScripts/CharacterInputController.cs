@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 public class CharacterInputController
 	: MonoBehaviour
 {
-	PlayerCombinedInput m_PlayerInput;
+	PlayerInput m_PlayerInput;
 	Rigidbody m_Rigid;
 	Vector2 m_Rotation = Vector2.zero;
 	float m_TimeOfLastShot;
@@ -46,7 +46,7 @@ public class CharacterInputController
 		LockCursor(true);
 	}
 	
-	public void SetupPlayer(PlayerCombinedInput playerInput)
+	public void SetupPlayer(PlayerInput playerInput)
 	{
 		if (m_PlayerInput != null)
 			m_PlayerInput.Deactivate();

@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		public InputControl anyButton
+		public virtual InputControl anyButton
 		{
 			get
 			{

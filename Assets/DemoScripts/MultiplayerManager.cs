@@ -23,7 +23,8 @@ public class MultiplayerManager
 	
 	class PlayerInfo
 	{
-		public PlayerSchemeInput controls;
+		public SchemeInput controls;
+		public PlayerInput player;
 		public PlayerStatus status;
 		public int colorIndex;
 	}
@@ -35,17 +36,17 @@ public class MultiplayerManager
 		var potentialPlayerInputs = InputSystem.CreateAllPotentialPlayers(actionMap);
 		foreach (var playerInput in potentialPlayerInputs)
 		{
-			playerInput.Activate();
+			//playerInput.Activate();
 			potentialPlayers.Add(new PlayerInfo() { controls = playerInput });
 		}
 	}
 	
 	public void Destroy()
 	{
-		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
+		/*for (int i = potentialPlayers.Count - 1; i >= 0; i--)
 		{
 			potentialPlayers[i].controls.Deactivate();
-		}
+		}*/
 	}
 	
 	public void Update()
@@ -62,6 +63,8 @@ public class MultiplayerManager
 					if (player.controls.anyButton.buttonDown)
 					{
 						player.status = PlayerStatus.Joined;
+						player.player = new PlayerInput(player.controls);
+						player.player.Activate();
 						// Move to end
 						potentialPlayers.Remove(player);
 						potentialPlayers.Add(player);
@@ -70,17 +73,21 @@ public class MultiplayerManager
 				}
 				case PlayerStatus.Joined:
 				{
-					if (player.controls[readyControl].buttonDown)
+					if (player.player[readyControl].buttonDown)
 						player.status = PlayerStatus.Ready;
-					if (player.controls[leaveControl].buttonDown)
+					if (player.player[leaveControl].buttonDown)
+					{
+						player.player.Deactivate();
+						player.player = null;
 						player.status = PlayerStatus.Inactive;
-					if (player.controls[navigateControl].buttonDown)
+					}
+					if (player.player[navigateControl].buttonDown)
 						player.colorIndex = ((player.colorIndex + 1) % colors.Length);
 					break;
 				}
 				case PlayerStatus.Ready:
 				{
-					if (player.controls[readyControl].buttonDown || player.controls[leaveControl].buttonDown)
+					if (player.player[readyControl].buttonDown || player.player[leaveControl].buttonDown)
 						player.status = PlayerStatus.Joined;
 					break;
 				}
@@ -120,7 +127,7 @@ public class MultiplayerManager
 			GUILayout.BeginVertical();
 			GUILayout.FlexibleSpace();
 			if (player.status != PlayerStatus.Ready)
-				GUILayout.Label(string.Format("Press {0} when ready", player.controls[readyControl].GetPrimarySourceName()));
+				GUILayout.Label(string.Format("Press {0} when ready", player.player[readyControl].GetPrimarySourceName()));
 			else
 				GUILayout.Label("READY");
 			GUILayout.EndVertical();
@@ -148,7 +155,7 @@ public class MultiplayerManager
 				continue;
 			
 			var player = (GameObject)Instantiate(playerPrefab, Vector3.right * 2 * playerNum, Quaternion.identity);
-			player.GetComponent<CharacterInputController>().SetupPlayer(new PlayerCombinedInput(playerInfo.controls));
+			player.GetComponent<CharacterInputController>().SetupPlayer(playerInfo.player);
 			player.GetComponentInChildren<Camera>().rect = new Rect(0, fraction * playerNum, 1, fraction);
 			
 			playerNum++;

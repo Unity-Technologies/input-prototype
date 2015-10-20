@@ -10,11 +10,11 @@ using UnityEngine.Serialization;
 
 public class CubeSizer : MonoBehaviour
 {
-	PlayerCombinedInput m_PlayerInput;
+	PlayerInput m_PlayerInput;
 	
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
-	public PlayerCombinedInput referencePlayerInput;
+	public PlayerInput referencePlayerInput;
 	
 	[Space(10)]
 	public InputAction moveControlX;

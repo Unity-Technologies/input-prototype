@@ -88,12 +88,7 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static PlayerInput CreateAllPotentialPlayers<T>(ActionMap actionMap) where T : PlayerInput
-		{
-			return (T)Activator.CreateInstance(typeof(T), new object[] { CreateAllPotentialPlayers(actionMap) });
-		}
-
-		public static IEnumerable<PlayerSchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
+		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
 		{
 			for (var i = 0; i < actionMap.schemes.Count; ++ i)
 			{
@@ -104,7 +99,7 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public static IEnumerable<PlayerSchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, int controlSchemeIndex, bool onlyOnePlayerPerScheme = false)
+		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, int controlSchemeIndex, bool onlyOnePlayerPerScheme = false)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
@@ -154,7 +149,7 @@ namespace UnityEngine.InputNew
 						deviceStates.Add(state);
 					}
 
-					yield return new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates);
+					yield return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
 				}
 			}
 			else
@@ -174,34 +169,34 @@ namespace UnityEngine.InputNew
 					deviceStates.Add(state);
 				}
 
-				yield return new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates);
+				yield return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
 			}
 		}
 
-		public static T CreatePlayer<T>(ActionMap actionMap) where T : PlayerCombinedInput
+		public static T CreatePlayer<T>(ActionMap actionMap) where T : PlayerInput
 		{
 			return (T)Activator.CreateInstance(typeof(T), new object[] { CreatePlayer(actionMap) });
 		}
 
-		public static PlayerCombinedInput CreatePlayer(ActionMap actionMap)
+		public static PlayerInput CreatePlayer(ActionMap actionMap)
 		{
-			return new PlayerCombinedInput(actionMap);
+			return new PlayerInput(actionMap);
 		}
 
 		// This is for creating an instance of a control map that matches the same devices as another control map instance.
 		// If the otherActionMapInstance listens to all devices, the new one will too.
 		// If the otherActionMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
-		public static PlayerCombinedInput CreatePlayer(ActionMap actionMap, PlayerCombinedInput otherPlayerInput)
+		public static PlayerInput CreatePlayer(ActionMap actionMap, PlayerInput otherPlayerInput)
 		{
 			if (otherPlayerInput.autoSwitching)
-				return new PlayerCombinedInput(actionMap);
+				return new PlayerInput(actionMap);
 			
-			return CreatePlayer(actionMap, otherPlayerInput.GetUsedDevices());
+			return CreatePlayer(actionMap, otherPlayerInput.currentScheme.GetUsedDevices());
 		}
 
 		// This is for having explicit control over what devices go into a ActionMapInstance,
 		// and automatically determining the control scheme based on it.
-		public static PlayerCombinedInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices)
+		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices)
 		{
 			int matchingControlSchemeIndex = -1;
 			for (int scheme = 0; scheme < actionMap.schemes.Count; scheme++)
@@ -241,7 +236,7 @@ namespace UnityEngine.InputNew
 		}
 
 		// This is for having explicit control over what devices go into a ActionMapInstance.
-		public static PlayerCombinedInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
+		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -251,7 +246,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			// Create map instance.
-			return new PlayerCombinedInput (new PlayerSchemeInput(actionMap, controlSchemeIndex, deviceStates));
+			return new PlayerInput (new SchemeInput(actionMap, controlSchemeIndex, deviceStates));
 		}
 
 		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
