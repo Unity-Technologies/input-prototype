@@ -73,7 +73,7 @@ internal static class InputDeviceGUIUtility
 			select assemblyType
 		).OrderBy(e => GetInheritancePath(e)).ToArray();
 		
-		s_DeviceNames = s_DeviceTypes.Select(e => e.Name).ToArray();
+		s_DeviceNames = s_DeviceTypes.Select(e => string.Empty.PadLeft(GetInheritanceDepth(e) * 3) + e.Name).ToArray();
 		
 		s_IndicesOfDevices = new Dictionary<Type, int>();
 		for (int i = 0; i < s_DeviceTypes.Length; i++)
@@ -103,5 +103,12 @@ internal static class InputDeviceGUIUtility
 		if (type.BaseType == typeof(InputDevice))
 			return type.Name;
 		return GetInheritancePath(type.BaseType) + "/" + type.Name;
+	}
+	
+	static int GetInheritanceDepth(Type type)
+	{
+		if (type.BaseType == typeof(InputDevice))
+			return 0;
+		return GetInheritanceDepth(type.BaseType) + 1;
 	}
 }

@@ -121,7 +121,7 @@ public class ActionMapEditor : Editor
 		EditorGUILayout.Space();
 		
 		// Show high level controls
-		EditorGUILayout.LabelField("Controls", m_ActionMap.schemes[selectedScheme] + " Bindings");
+		EditorGUILayout.LabelField("Actions", m_ActionMap.schemes[selectedScheme] + " Bindings");
 		EditorGUILayout.BeginVertical("Box");
 		foreach (var entry in m_ActionMap.entries)
 		{
