@@ -3,6 +3,8 @@ using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
 
 [CustomEditor(typeof(ActionMap))]
 public class ActionMapEditor : Editor
@@ -165,6 +167,9 @@ public class ActionMapEditor : Editor
 		
 		if (EditorGUI.EndChangeCheck())
 			EditorUtility.SetDirty(m_ActionMap);
+		
+		if (GUILayout.Button("Update Script"))
+			UpdateActionMapScript();
 	}
 	
 	void DrawEntry(InputAction entry, int controlScheme)
@@ -266,5 +271,71 @@ public class ActionMapEditor : Editor
 	string GetSourceString(InputControlDescriptor source)
 	{
 		return string.Format("{0} {1}", InputDeviceGUIUtility.GetDeviceName(source), InputDeviceGUIUtility.GetDeviceControlName(source));
+	}
+	
+	void UpdateActionMapScript () {
+		string className = GetCamelCaseString(m_ActionMap.name, true);
+		StringBuilder str = new StringBuilder();
+		
+		str.AppendFormat(@"using UnityEngine;
+using UnityEngine.InputNew;
+
+// GENERATED FILE - DO NOT EDIT MANUALLY
+public class {0} : PlayerInput {{
+	public {0} (ActionMap actionMap) : base (actionMap) {{ }}
+	public {0} (SchemeInput schemeInput) : base (schemeInput) {{ }}
+	
+", className);
+		
+		for (int i = 0; i < m_ActionMap.entries.Count; i++)
+			str.AppendFormat("	public InputControl {0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.entries[i].name, false), i);
+		
+		str.AppendLine(@"}");
+		
+		string path = AssetDatabase.GetAssetPath(m_ActionMap);
+		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
+		File.WriteAllText(path, str.ToString());
+	}
+	
+	string GetCamelCaseString(string input, bool capitalFirstLetter)
+	{
+		string output = string.Empty;
+		bool capitalize = capitalFirstLetter;
+		for (int i = 0; i < input.Length; i++)
+		{
+			char c = input[i];
+			if (c == ' ')
+			{
+				capitalize = true;
+				continue;
+			}
+			if (char.IsLetter(c))
+			{
+				if (capitalize)
+					output += char.ToUpper(c);
+				else if (output.Length == 0)
+					output += char.ToLower(c);
+				else
+					output += c;
+				capitalize = false;
+				continue;
+			}
+			if (char.IsDigit(c))
+			{
+				if (output.Length > 0)
+				{
+					output += c;
+					capitalize = false;
+				}
+				continue;
+			}
+			if (c == '_')
+			{
+				output += c;
+				capitalize = true;
+				continue;
+			}
+		}
+		return output;
 	}
 }

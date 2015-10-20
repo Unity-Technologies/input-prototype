@@ -10,11 +10,11 @@ using UnityEngine.Serialization;
 
 public class CubeSizer : MonoBehaviour
 {
-	PlayerFirstPersonControls m_PlayerInput;
+	FirstPersonControls m_PlayerInput;
 	
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
-	public PlayerFirstPersonControls referencePlayerInput;
+	public FirstPersonControls referencePlayerInput;
 	
 	[Space(10)]
 	public GameObject menu;
@@ -26,7 +26,7 @@ public class CubeSizer : MonoBehaviour
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_PlayerInput = InputSystem.CreatePlayer<PlayerFirstPersonControls>(actionMap, referencePlayerInput);
+		m_PlayerInput = InputSystem.CreatePlayer<FirstPersonControls>(actionMap, referencePlayerInput);
 		m_PlayerInput.Activate();
 	}
 	

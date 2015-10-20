@@ -19,7 +19,7 @@ public class MultiplayerManager
 	class PlayerInfo
 	{
 		public SchemeInput controls;
-		public PlayerFirstPersonControls player;
+		public FirstPersonControls player;
 		public PlayerStatus status;
 		public int colorIndex;
 	}
@@ -58,7 +58,7 @@ public class MultiplayerManager
 					if (player.controls.anyButton.buttonDown)
 					{
 						player.status = PlayerStatus.Joined;
-						player.player = new PlayerFirstPersonControls(player.controls);
+						player.player = new FirstPersonControls(player.controls);
 						player.player.Activate();
 						// Move to end
 						potentialPlayers.Remove(player);
