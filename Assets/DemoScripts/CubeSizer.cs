@@ -10,15 +10,11 @@ using UnityEngine.Serialization;
 
 public class CubeSizer : MonoBehaviour
 {
-	PlayerInput m_PlayerInput;
+	PlayerFirstPersonControls m_PlayerInput;
 	
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
-	public PlayerInput referencePlayerInput;
-	
-	[Space(10)]
-	public InputAction moveControlX;
-	public InputAction menuControl;
+	public PlayerFirstPersonControls referencePlayerInput;
 	
 	[Space(10)]
 	public GameObject menu;
@@ -30,7 +26,7 @@ public class CubeSizer : MonoBehaviour
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_PlayerInput = InputSystem.CreatePlayer(actionMap, referencePlayerInput);
+		m_PlayerInput = InputSystem.CreatePlayer<PlayerFirstPersonControls>(actionMap, referencePlayerInput);
 		m_PlayerInput.Activate();
 	}
 	
@@ -51,8 +47,8 @@ public class CubeSizer : MonoBehaviour
 	
 	void Update()
 	{
-		slider.value += m_PlayerInput[moveControlX].value * 0.05f;
-		if (m_PlayerInput[menuControl].buttonDown)
+		slider.value += m_PlayerInput.moveX.value * 0.05f;
+		if (m_PlayerInput.menu.buttonDown)
 			ToggleMenu();
 	}
 }

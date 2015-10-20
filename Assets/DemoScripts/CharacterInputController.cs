@@ -10,23 +10,13 @@ using UnityEngine.Serialization;
 public class CharacterInputController
 	: MonoBehaviour
 {
-	PlayerInput m_PlayerInput;
+	PlayerFirstPersonControls m_PlayerInput;
 	Rigidbody m_Rigid;
 	Vector2 m_Rotation = Vector2.zero;
 	float m_TimeOfLastShot;
 
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
-
-	[Space(10)]
-	public InputAction moveControlX;
-	public InputAction moveControlY;
-	public InputAction lookControlX;
-	public InputAction lookControlY;
-	public InputAction fireControl;
-	public InputAction menuControl;
-	public InputAction lockCursorControl;
-	public InputAction unlockCursorControl;
 
 	[Space(10)]
 	public Transform head;
@@ -38,7 +28,7 @@ public class CharacterInputController
 
 	public void Awake()
 	{
-		m_PlayerInput = InputSystem.CreatePlayer(actionMap);
+		m_PlayerInput = InputSystem.CreatePlayer<PlayerFirstPersonControls>(actionMap);
 		sizer.referencePlayerInput = m_PlayerInput;
 		m_PlayerInput.Activate();
 		m_Rigid = GetComponent<Rigidbody>();
@@ -46,7 +36,7 @@ public class CharacterInputController
 		LockCursor(true);
 	}
 	
-	public void SetupPlayer(PlayerInput playerInput)
+	public void SetupPlayer(PlayerFirstPersonControls playerInput)
 	{
 		if (m_PlayerInput != null)
 			m_PlayerInput.Deactivate();
@@ -57,15 +47,15 @@ public class CharacterInputController
 	public void Update()
 	{
 		// Move
-		var moveX = m_PlayerInput[moveControlX].value;
-		var moveY = m_PlayerInput[moveControlY].value;
+		var moveX = m_PlayerInput.moveX.value;
+		var moveY = m_PlayerInput.moveY.value;
 
 		Vector3 velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
 		m_Rigid.velocity = new Vector3(velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
-		var lookX = m_PlayerInput[lookControlX].value;
-		var lookY = m_PlayerInput[lookControlY].value;
+		var lookX = m_PlayerInput.lookX.value;
+		var lookY = m_PlayerInput.lookY.value;
 
 		m_Rotation.y += lookX;
 		m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
@@ -74,7 +64,7 @@ public class CharacterInputController
 		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
 
 		// Fire
-		var fire = m_PlayerInput[fireControl].button;
+		var fire = m_PlayerInput.fire.button;
 		if (fire)
 		{
 			var currentTime = Time.time;
@@ -86,13 +76,13 @@ public class CharacterInputController
 			}
 		}
 
-		if (m_PlayerInput[lockCursorControl].buttonDown)
+		if (m_PlayerInput.lockCursor.buttonDown)
 			LockCursor(true);
 
-		if (m_PlayerInput[unlockCursorControl].buttonDown)
+		if (m_PlayerInput.unlockCursor.buttonDown)
 			LockCursor(false);
 		
-		if (m_PlayerInput[menuControl].buttonDown)
+		if (m_PlayerInput.menu.buttonDown)
 			sizer.ToggleMenu();
 		
 		HandleControlsText();
@@ -102,12 +92,12 @@ public class CharacterInputController
 	{
 		string help = string.Empty;
 		
-		help += GetControlHelp(m_PlayerInput[moveControlX]) + "\n";
-		help += GetControlHelp(m_PlayerInput[moveControlY]) + "\n";
-		help += GetControlHelp(m_PlayerInput[lookControlX]) + "\n";
-		help += GetControlHelp(m_PlayerInput[lookControlY]) + "\n";
-		help += GetControlHelp(m_PlayerInput[fireControl]) + "\n";
-		help += GetControlHelp(m_PlayerInput[menuControl]);
+		help += GetControlHelp(m_PlayerInput.moveX) + "\n";
+		help += GetControlHelp(m_PlayerInput.moveY) + "\n";
+		help += GetControlHelp(m_PlayerInput.lookX) + "\n";
+		help += GetControlHelp(m_PlayerInput.lookY) + "\n";
+		help += GetControlHelp(m_PlayerInput.fire) + "\n";
+		help += GetControlHelp(m_PlayerInput.menu);
 		controlsText.text = help;
 	}
 	

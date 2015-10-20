@@ -175,28 +175,24 @@ namespace UnityEngine.InputNew
 
 		public static T CreatePlayer<T>(ActionMap actionMap) where T : PlayerInput
 		{
-			return (T)Activator.CreateInstance(typeof(T), new object[] { CreatePlayer(actionMap) });
-		}
-
-		public static PlayerInput CreatePlayer(ActionMap actionMap)
-		{
-			return new PlayerInput(actionMap);
+			return (T)Activator.CreateInstance(typeof(T), new object[] { actionMap });
 		}
 
 		// This is for creating an instance of a control map that matches the same devices as another control map instance.
 		// If the otherActionMapInstance listens to all devices, the new one will too.
 		// If the otherActionMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
-		public static PlayerInput CreatePlayer(ActionMap actionMap, PlayerInput otherPlayerInput)
+		public static T CreatePlayer<T>(ActionMap actionMap, PlayerInput otherPlayerInput) where T : PlayerInput
 		{
 			if (otherPlayerInput.autoSwitching)
-				return new PlayerInput(actionMap);
+				return (T)Activator.CreateInstance(typeof(T), new object[] { actionMap });
 			
-			return CreatePlayer(actionMap, otherPlayerInput.currentScheme.GetUsedDevices());
+			SchemeInput schemeInput = CreateSchemeInput(actionMap, otherPlayerInput.currentScheme.GetUsedDevices());
+			return (T)Activator.CreateInstance(typeof(T), new object[] { schemeInput });
 		}
 
 		// This is for having explicit control over what devices go into a ActionMapInstance,
 		// and automatically determining the control scheme based on it.
-		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices)
+		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices)
 		{
 			int matchingControlSchemeIndex = -1;
 			for (int scheme = 0; scheme < actionMap.schemes.Count; scheme++)
@@ -232,11 +228,11 @@ namespace UnityEngine.InputNew
 			if (matchingControlSchemeIndex == -1)
 				return null;
 			
-			return CreatePlayer(actionMap, devices, matchingControlSchemeIndex);
+			return CreateSchemeInput(actionMap, devices, matchingControlSchemeIndex);
 		}
 
 		// This is for having explicit control over what devices go into a ActionMapInstance.
-		public static PlayerInput CreatePlayer(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
+		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -246,7 +242,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			// Create map instance.
-			return new PlayerInput (new SchemeInput(actionMap, controlSchemeIndex, deviceStates));
+			return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
 		}
 
 		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)

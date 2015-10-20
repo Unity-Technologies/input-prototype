@@ -13,18 +13,13 @@ public class MultiplayerManager
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
 	public GameObject hubCamera;
-	
-	[Space(10)]
-	public InputAction readyControl;
-	public InputAction leaveControl;
-	public InputAction navigateControl;
 
 	enum PlayerStatus { Inactive, Joined, Ready }
 	
 	class PlayerInfo
 	{
 		public SchemeInput controls;
-		public PlayerInput player;
+		public PlayerFirstPersonControls player;
 		public PlayerStatus status;
 		public int colorIndex;
 	}
@@ -36,17 +31,17 @@ public class MultiplayerManager
 		var potentialPlayerInputs = InputSystem.CreateAllPotentialPlayers(actionMap);
 		foreach (var playerInput in potentialPlayerInputs)
 		{
-			//playerInput.Activate();
 			potentialPlayers.Add(new PlayerInfo() { controls = playerInput });
 		}
 	}
 	
 	public void Destroy()
 	{
-		/*for (int i = potentialPlayers.Count - 1; i >= 0; i--)
+		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
 		{
-			potentialPlayers[i].controls.Deactivate();
-		}*/
+			if (potentialPlayers[i].player != null)
+				potentialPlayers[i].player.Deactivate();
+		}
 	}
 	
 	public void Update()
@@ -63,7 +58,7 @@ public class MultiplayerManager
 					if (player.controls.anyButton.buttonDown)
 					{
 						player.status = PlayerStatus.Joined;
-						player.player = new PlayerInput(player.controls);
+						player.player = new PlayerFirstPersonControls(player.controls);
 						player.player.Activate();
 						// Move to end
 						potentialPlayers.Remove(player);
@@ -73,21 +68,21 @@ public class MultiplayerManager
 				}
 				case PlayerStatus.Joined:
 				{
-					if (player.player[readyControl].buttonDown)
+					if (player.player.fire.buttonDown)
 						player.status = PlayerStatus.Ready;
-					if (player.player[leaveControl].buttonDown)
+					if (player.player.menu.buttonDown)
 					{
 						player.player.Deactivate();
 						player.player = null;
 						player.status = PlayerStatus.Inactive;
 					}
-					if (player.player[navigateControl].buttonDown)
+					if (player.player.moveX.buttonDown)
 						player.colorIndex = ((player.colorIndex + 1) % colors.Length);
 					break;
 				}
 				case PlayerStatus.Ready:
 				{
-					if (player.player[readyControl].buttonDown || player.player[leaveControl].buttonDown)
+					if (player.player.fire.buttonDown || player.player.menu.buttonDown)
 						player.status = PlayerStatus.Joined;
 					break;
 				}
@@ -127,7 +122,7 @@ public class MultiplayerManager
 			GUILayout.BeginVertical();
 			GUILayout.FlexibleSpace();
 			if (player.status != PlayerStatus.Ready)
-				GUILayout.Label(string.Format("Press {0} when ready", player.player[readyControl].GetPrimarySourceName()));
+				GUILayout.Label(string.Format("Press {0} when ready", player.player.fire.GetPrimarySourceName()));
 			else
 				GUILayout.Label("READY");
 			GUILayout.EndVertical();
