@@ -7,83 +7,70 @@ namespace UnityEngine.InputNew
 {
 	public class PlayerCombinedInput : PlayerInput
 	{
-		private int m_ControlSchemeIndex = 0;
 		private ActionMap m_ActionMap;
-		private Dictionary<Type, int> m_DeviceTypeToControlSchemeIndex = new Dictionary<Type, int>();
-		private List<PlayerInput> m_MapInstances;
+		private bool m_AutoSwitch = false;
+		private int m_SchemeIndex = 0;
+		private List<PlayerSchemeInput> m_SchemeInputs;
 
-		public override List<InputControlData> controls { get { return m_MapInstances[m_ControlSchemeIndex].controls; } }
-		public override InputState state { get { return m_MapInstances[m_ControlSchemeIndex].state; } }
-		public override ActionMap actionMap { get { return m_MapInstances[m_ControlSchemeIndex].actionMap; } }
-		public override int controlSchemeIndex { get { return m_ControlSchemeIndex; } }
-		protected override List<InputState> deviceStates { get { return m_MapInstances[m_ControlSchemeIndex].GetDeviceStates(); } }
+		public override List<InputControlData> controls { get { return m_SchemeInputs[m_SchemeIndex].controls; } }
+		public override InputState state { get { return m_SchemeInputs[m_SchemeIndex].state; } }
+		public override ActionMap actionMap { get { return m_SchemeInputs[m_SchemeIndex].actionMap; } }
+		public override int controlSchemeIndex { get { return m_SchemeInputs[m_SchemeIndex].controlSchemeIndex; } }
+		protected override List<InputState> deviceStates { get { return m_SchemeInputs[m_SchemeIndex].GetDeviceStates(); } }
+		public bool autoSwitching { get { return m_AutoSwitch; } }
 
 		public PlayerCombinedInput(ActionMap actionMap)
 		{
 			m_ActionMap = actionMap;
+			m_AutoSwitch = true;
+			
+			// TODO: Invoke Rebind when new input devices have been plugged in when m_AutoSwitch is true.
 			Rebind();
+		}
+		
+		public PlayerCombinedInput(PlayerSchemeInput schemeInput)
+		{
+			m_ActionMap = schemeInput.actionMap;
+			m_SchemeInputs = new List<PlayerSchemeInput> ();
+			m_SchemeInputs.Add (schemeInput);
+			m_AutoSwitch = false;
 		}
 
 		public void Rebind()
 		{
-			m_MapInstances = InputSystem.CreateAllPotentialPlayers(m_ActionMap, true).ToList();
+			m_SchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap, false).ToList();
 			
-			// Record which control schemes use which device types.
-			m_DeviceTypeToControlSchemeIndex.Clear();
-			for (int i = 0; i < m_MapInstances.Count; i++)
+			float mostRecentTime = 0;
+			for (int i = 0; i < m_SchemeInputs.Count; i++)
 			{
-				PlayerInput instance = m_MapInstances[i];
-				var devices = actionMap.GetUsedDeviceTypes(instance.controlSchemeIndex);
-				foreach (var device in devices)
+				float time = m_SchemeInputs[i].lastEventTime;
+				if (time > mostRecentTime)
 				{
-					m_DeviceTypeToControlSchemeIndex[device] = instance.controlSchemeIndex;
+					mostRecentTime = time;
+					m_SchemeIndex = i;
 				}
-			}
-			
-			// Find control scheme with most recently used device.
-			m_ControlSchemeIndex = 0;
-			List<InputDevice> leastToMost = InputSystem.leastToMostRecentlyUsedDevices;
-			for (int i = leastToMost.Count - 1; i >= 0; i--)
-			{
-				Type type = leastToMost[i].GetType();
-				bool stop = false;
-				while (type != typeof(InputDevice))
-				{
-					if (m_DeviceTypeToControlSchemeIndex.ContainsKey(type))
-					{
-						m_ControlSchemeIndex = m_DeviceTypeToControlSchemeIndex[type];
-						stop = true;
-						break;
-					}
-					type = type.BaseType;
-				}
-				if (stop)
-					break;
 			}
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)
 		{
-			bool consumed = base.ProcessEvent(inputEvent);
-			if (consumed)
+			if (m_SchemeInputs[m_SchemeIndex].ProcessEvent(inputEvent))
 				return true;
 			
-			// Check if it could have been used with another control scheme.
-			for (var type = inputEvent.deviceType; type != typeof(InputDevice) || type == null; type = type.BaseType)
+			if (!m_AutoSwitch)
+				return false;
+			
+			for (int i = 0; i < m_SchemeInputs.Count; i++)
 			{
-				int otherControlSchemeIndex = -1;
-				if (m_DeviceTypeToControlSchemeIndex.TryGetValue(type, out otherControlSchemeIndex))
+				if (i == m_SchemeIndex)
+					continue;
+				bool consumed = m_SchemeInputs[i].ProcessEvent(inputEvent);
+				if (consumed)
 				{
-						////TODO: prevent from constantly toggling
-					//if (otherControlSchemeIndex != controlSchemeIndex)
-					{
-						// Try to switch to other control scheme and process event again.
-						Rebind();
-						return base.ProcessEvent(inputEvent);
-					}
+					m_SchemeIndex = i;
+					return true;
 				}
 			}
-			
 			return false;
 		}
 	}

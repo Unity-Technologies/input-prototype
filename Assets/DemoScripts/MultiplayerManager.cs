@@ -23,7 +23,7 @@ public class MultiplayerManager
 	
 	class PlayerInfo
 	{
-		public PlayerInput controls;
+		public PlayerSchemeInput controls;
 		public PlayerStatus status;
 		public int colorIndex;
 	}
@@ -148,7 +148,7 @@ public class MultiplayerManager
 				continue;
 			
 			var player = (GameObject)Instantiate(playerPrefab, Vector3.right * 2 * playerNum, Quaternion.identity);
-			player.GetComponent<CharacterInputController>().SetupPlayer(playerInfo.controls);
+			player.GetComponent<CharacterInputController>().SetupPlayer(new PlayerCombinedInput(playerInfo.controls));
 			player.GetComponentInChildren<Camera>().rect = new Rect(0, fraction * playerNum, 1, fraction);
 			
 			playerNum++;
