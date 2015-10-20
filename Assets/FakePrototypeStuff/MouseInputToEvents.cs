@@ -17,19 +17,26 @@ public class MouseInputToEvents
 
 	void SendButtonEvents()
 	{
-		if (Input.GetKeyDown(KeyCode.Mouse0))
+		HandleMouseButton(0, PointerControl.LeftButton);
+		HandleMouseButton(1, PointerControl.RightButton);
+		HandleMouseButton(2, PointerControl.MiddleButton);
+	}
+	
+	void HandleMouseButton(int buttonIndex, PointerControl buttonEnumValue)
+	{
+		if (Input.GetMouseButtonDown(buttonIndex))
 		{
 			if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 				m_Ignore = true;
 			else
-				SendClickEvent(PointerControl.LeftButton, true);
+				SendClickEvent(buttonEnumValue, true);
 		}
-		if (Input.GetKeyUp(KeyCode.Mouse0))
+		if (Input.GetMouseButtonUp(buttonIndex))
 		{
 			if (m_Ignore)
 				m_Ignore = false;
 			else
-				SendClickEvent(PointerControl.LeftButton, false);
+				SendClickEvent(buttonEnumValue, false);
 		}
 	}
 
