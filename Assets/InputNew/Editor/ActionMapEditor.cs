@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 [CustomEditor(typeof(ActionMap))]
 public class ActionMapEditor : Editor
@@ -20,6 +22,9 @@ public class ActionMapEditor : Editor
 	
 	int m_SelectedScheme = 0;
 	InputAction m_SelectedEntry = null;
+	List<string> m_PropertyNames = new List<string>();
+	HashSet<string> m_PropertyBlacklist  = new HashSet<string>();
+	Dictionary<string, string> m_PropertyErrors = new Dictionary<string, string>();
 	
 	int selectedScheme
 	{
@@ -58,6 +63,35 @@ public class ActionMapEditor : Editor
 	public void OnEnable()
 	{
 		m_ActionMap = (ActionMap)serializedObject.targetObject;
+		RefreshPropertyNames();
+		CalculateBlackList();
+	}
+	
+	void RefreshPropertyNames()
+	{
+		// Calculate property names.
+		m_PropertyNames.Clear();
+		for (int i = 0; i < m_ActionMap.entries.Count; i++)
+			m_PropertyNames.Add(GetCamelCaseString(m_ActionMap.entries[i].name, false));
+		
+		// Calculate duplicates.
+		HashSet<string> duplicates = new HashSet<string>(m_PropertyNames.GroupBy(x => x).Where(group => group.Count() > 1).Select(group => group.Key));
+		
+		// Calculate errors.
+		m_PropertyErrors.Clear();
+		for (int i = 0; i < m_PropertyNames.Count; i++)
+		{
+			string name = m_PropertyNames[i];
+			if (m_PropertyBlacklist.Contains(name))
+				m_PropertyErrors[name] = "Invalid action name: "+name+".";
+			else if (duplicates.Contains(name))
+				m_PropertyErrors[name] = "Duplicate action name: "+name+".";
+		}
+	}
+	
+	void CalculateBlackList()
+	{
+		m_PropertyBlacklist = new HashSet<string>(typeof(PlayerInput).GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).Select(e => e.Name));
 	}
 	
 	public override void OnInspectorGUI()
@@ -162,14 +196,27 @@ public class ActionMapEditor : Editor
 		
 		if (m_EntryEditor != null)
 		{
+			string oldName = selectedEntry.name;
 			m_EntryEditor.OnInspectorGUI();
+			if (selectedEntry.name != oldName)
+				RefreshPropertyNames();
 		}
 		
 		if (EditorGUI.EndChangeCheck())
 			EditorUtility.SetDirty(m_ActionMap);
 		
+		EditorGUILayout.Space();
+		
+		bool valid = true;
+		if (m_PropertyErrors.Count > 0)
+		{
+			valid = false;
+			EditorGUILayout.HelpBox(string.Join("\n", m_PropertyErrors.Values.ToArray()), MessageType.Error);
+		}
+		EditorGUI.BeginDisabledGroup(!valid);
 		if (GUILayout.Button("Update Script"))
 			UpdateActionMapScript();
+		EditorGUI.EndDisabledGroup();
 	}
 	
 	void DrawEntry(InputAction entry, int controlScheme)
@@ -288,7 +335,7 @@ public class {0} : PlayerInput {{
 ", className);
 		
 		for (int i = 0; i < m_ActionMap.entries.Count; i++)
-			str.AppendFormat("	public InputControl {0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.entries[i].name, false), i);
+			str.AppendFormat("	public InputControl @{0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.entries[i].name, false), i);
 		
 		str.AppendLine(@"}");
 		
