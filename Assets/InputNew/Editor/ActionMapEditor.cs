@@ -21,10 +21,13 @@ public class ActionMapEditor : Editor
 	ActionMap m_ActionMap;
 	
 	int m_SelectedScheme = 0;
+	[System.NonSerialized]
 	InputAction m_SelectedEntry = null;
 	List<string> m_PropertyNames = new List<string>();
 	HashSet<string> m_PropertyBlacklist  = new HashSet<string>();
 	Dictionary<string, string> m_PropertyErrors = new Dictionary<string, string>();
+	InputControlDescriptor m_SelectedSource = null;
+	ButtonAxisSource m_SelectedButtonAxisSource = null;
 	
 	int selectedScheme
 	{
@@ -34,8 +37,6 @@ public class ActionMapEditor : Editor
 			if (m_SelectedScheme == value)
 				return;
 			m_SelectedScheme = value;
-			if (m_EntryEditor != null)
-				m_EntryEditor.controlScheme = value;
 		}
 	}
 	
@@ -46,19 +47,9 @@ public class ActionMapEditor : Editor
 		{
 			if (m_SelectedEntry == value)
 				return;
-			if (m_EntryEditor != null)
-				DestroyImmediate(m_EntryEditor);
 			m_SelectedEntry = value;
-			if (m_SelectedEntry != null)
-			{
-				m_EntryEditor = (InputActionEditor)Editor.CreateEditor(m_SelectedEntry, typeof(InputActionEditor));
-				m_EntryEditor.controlScheme = selectedScheme;
-				m_EntryEditor.showCommon = false;
-			}
 		}
 	}
-	
-	InputActionEditor m_EntryEditor = null;
 	
 	public void OnEnable()
 	{
@@ -171,22 +162,18 @@ public class ActionMapEditor : Editor
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
 			m_ActionMap.entries.Remove(selectedEntry);
-			DestroyImmediate(selectedEntry, true);
 			if (!m_ActionMap.entries.Contains(selectedEntry))
 				selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ActionMap));
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			var entry = ScriptableObject.CreateInstance<InputAction>();
+			var entry = new InputAction();
 			entry.controlData = new InputControlData() { name = "New Control" };
 			entry.name = entry.controlData.name;
 			entry.bindings = new List<ControlBinding>();
 			while (entry.bindings.Count < m_ActionMap.schemes.Count)
 				entry.bindings.Add(new ControlBinding());
 			m_ActionMap.entries.Add(entry);
-			AssetDatabase.AddObjectToAsset(entry, m_ActionMap);
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(m_ActionMap));
 			selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
 		}
 		GUILayout.FlexibleSpace();
@@ -194,13 +181,8 @@ public class ActionMapEditor : Editor
 		
 		EditorGUILayout.Space();
 		
-		if (m_EntryEditor != null)
-		{
-			string oldName = selectedEntry.name;
-			m_EntryEditor.OnInspectorGUI();
-			if (selectedEntry.name != oldName)
-				RefreshPropertyNames();
-		}
+		if (selectedEntry != null)
+			DrawEntryGUI();
 		
 		if (EditorGUI.EndChangeCheck())
 			EditorUtility.SetDirty(m_ActionMap);
@@ -219,9 +201,9 @@ public class ActionMapEditor : Editor
 		EditorGUI.EndDisabledGroup();
 	}
 	
-	void DrawEntry(InputAction entry, int controlScheme)
+	void DrawEntry(InputAction entry, int selectedScheme)
 	{
-		ControlBinding binding = (entry.bindings.Count > controlScheme ? entry.bindings[controlScheme] : null);
+		ControlBinding binding = (entry.bindings.Count > selectedScheme ? entry.bindings[selectedScheme] : null);
 		
 		int sourceCount = 0;
 		int buttonAxisSourceCount = 0;
@@ -342,6 +324,7 @@ public class {0} : PlayerInput {{
 		string path = AssetDatabase.GetAssetPath(m_ActionMap);
 		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
 		File.WriteAllText(path, str.ToString());
+		AssetDatabase.ImportAsset(path);
 	}
 	
 	string GetCamelCaseString(string input, bool capitalFirstLetter)
@@ -384,5 +367,177 @@ public class {0} : PlayerInput {{
 			}
 		}
 		return output;
+	}
+	
+	void DrawEntryGUI()
+	{
+		EditorGUI.BeginChangeCheck();
+		
+		EditorGUI.BeginChangeCheck();
+		string name = EditorGUILayout.TextField("Name", selectedEntry.controlData.name);
+		if (EditorGUI.EndChangeCheck())
+		{
+			InputControlData data = selectedEntry.controlData;
+			data.name = name;
+			selectedEntry.controlData = data;
+			selectedEntry.name = name;
+		}
+		
+		EditorGUI.BeginChangeCheck();
+		var type = (InputControlType)EditorGUILayout.EnumPopup("Type", selectedEntry.controlData.controlType);
+		if (EditorGUI.EndChangeCheck())
+		{
+			InputControlData data = selectedEntry.controlData;
+			data.controlType = type;
+			selectedEntry.controlData = data;
+		}
+		
+		EditorGUILayout.Space();
+		
+		if (selectedScheme >= 0 && selectedScheme < selectedEntry.bindings.Count)
+			DrawBinding(selectedEntry.bindings[selectedScheme]);
+	}
+	
+	void DrawBinding(ControlBinding binding)
+	{
+		if (binding.primaryIsButtonAxis)
+		{
+			DrawButtonAxisSources(binding);
+			DrawSources(binding);
+		}
+		else
+		{
+			DrawSources(binding);
+			DrawButtonAxisSources(binding);
+		}
+		
+		// Remove and add buttons
+		EditorGUILayout.BeginHorizontal();
+		GUILayout.Space(15 * EditorGUI.indentLevel);
+		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+		{
+			if (m_SelectedSource != null)
+				binding.sources.Remove(m_SelectedSource);
+			if (m_SelectedButtonAxisSource != null)
+				binding.buttonAxisSources.Remove(m_SelectedButtonAxisSource);
+		}
+		Rect r = GUILayoutUtility.GetRect(Styles.iconToolbarPlusMore, GUIStyle.none);
+		if (GUI.Button(r, Styles.iconToolbarPlusMore, GUIStyle.none))
+		{
+			ShowAddOptions(r, binding);
+		}
+		GUILayout.FlexibleSpace();
+		EditorGUILayout.EndHorizontal();
+	}
+	
+	void ShowAddOptions(Rect rect, ControlBinding binding)
+	{
+		GenericMenu menu = new GenericMenu();
+		menu.AddItem(new GUIContent("Regular Source"), false, AddSource, binding);
+		menu.AddItem(new GUIContent("Button Axis Source"), false, AddButtonAxisSource, binding);
+		menu.DropDown(rect);
+	}
+	
+	void AddSource(object data)
+	{
+		ControlBinding binding = (ControlBinding)data;
+		var source = new InputControlDescriptor();
+		binding.sources.Add(source);
+		
+		m_SelectedButtonAxisSource = null;
+		m_SelectedSource = source;
+	}
+	
+	void AddButtonAxisSource(object data)
+	{
+		ControlBinding binding = (ControlBinding)data;
+		var source = new ButtonAxisSource(new InputControlDescriptor(), new InputControlDescriptor());
+		binding.buttonAxisSources.Add(source);
+		
+		m_SelectedSource = null;
+		m_SelectedButtonAxisSource = source;
+	}
+	
+	void DrawSources(ControlBinding binding)
+	{
+		for (int i = 0; i < binding.sources.Count; i++)
+		{
+			DrawSourceSummary(binding.sources[i]);
+		}
+	}
+	
+	void DrawButtonAxisSources(ControlBinding binding)
+	{
+		for (int i = 0; i < binding.buttonAxisSources.Count; i++)
+		{
+			DrawButtonAxisSourceSummary(binding.buttonAxisSources[i]);
+		}
+	}
+	
+	void DrawSourceSummary(InputControlDescriptor source)
+	{
+		Rect rect = EditorGUILayout.GetControlRect();
+		
+		if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+		{
+			m_SelectedButtonAxisSource = null;
+			m_SelectedSource = source;
+			Repaint();
+		}
+		if (m_SelectedSource == source)
+			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+		
+		DrawSourceSummary(rect, "Source", source);
+		
+		EditorGUILayout.Space();
+	}
+	
+	void DrawButtonAxisSourceSummary(ButtonAxisSource source)
+	{
+		Rect rect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing);
+		
+		if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+		{
+			m_SelectedSource = null;
+			m_SelectedButtonAxisSource = source;
+			Repaint();
+		}
+		if (m_SelectedButtonAxisSource == source)
+			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+		
+		rect.height = EditorGUIUtility.singleLineHeight;
+		DrawSourceSummary(rect, "Source (negative)", source.negative);
+		rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+		DrawSourceSummary(rect, "Source (positive)", source.positive);
+		
+		EditorGUILayout.Space();
+	}
+	
+	void DrawSourceSummary(Rect rect, string label, InputControlDescriptor source)
+	{
+		if (m_SelectedSource == source)
+			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+		
+		rect = EditorGUI.PrefixLabel(rect, new GUIContent(label));
+		rect.width = (rect.width - 4) * 0.5f;
+		
+		int indentLevel = EditorGUI.indentLevel;
+		EditorGUI.indentLevel = 0;
+		
+		string[] deviceNames = InputDeviceGUIUtility.GetDeviceNames();
+		EditorGUI.BeginChangeCheck();
+		int deviceIndex = EditorGUI.Popup(rect, InputDeviceGUIUtility.GetDeviceIndex(source.deviceType), deviceNames);
+		if (EditorGUI.EndChangeCheck())
+			source.deviceType = InputDeviceGUIUtility.GetDeviceType(deviceIndex);
+		
+		rect.x += rect.width + 4;
+		
+		string[] controlNames = InputDeviceGUIUtility.GetDeviceControlNames(source.deviceType);
+		EditorGUI.BeginChangeCheck();
+		int controlIndex = EditorGUI.Popup(rect, source.controlIndex, controlNames);
+		if (EditorGUI.EndChangeCheck())
+			source.controlIndex = controlIndex;
+		
+		EditorGUI.indentLevel = indentLevel;
 	}
 }

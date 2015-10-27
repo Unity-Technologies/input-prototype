@@ -94,11 +94,6 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		public InputControl this[InputAction entry]
-		{
-			get { return state[entry.controlIndex]; }
-		}
-
 		void BeginNewFrameEvent()
 		{
 			currentScheme.state.BeginNewFrame();

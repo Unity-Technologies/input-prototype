@@ -4,10 +4,12 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
+	[Serializable]
 	public class InputAction
-		: ScriptableObject
 	{
 		#region Fields
+		
+		public string name;
 
 		[SerializeField]
 		InputControlData m_ControlData;

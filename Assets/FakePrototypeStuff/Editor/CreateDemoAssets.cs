@@ -8,7 +8,7 @@ public static class CreateDemoAssets
 {
 	private static InputAction CreateControl(string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
 	{
-		var entry = ScriptableObject.CreateInstance<InputAction>();
+		var entry = new InputAction();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -62,7 +62,7 @@ public static class CreateDemoAssets
 	
 	private static InputAction CreateControlComposite(string name, InputControlType controlType, int[] indices)
 	{
-		var entry = ScriptableObject.CreateInstance<InputAction>();
+		var entry = new InputAction();
 		entry.controlData = new InputControlData
 		{
 			name = name,
@@ -130,8 +130,6 @@ public static class CreateDemoAssets
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
 		AssetDatabase.CreateAsset(actionMap, path);
-		for (int i = 0; i < entries.Count; i++)
-			AssetDatabase.AddObjectToAsset(entries[i], path);
 	}
 
 	[ MenuItem("Tools/Create Device Profile Asset") ]
