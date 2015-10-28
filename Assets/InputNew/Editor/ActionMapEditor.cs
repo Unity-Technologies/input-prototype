@@ -22,7 +22,7 @@ public class ActionMapEditor : Editor
 	
 	int m_SelectedScheme = 0;
 	[System.NonSerialized]
-	InputAction m_SelectedEntry = null;
+	InputAction m_SelectedAction = null;
 	List<string> m_PropertyNames = new List<string>();
 	HashSet<string> m_PropertyBlacklist  = new HashSet<string>();
 	Dictionary<string, string> m_PropertyErrors = new Dictionary<string, string>();
@@ -40,18 +40,18 @@ public class ActionMapEditor : Editor
 		}
 	}
 	
-	InputAction selectedEntry
+	InputAction selectedAction
 	{
-		get { return m_SelectedEntry; }
+		get { return m_SelectedAction; }
 		set
 		{
-			if (m_SelectedEntry == value)
+			if (m_SelectedAction == value)
 				return;
-			m_SelectedEntry = value;
+			m_SelectedAction = value;
 		}
 	}
 	
-	public void OnEnable()
+	void OnEnable()
 	{
 		m_ActionMap = (ActionMap)serializedObject.targetObject;
 		RefreshPropertyNames();
@@ -62,8 +62,8 @@ public class ActionMapEditor : Editor
 	{
 		// Calculate property names.
 		m_PropertyNames.Clear();
-		for (int i = 0; i < m_ActionMap.entries.Count; i++)
-			m_PropertyNames.Add(GetCamelCaseString(m_ActionMap.entries[i].name, false));
+		for (int i = 0; i < m_ActionMap.actions.Count; i++)
+			m_PropertyNames.Add(GetCamelCaseString(m_ActionMap.actions[i].name, false));
 		
 		// Calculate duplicates.
 		HashSet<string> duplicates = new HashSet<string>(m_PropertyNames.GroupBy(x => x).Where(group => group.Count() > 1).Select(group => group.Key));
@@ -120,13 +120,13 @@ public class ActionMapEditor : Editor
 		{
 			m_ActionMap.schemes.RemoveAt(selectedScheme);
 			
-			for (int i = 0; i < m_ActionMap.entries.Count; i++)
+			for (int i = 0; i < m_ActionMap.actions.Count; i++)
 			{
-				InputAction entry = m_ActionMap.entries[i];
-				if (entry.bindings.Count > selectedScheme)
-					entry.bindings.RemoveAt(selectedScheme);
-				while (entry.bindings.Count > m_ActionMap.schemes.Count)
-					entry.bindings.RemoveAt(entry.bindings.Count - 1);
+				InputAction action = m_ActionMap.actions[i];
+				if (action.bindings.Count > selectedScheme)
+					action.bindings.RemoveAt(selectedScheme);
+				while (action.bindings.Count > m_ActionMap.schemes.Count)
+					action.bindings.RemoveAt(action.bindings.Count - 1);
 			}
 			if (selectedScheme >= m_ActionMap.schemes.Count)
 				selectedScheme = m_ActionMap.schemes.Count - 1;
@@ -134,11 +134,11 @@ public class ActionMapEditor : Editor
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
 			m_ActionMap.schemes.Add("New Control Scheme");
-			for (int i = 0; i < m_ActionMap.entries.Count; i++)
+			for (int i = 0; i < m_ActionMap.actions.Count; i++)
 			{
-				InputAction entry = m_ActionMap.entries[i];
-				while (entry.bindings.Count < m_ActionMap.schemes.Count)
-					entry.bindings.Add(new ControlBinding());
+				InputAction action = m_ActionMap.actions[i];
+				while (action.bindings.Count < m_ActionMap.schemes.Count)
+					action.bindings.Add(new ControlBinding());
 			}
 			selectedScheme = m_ActionMap.schemes.Count - 1;
 		}
@@ -150,9 +150,9 @@ public class ActionMapEditor : Editor
 		// Show high level controls
 		EditorGUILayout.LabelField("Actions", m_ActionMap.schemes[selectedScheme] + " Bindings");
 		EditorGUILayout.BeginVertical("Box");
-		foreach (var entry in m_ActionMap.entries)
+		foreach (var action in m_ActionMap.actions)
 		{
-			DrawEntry(entry, selectedScheme);
+			DrawActionRow(action, selectedScheme);
 		}
 		EditorGUILayout.EndVertical();
 		
@@ -161,28 +161,28 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ActionMap.entries.Remove(selectedEntry);
-			if (!m_ActionMap.entries.Contains(selectedEntry))
-				selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
+			m_ActionMap.actions.Remove(selectedAction);
+			if (!m_ActionMap.actions.Contains(selectedAction))
+				selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			var entry = new InputAction();
-			entry.controlData = new InputControlData() { name = "New Control" };
-			entry.name = entry.controlData.name;
-			entry.bindings = new List<ControlBinding>();
-			while (entry.bindings.Count < m_ActionMap.schemes.Count)
-				entry.bindings.Add(new ControlBinding());
-			m_ActionMap.entries.Add(entry);
-			selectedEntry = m_ActionMap.entries[m_ActionMap.entries.Count - 1];
+			var action = new InputAction();
+			action.controlData = new InputControlData() { name = "New Control" };
+			action.name = action.controlData.name;
+			action.bindings = new List<ControlBinding>();
+			while (action.bindings.Count < m_ActionMap.schemes.Count)
+				action.bindings.Add(new ControlBinding());
+			m_ActionMap.actions.Add(action);
+			selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		
 		EditorGUILayout.Space();
 		
-		if (selectedEntry != null)
-			DrawEntryGUI();
+		if (selectedAction != null)
+			DrawActionGUI();
 		
 		if (EditorGUI.EndChangeCheck())
 			EditorUtility.SetDirty(m_ActionMap);
@@ -201,9 +201,9 @@ public class ActionMapEditor : Editor
 		EditorGUI.EndDisabledGroup();
 	}
 	
-	void DrawEntry(InputAction entry, int selectedScheme)
+	void DrawActionRow(InputAction action, int selectedScheme)
 	{
-		ControlBinding binding = (entry.bindings.Count > selectedScheme ? entry.bindings[selectedScheme] : null);
+		ControlBinding binding = (action.bindings.Count > selectedScheme ? action.bindings[selectedScheme] : null);
 		
 		int sourceCount = 0;
 		int buttonAxisSourceCount = 0;
@@ -222,7 +222,7 @@ public class ActionMapEditor : Editor
 		baseRect.yMin += 4;
 		baseRect.yMax -= 4;
 		
-		if (selectedEntry == entry)
+		if (selectedAction == action)
 			GUI.DrawTexture(totalRect, EditorGUIUtility.whiteTexture);
 		
 		// Show control fields
@@ -231,7 +231,7 @@ public class ActionMapEditor : Editor
 		rect.height = EditorGUIUtility.singleLineHeight;
 		rect.width = EditorGUIUtility.labelWidth - 4;
 		
-		EditorGUI.LabelField(rect, entry.controlData.name);
+		EditorGUI.LabelField(rect, action.controlData.name);
 		
 		// Show binding fields
 		
@@ -255,7 +255,7 @@ public class ActionMapEditor : Editor
 		
 		if (Event.current.type == EventType.MouseDown && totalRect.Contains(Event.current.mousePosition))
 		{
-			selectedEntry = entry;
+			selectedAction = action;
 			Event.current.Use();
 		}
 	}
@@ -316,8 +316,8 @@ public class {0} : PlayerInput {{
 	
 ", className);
 		
-		for (int i = 0; i < m_ActionMap.entries.Count; i++)
-			str.AppendFormat("	public InputControl @{0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.entries[i].name, false), i);
+		for (int i = 0; i < m_ActionMap.actions.Count; i++)
+			str.AppendFormat("	public InputControl @{0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.actions[i].name, false), i);
 		
 		str.AppendLine(@"}");
 		
@@ -369,33 +369,33 @@ public class {0} : PlayerInput {{
 		return output;
 	}
 	
-	void DrawEntryGUI()
+	void DrawActionGUI()
 	{
 		EditorGUI.BeginChangeCheck();
 		
 		EditorGUI.BeginChangeCheck();
-		string name = EditorGUILayout.TextField("Name", selectedEntry.controlData.name);
+		string name = EditorGUILayout.TextField("Name", selectedAction.controlData.name);
 		if (EditorGUI.EndChangeCheck())
 		{
-			InputControlData data = selectedEntry.controlData;
+			InputControlData data = selectedAction.controlData;
 			data.name = name;
-			selectedEntry.controlData = data;
-			selectedEntry.name = name;
+			selectedAction.controlData = data;
+			selectedAction.name = name;
 		}
 		
 		EditorGUI.BeginChangeCheck();
-		var type = (InputControlType)EditorGUILayout.EnumPopup("Type", selectedEntry.controlData.controlType);
+		var type = (InputControlType)EditorGUILayout.EnumPopup("Type", selectedAction.controlData.controlType);
 		if (EditorGUI.EndChangeCheck())
 		{
-			InputControlData data = selectedEntry.controlData;
+			InputControlData data = selectedAction.controlData;
 			data.controlType = type;
-			selectedEntry.controlData = data;
+			selectedAction.controlData = data;
 		}
 		
 		EditorGUILayout.Space();
 		
-		if (selectedScheme >= 0 && selectedScheme < selectedEntry.bindings.Count)
-			DrawBinding(selectedEntry.bindings[selectedScheme]);
+		if (selectedScheme >= 0 && selectedScheme < selectedAction.bindings.Count)
+			DrawBinding(selectedAction.bindings[selectedScheme]);
 	}
 	
 	void DrawBinding(ControlBinding binding)

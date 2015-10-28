@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEditor;
 using System.Collections.Generic;
@@ -126,7 +126,7 @@ public static class CreateDemoAssets
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Escape)
 		));
 		
-		actionMap.entries = entries;
+		actionMap.actions = entries;
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
 		AssetDatabase.CreateAsset(actionMap, path);

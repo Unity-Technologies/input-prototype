@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e5bc088c9caeb44bc4283dc321b033, type: 3}
   m_Name: FirstPersonControls
   m_EditorClassIdentifier: 
-  m_Entries:
-  - name: MoveX
+  m_Actions:
+  - m_Name: MoveX
     m_ControlData:
       componentControlIndices: 
       controlType: 1
@@ -61,7 +61,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: MoveY
+  - m_Name: MoveY
     m_ControlData:
       componentControlIndices: 
       controlType: 1
@@ -110,13 +110,13 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: Move
+  - m_Name: Move
     m_ControlData:
       componentControlIndices: 0000000001000000
       controlType: 3
       name: Move
     m_Bindings: []
-  - name: LookX
+  - m_Name: LookX
     m_ControlData:
       componentControlIndices: 
       controlType: 1
@@ -152,7 +152,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: LookY
+  - m_Name: LookY
     m_ControlData:
       componentControlIndices: 
       controlType: 1
@@ -188,13 +188,13 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: Look
+  - m_Name: Look
     m_ControlData:
       componentControlIndices: 0300000004000000
       controlType: 3
       name: Look
     m_Bindings: []
-  - name: Fire
+  - m_Name: Fire
     m_ControlData:
       componentControlIndices: 
       controlType: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: Menu
+  - m_Name: Menu
     m_ControlData:
       componentControlIndices: 
       controlType: 0
@@ -266,7 +266,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: LockCursor
+  - m_Name: LockCursor
     m_ControlData:
       componentControlIndices: 
       controlType: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - name: UnlockCursor
+  - m_Name: UnlockCursor
     m_ControlData:
       componentControlIndices: 
       controlType: 0

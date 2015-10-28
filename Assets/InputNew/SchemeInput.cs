@@ -37,7 +37,7 @@ namespace UnityEngine.InputNew
 			
 			// Create list of controls from InputMap.
 			var controls = new List<InputControlData>();
-			foreach (var entry in actionMap.entries)
+			foreach (var entry in actionMap.actions)
 			{
 				////REVIEW: why are we making copies here?
 				var control = new InputControlData
@@ -112,9 +112,9 @@ namespace UnityEngine.InputNew
 			
 			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
 			// Synchronize the ActionMapInstance's own state.
-			for (var entryIndex = 0; entryIndex < actionMap.entries.Count; ++ entryIndex)
+			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
-				var entry = actionMap.entries[entryIndex];
+				var entry = actionMap.actions[entryIndex];
 				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
 					continue;
 				
@@ -151,7 +151,7 @@ namespace UnityEngine.InputNew
 		
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
-			var entry = actionMap.entries[controlIndex];
+			var entry = actionMap.actions[controlIndex];
 			if (entry.bindings == null || entry.bindings.Count == 0)
 				return string.Empty;
 			

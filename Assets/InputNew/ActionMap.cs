@@ -10,8 +10,8 @@ namespace UnityEngine.InputNew
 	{
 		[FormerlySerializedAs("entries")]
 		[SerializeField]
-		private List<InputAction> m_Entries;
-		public List<InputAction> entries { get { return m_Entries; } set { m_Entries = value; } }
+		private List<InputAction> m_Actions;
+		public List<InputAction> actions { get { return m_Actions; } set { m_Actions = value; } }
 		
 		[FormerlySerializedAs("schemes")]
 		[SerializeField]
@@ -20,22 +20,22 @@ namespace UnityEngine.InputNew
 
 		public void OnEnable()
 		{
-			if (entries != null)
+			if (actions != null)
 			{
-				for (var i = 0; i < entries.Count; ++ i)
+				for (var i = 0; i < actions.Count; ++ i)
 				{
-					entries[i].controlIndex = i;
+					actions[i].controlIndex = i;
 				}
 			}
 		}
 
 		public IEnumerable<Type> GetUsedDeviceTypes(int controlSchemeIndex)
 		{
-			if (entries == null)
+			if (actions == null)
 				return Enumerable.Empty<Type>();
 
 			var deviceTypes = new HashSet<Type>();
-			foreach (var entry in entries)
+			foreach (var entry in actions)
 			{
 				if (controlSchemeIndex >= entry.bindings.Count)
 					continue;

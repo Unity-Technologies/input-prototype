@@ -103,17 +103,17 @@ namespace UnityEngine.InputNew
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
-			foreach (var entry in actionMap.entries)
+			foreach (var action in actionMap.actions)
 			{
-				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
+				if (action.bindings == null || action.bindings.Count <= controlSchemeIndex)
 					continue;
 
-				foreach (var control in entry.bindings[controlSchemeIndex].sources)
+				foreach (var control in action.bindings[controlSchemeIndex].sources)
 				{
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, control);
 				}
 
-				foreach (var axis in entry.bindings[controlSchemeIndex].buttonAxisSources)
+				foreach (var axis in action.bindings[controlSchemeIndex].buttonAxisSources)
 				{
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.negative);
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.positive);
