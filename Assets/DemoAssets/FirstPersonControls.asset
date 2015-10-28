@@ -11,13 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e5bc088c9caeb44bc4283dc321b033, type: 3}
   m_Name: FirstPersonControls
   m_EditorClassIdentifier: 
-  entries:
+  m_Entries:
   - name: MoveX
     m_ControlData:
       componentControlIndices: 
       controlType: 1
       name: MoveX
-    bindings:
+    m_Bindings:
     - sources: []
       deadZone: .300000012
       buttonAxisSources:
@@ -66,7 +66,7 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 1
       name: MoveY
-    bindings:
+    m_Bindings:
     - sources: []
       deadZone: .300000012
       buttonAxisSources:
@@ -115,13 +115,13 @@ MonoBehaviour:
       componentControlIndices: 0000000001000000
       controlType: 3
       name: Move
-    bindings: []
+    m_Bindings: []
   - name: LookX
     m_ControlData:
       componentControlIndices: 
       controlType: 1
       name: LookX
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 9
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -157,7 +157,7 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 1
       name: LookY
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 10
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -193,13 +193,13 @@ MonoBehaviour:
       componentControlIndices: 0300000004000000
       controlType: 3
       name: Look
-    bindings: []
+    m_Bindings: []
   - name: Fire
     m_ControlData:
       componentControlIndices: 
       controlType: 0
       name: Fire
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 15
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -235,7 +235,7 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 0
       name: Menu
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 32
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
@@ -271,7 +271,7 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 0
       name: LockCursor
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 15
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -287,7 +287,7 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 0
       name: UnlockCursor
-    bindings:
+    m_Bindings:
     - sources:
       - controlIndex: 27
         m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
@@ -298,7 +298,7 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  schemes:
+  m_Schemes:
   - KeyboardMouse
   - Gamepad
   - VirtualJoystick

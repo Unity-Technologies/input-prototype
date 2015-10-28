@@ -2,14 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
-	public class ActionMap
-		: ScriptableObject
+	public class ActionMap : ScriptableObject
 	{
-		public List<InputAction> entries;
-		public List<string> schemes;
+		[FormerlySerializedAs("entries")]
+		[SerializeField]
+		private List<InputAction> m_Entries;
+		public List<InputAction> entries { get { return m_Entries; } set { m_Entries = value; } }
+		
+		[FormerlySerializedAs("schemes")]
+		[SerializeField]
+		private List<string> m_Schemes;
+		public List<string> schemes { get { return m_Schemes; } set { m_Schemes = value; } }
 
 		public void OnEnable()
 		{
