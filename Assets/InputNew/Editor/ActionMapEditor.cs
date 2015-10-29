@@ -28,6 +28,7 @@ public class ActionMapEditor : Editor
 	Dictionary<string, string> m_PropertyErrors = new Dictionary<string, string>();
 	InputControlDescriptor m_SelectedSource = null;
 	ButtonAxisSource m_SelectedButtonAxisSource = null;
+	bool m_Modified = false;
 	
 	int selectedScheme
 	{
@@ -53,9 +54,47 @@ public class ActionMapEditor : Editor
 	
 	void OnEnable()
 	{
-		m_ActionMap = (ActionMap)serializedObject.targetObject;
+		Revert();
 		RefreshPropertyNames();
 		CalculateBlackList();
+	}
+	
+	public virtual void OnDisable ()
+	{
+		// When destroying the editor check if we have any unapplied modifications and ask about applying them.
+		if (m_Modified)
+		{
+			string dialogText = "Unapplied changes to ActionMap '" + serializedObject.targetObject.name + "'.";
+			if (EditorUtility.DisplayDialog ("Unapplied changes", dialogText, "Apply", "Revert"))
+				Apply();
+		}
+	}
+	
+	void Apply()
+	{
+		EditorGUIUtility.keyboardControl = 0;
+		
+		SerializedObject temp = new SerializedObject(m_ActionMap);
+		temp.Update();
+		SerializedProperty prop = temp.GetIterator();
+		while (prop.Next(true))
+			serializedObject.CopyFromSerializedProperty(prop);
+		serializedObject.ApplyModifiedProperties();
+		
+		UpdateActionMapScript();
+		
+		m_Modified = false;
+	}
+	
+	void Revert ()
+	{
+		EditorGUIUtility.keyboardControl = 0;
+		
+		ActionMap original = (ActionMap)serializedObject.targetObject;
+		m_ActionMap = Instantiate<ActionMap>(original);
+		m_ActionMap.name = original.name;
+		
+		m_Modified = false;
 	}
 	
 	void RefreshPropertyNames()
@@ -99,7 +138,10 @@ public class ActionMapEditor : Editor
 			Rect rect = EditorGUILayout.GetControlRect();
 			
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+			{
+				EditorGUIUtility.keyboardControl = 0;
 				selectedScheme = i;
+			}
 			
 			if (selectedScheme == i)
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
@@ -164,6 +206,8 @@ public class ActionMapEditor : Editor
 			m_ActionMap.actions.Remove(selectedAction);
 			if (!m_ActionMap.actions.Contains(selectedAction))
 				selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+			
+			RefreshPropertyNames();
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
@@ -175,6 +219,8 @@ public class ActionMapEditor : Editor
 				action.bindings.Add(new ControlBinding());
 			m_ActionMap.actions.Add(action);
 			selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+			
+			RefreshPropertyNames();
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
@@ -185,19 +231,41 @@ public class ActionMapEditor : Editor
 			DrawActionGUI();
 		
 		if (EditorGUI.EndChangeCheck())
+		{
 			EditorUtility.SetDirty(m_ActionMap);
+			m_Modified = true;
+		}
 		
 		EditorGUILayout.Space();
 		
+		ApplyRevertGUI();
+	}
+	
+	void ApplyRevertGUI()
+	{
 		bool valid = true;
 		if (m_PropertyErrors.Count > 0)
 		{
 			valid = false;
 			EditorGUILayout.HelpBox(string.Join("\n", m_PropertyErrors.Values.ToArray()), MessageType.Error);
 		}
-		EditorGUI.BeginDisabledGroup(!valid);
-		if (GUILayout.Button("Update Script"))
-			UpdateActionMapScript();
+		
+		EditorGUI.BeginDisabledGroup(!m_Modified);
+		
+		GUILayout.BeginHorizontal();
+		{
+			GUILayout.FlexibleSpace();
+			
+			if (GUILayout.Button("Revert"))
+				Revert();
+			
+			EditorGUI.BeginDisabledGroup(!valid);
+			if (GUILayout.Button("Apply"))
+				Apply();
+			EditorGUI.EndDisabledGroup();
+		}
+		GUILayout.EndHorizontal();
+		
 		EditorGUI.EndDisabledGroup();
 	}
 	
@@ -255,6 +323,7 @@ public class ActionMapEditor : Editor
 		
 		if (Event.current.type == EventType.MouseDown && totalRect.Contains(Event.current.mousePosition))
 		{
+			EditorGUIUtility.keyboardControl = 0;
 			selectedAction = action;
 			Event.current.Use();
 		}
@@ -303,7 +372,8 @@ public class ActionMapEditor : Editor
 	}
 	
 	void UpdateActionMapScript () {
-		string className = GetCamelCaseString(m_ActionMap.name, true);
+		ActionMap original = (ActionMap)serializedObject.targetObject;
+		string className = GetCamelCaseString(original.name, true);
 		StringBuilder str = new StringBuilder();
 		
 		str.AppendFormat(@"using UnityEngine;
@@ -321,7 +391,7 @@ public class {0} : PlayerInput {{
 		
 		str.AppendLine(@"}");
 		
-		string path = AssetDatabase.GetAssetPath(m_ActionMap);
+		string path = AssetDatabase.GetAssetPath(original);
 		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
 		File.WriteAllText(path, str.ToString());
 		AssetDatabase.ImportAsset(path);
@@ -381,6 +451,7 @@ public class {0} : PlayerInput {{
 			data.name = name;
 			selectedAction.controlData = data;
 			selectedAction.name = name;
+			RefreshPropertyNames();
 		}
 		
 		EditorGUI.BeginChangeCheck();
