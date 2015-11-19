@@ -8,22 +8,11 @@ namespace UnityEngine.InputNew
 	[Serializable]
 	public class InputAction
 	{
-		[FormerlySerializedAs("name")]
-		[SerializeField]
-		private string m_Name;
-		public string name { get { return m_Name; } set { m_Name = value; } }
+		public string name { get { return m_ControlData.name; } set { m_ControlData.name = value; } }
 
 		[SerializeField]
 		private InputControlData m_ControlData;
-		public InputControlData controlData
-		{
-			get { return m_ControlData; }
-			set
-			{
-				m_ControlData = value;
-				name = m_ControlData.name;
-			}
-		}
+		public InputControlData controlData { get { return m_ControlData; } set { m_ControlData = value; } }
 
 		// This is one entry for each control scheme (matching indices) -- except if there are no bindings for the entry.
 		[FormerlySerializedAs("bindings")]

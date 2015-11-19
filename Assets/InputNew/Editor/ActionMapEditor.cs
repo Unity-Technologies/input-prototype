@@ -213,7 +213,6 @@ public class ActionMapEditor : Editor
 		{
 			var action = new InputAction();
 			action.controlData = new InputControlData() { name = "New Control" };
-			action.name = action.controlData.name;
 			action.bindings = new List<ControlBinding>();
 			while (action.bindings.Count < m_ActionMap.schemes.Count)
 				action.bindings.Add(new ControlBinding());
