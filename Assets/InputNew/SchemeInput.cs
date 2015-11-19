@@ -9,18 +9,18 @@ namespace UnityEngine.InputNew
 		private List<InputControlData> m_Controls;
 		private InputState m_State;
 		private ActionMap m_ActionMap;
-		private int m_ControlSchemeIndex = 0;
+		private ControlScheme m_ControlScheme;
 		private List<InputState> m_DeviceStates;
 
 		public override List<InputControlData> controls { get { return m_Controls; } }
 		public override InputState state { get { return m_State; } }
 		public ActionMap actionMap { get { return m_ActionMap; } }
-		public int controlSchemeIndex { get { return m_ControlSchemeIndex; } }
+		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 		protected List<InputState> deviceStates { get { return m_DeviceStates; } }
 
-		public SchemeInput(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
+		public SchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
 		{
-			Setup(actionMap, controlSchemeIndex, deviceStates);
+			Setup(actionMap, controlScheme, deviceStates);
 		}
 
 		private void SetControls(List<InputControlData> controls)
@@ -29,9 +29,9 @@ namespace UnityEngine.InputNew
 			m_State = new InputState(this);
 		}
 
-		protected void Setup(ActionMap actionMap, int controlSchemeIndex, List<InputState> deviceStates)
+		protected void Setup(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
 		{
-			m_ControlSchemeIndex = controlSchemeIndex;
+			m_ControlScheme = controlScheme;
 			m_DeviceStates = deviceStates;
 			m_ActionMap = actionMap;
 			
@@ -114,11 +114,7 @@ namespace UnityEngine.InputNew
 			// Synchronize the ActionMapInstance's own state.
 			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
-				var entry = actionMap.actions[entryIndex];
-				if (entry.bindings == null || entry.bindings.Count <= controlSchemeIndex)
-					continue;
-				
-				var binding = entry.bindings[controlSchemeIndex];
+				var binding = controlScheme.bindings[entryIndex];
 				
 				var controlValue = 0.0f;
 				foreach (var source in binding.sources)
@@ -151,11 +147,7 @@ namespace UnityEngine.InputNew
 		
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
 		{
-			var entry = actionMap.actions[controlIndex];
-			if (entry.bindings == null || entry.bindings.Count == 0)
-				return string.Empty;
-			
-			var binding = entry.bindings[controlSchemeIndex];
+			var binding = controlScheme.bindings[controlIndex];
 			
 			if (binding.primaryIsButtonAxis && binding.buttonAxisSources != null && binding.buttonAxisSources.Count > 0)
 			{

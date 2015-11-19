@@ -10,47 +10,11 @@ namespace UnityEngine.InputNew
 	{
 		[FormerlySerializedAs("entries")]
 		[SerializeField]
-		private List<InputAction> m_Actions;
+		private List<InputAction> m_Actions = new List<InputAction>();
 		public List<InputAction> actions { get { return m_Actions; } set { m_Actions = value; } }
 		
-		[FormerlySerializedAs("schemes")]
 		[SerializeField]
-		private List<string> m_Schemes;
-		public List<string> schemes { get { return m_Schemes; } set { m_Schemes = value; } }
-
-		public void OnEnable()
-		{
-			if (actions != null)
-			{
-				for (var i = 0; i < actions.Count; ++ i)
-				{
-					actions[i].controlIndex = i;
-				}
-			}
-		}
-
-		public IEnumerable<Type> GetUsedDeviceTypes(int controlSchemeIndex)
-		{
-			if (actions == null)
-				return Enumerable.Empty<Type>();
-
-			var deviceTypes = new HashSet<Type>();
-			foreach (var entry in actions)
-			{
-				if (controlSchemeIndex >= entry.bindings.Count)
-					continue;
-
-				var binding = entry.bindings[controlSchemeIndex];
-
-				foreach (var source in binding.sources)
-				{
-					deviceTypes.Add(source.deviceType);
-				}
-
-				////TODO: button axes
-			}
-
-			return deviceTypes;
-		}
+		private List<ControlScheme> m_ControlSchemes = new List<ControlScheme>();
+		public List<ControlScheme> controlSchemes { get { return m_ControlSchemes; } set { m_ControlSchemes = value; } }
 	}
 }

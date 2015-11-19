@@ -12,11 +12,48 @@ MonoBehaviour:
   m_Name: FirstPersonControls
   m_EditorClassIdentifier: 
   m_Actions:
-  - m_Name: MoveX
-    m_ControlData:
+  - m_ControlData:
       componentControlIndices: 
       controlType: 1
       name: MoveX
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 1
+      name: MoveY
+  - m_ControlData:
+      componentControlIndices: 0000000001000000
+      controlType: 3
+      name: Move
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 1
+      name: LookX
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 1
+      name: LookY
+  - m_ControlData:
+      componentControlIndices: 0300000004000000
+      controlType: 3
+      name: Look
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 0
+      name: Fire
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 0
+      name: Menu
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 0
+      name: LockCursor
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 0
+      name: UnlockCursor
+  m_ControlSchemes:
+  - m_Name: KeyboardMouse
     m_Bindings:
     - sources: []
       deadZone: .300000012
@@ -41,32 +78,6 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 1
-    - sources:
-      - controlIndex: 0
-        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-    - sources:
-      - controlIndex: 0
-        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-  - m_Name: MoveY
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 1
-      name: MoveY
-    m_Bindings:
     - sources: []
       deadZone: .300000012
       buttonAxisSources:
@@ -90,38 +101,13 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 1
-    - sources:
-      - controlIndex: 1
-        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+    - sources: []
       deadZone: .300000012
       buttonAxisSources: []
       gravity: 1000
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-    - sources:
-      - controlIndex: 1
-        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-  - m_Name: Move
-    m_ControlData:
-      componentControlIndices: 0000000001000000
-      controlType: 3
-      name: Move
-    m_Bindings: []
-  - m_Name: LookX
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 1
-      name: LookX
-    m_Bindings:
     - sources:
       - controlIndex: 9
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -133,32 +119,6 @@ MonoBehaviour:
       snap: 1
       primaryIsButtonAxis: 0
     - sources:
-      - controlIndex: 3
-        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-    - sources:
-      - controlIndex: 2
-        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-  - m_Name: LookY
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 1
-      name: LookY
-    m_Bindings:
-    - sources:
       - controlIndex: 10
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
@@ -168,38 +128,13 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-    - sources:
-      - controlIndex: 4
-        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+    - sources: []
       deadZone: .300000012
       buttonAxisSources: []
       gravity: 1000
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-    - sources:
-      - controlIndex: 3
-        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      deadZone: .300000012
-      buttonAxisSources: []
-      gravity: 1000
-      sensitivity: 1000
-      snap: 1
-      primaryIsButtonAxis: 0
-  - m_Name: Look
-    m_ControlData:
-      componentControlIndices: 0300000004000000
-      controlType: 3
-      name: Look
-    m_Bindings: []
-  - m_Name: Fire
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 0
-      name: Fire
-    m_Bindings:
     - sources:
       - controlIndex: 15
         m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
@@ -211,7 +146,66 @@ MonoBehaviour:
       snap: 1
       primaryIsButtonAxis: 0
     - sources:
+      - controlIndex: 32
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
       - controlIndex: 15
+        m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 27
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+  - m_Name: Gamepad
+    m_Bindings:
+    - sources:
+      - controlIndex: 0
+        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 1
+        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 3
         m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       deadZone: .300000012
@@ -222,7 +216,7 @@ MonoBehaviour:
       primaryIsButtonAxis: 0
     - sources:
       - controlIndex: 4
-        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       deadZone: .300000012
       buttonAxisSources: []
@@ -230,15 +224,16 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - m_Name: Menu
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 0
-      name: Menu
-    m_Bindings:
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
     - sources:
-      - controlIndex: 32
-        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+      - controlIndex: 15
+        m_DeviceTypeName: UnityEngine.InputNew.Gamepad, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       deadZone: .300000012
       buttonAxisSources: []
@@ -256,6 +251,86 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+  - m_Name: VirtualJoystick
+    m_Bindings:
+    - sources:
+      - controlIndex: 0
+        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 1
+        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 2
+        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 3
+        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 4
+        m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
     - sources:
       - controlIndex: 14
         m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
@@ -266,39 +341,17 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - m_Name: LockCursor
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 0
-      name: LockCursor
-    m_Bindings:
-    - sources:
-      - controlIndex: 15
-        m_DeviceTypeName: UnityEngine.InputNew.Pointer, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+    - sources: []
       deadZone: .300000012
       buttonAxisSources: []
       gravity: 1000
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  - m_Name: UnlockCursor
-    m_ControlData:
-      componentControlIndices: 
-      controlType: 0
-      name: UnlockCursor
-    m_Bindings:
-    - sources:
-      - controlIndex: 27
-        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+    - sources: []
       deadZone: .300000012
       buttonAxisSources: []
       gravity: 1000
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
-  m_Schemes:
-  - KeyboardMouse
-  - Gamepad
-  - VirtualJoystick

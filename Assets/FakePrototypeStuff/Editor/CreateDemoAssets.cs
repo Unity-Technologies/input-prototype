@@ -6,16 +6,20 @@ using Assets.Utilities;
 
 public static class CreateDemoAssets
 {
-	private static InputAction CreateControl(string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
+	private static void CreateControl(ActionMap actionMap, string name, InputControlType controlType, params ControlBinding[] bindingsPerControlScheme)
 	{
-		var entry = new InputAction();
-		entry.controlData = new InputControlData
+		var action = new InputAction();
+		action.controlData = new InputControlData
 		{
 			name = name,
 			controlType = controlType
 		};
-		entry.bindings = new List<ControlBinding>(bindingsPerControlScheme);
-		return entry;
+		actionMap.actions.Add(action);
+		for (int i = 0; i < actionMap.controlSchemes.Count; i++)
+		{
+			var binding = (i >= bindingsPerControlScheme.Length ? null : bindingsPerControlScheme[i]);
+			actionMap.controlSchemes[i].bindings.Add(binding);
+		}
 	}
 	
 	private static ControlBinding CreateBinding(System.Type deviceType, int controlIndex)
@@ -60,73 +64,78 @@ public static class CreateDemoAssets
 		return binding;
 	}
 	
-	private static InputAction CreateControlComposite(string name, InputControlType controlType, int[] indices)
+	private static void CreateControlComposite(ActionMap actionMap, string name, InputControlType controlType, int[] indices)
 	{
-		var entry = new InputAction();
-		entry.controlData = new InputControlData
+		var action = new InputAction();
+		action.controlData = new InputControlData
 		{
 			name = name,
 			controlType = controlType,
 			componentControlIndices = indices
 		};
-		return entry;
+		actionMap.actions.Add(action);
+		// We have to create dummy bindings for now to make the indices match up.
+		for (int i = 0; i < actionMap.controlSchemes.Count; i++)
+			actionMap.controlSchemes[i].bindings.Add(new ControlBinding());
 	}
 	
 	[ MenuItem("Tools/Create Input Map Asset") ]
 	public static void CreateInputMapAsset()
 	{
 		var actionMap = ScriptableObject.CreateInstance<ActionMap>();
-		actionMap.schemes = new List<string> { "KeyboardMouse", "Gamepad", "VirtualJoystick" };
+		actionMap.controlSchemes = new List<ControlScheme>
+		{
+			new ControlScheme("KeyboardMouse"),
+			new ControlScheme("Gamepad"),
+			new ControlScheme("VirtualJoystick")
+		};
 
-		var entries = new List<InputAction>();
-		entries.Add(CreateControl("MoveX", InputControlType.RelativeAxis,
+		CreateControl(actionMap, "MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickX)
-		));
+		);
 		
-		entries.Add(CreateControl("MoveY", InputControlType.RelativeAxis,
+		CreateControl(actionMap, "MoveY", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.S, (int)KeyCode.W, (int)KeyCode.DownArrow, (int)KeyCode.UpArrow),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickY),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickY)
-		));
+		);
 		
-		entries.Add(CreateControlComposite("Move", InputControlType.Vector2, new[] { 0, 1 }));
+		CreateControlComposite(actionMap, "Move", InputControlType.Vector2, new[] { 0, 1 });
 		
-		entries.Add(CreateControl("LookX", InputControlType.RelativeAxis,
+		CreateControl(actionMap, "LookX", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaX),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickX)
-		));
+		);
 		
-		entries.Add(CreateControl("LookY", InputControlType.RelativeAxis,
+		CreateControl(actionMap, "LookY", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaY),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickY)
-		));
+		);
 		
-		entries.Add(CreateControlComposite("Look", InputControlType.Vector2, new[] { 3, 4 }));
+		CreateControlComposite(actionMap, "Look", InputControlType.Vector2, new[] { 3, 4 });
 		
-		entries.Add(CreateControl("Fire", InputControlType.Button,
+		CreateControl(actionMap, "Fire", InputControlType.Button,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Action1)
-		));
+		);
 		
-		entries.Add(CreateControl("Menu", InputControlType.Button,
+		CreateControl(actionMap, "Menu", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Space),
 			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
-		));
+		);
 	
-		entries.Add(CreateControl("LockCursor", InputControlType.Button,
+		CreateControl(actionMap, "LockCursor", InputControlType.Button,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton)
-		));
-		entries.Add(CreateControl("UnlockCursor", InputControlType.Button,
+		);
+		CreateControl(actionMap, "UnlockCursor", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Escape)
-		));
-		
-		actionMap.actions = entries;
+		);
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
 		AssetDatabase.CreateAsset(actionMap, path);

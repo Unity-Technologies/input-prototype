@@ -128,12 +128,12 @@ public class ActionMapEditor : Editor
 	{
 		EditorGUI.BeginChangeCheck();
 		
-		if (selectedScheme >= m_ActionMap.schemes.Count)
-			selectedScheme = m_ActionMap.schemes.Count - 1;
+		if (selectedScheme >= m_ActionMap.controlSchemes.Count)
+			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
 		
 		// Show schemes
 		EditorGUIUtility.GetControlID(FocusType.Passive);
-		for (int i = 0; i < m_ActionMap.schemes.Count; i++)
+		for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
 			
@@ -147,9 +147,9 @@ public class ActionMapEditor : Editor
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 			
 			EditorGUI.BeginChangeCheck();
-			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMap.schemes[i]);
+			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMap.controlSchemes[i].name);
 			if (EditorGUI.EndChangeCheck())
-				m_ActionMap.schemes[i] = schemeName;
+				m_ActionMap.controlSchemes[i].name = schemeName;
 			
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 				Event.current.Use();
@@ -160,29 +160,14 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ActionMap.schemes.RemoveAt(selectedScheme);
-			
-			for (int i = 0; i < m_ActionMap.actions.Count; i++)
-			{
-				InputAction action = m_ActionMap.actions[i];
-				if (action.bindings.Count > selectedScheme)
-					action.bindings.RemoveAt(selectedScheme);
-				while (action.bindings.Count > m_ActionMap.schemes.Count)
-					action.bindings.RemoveAt(action.bindings.Count - 1);
-			}
-			if (selectedScheme >= m_ActionMap.schemes.Count)
-				selectedScheme = m_ActionMap.schemes.Count - 1;
+			m_ActionMap.controlSchemes.RemoveAt(selectedScheme);
+			if (selectedScheme >= m_ActionMap.controlSchemes.Count)
+				selectedScheme = m_ActionMap.controlSchemes.Count - 1;
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			m_ActionMap.schemes.Add("New Control Scheme");
-			for (int i = 0; i < m_ActionMap.actions.Count; i++)
-			{
-				InputAction action = m_ActionMap.actions[i];
-				while (action.bindings.Count < m_ActionMap.schemes.Count)
-					action.bindings.Add(new ControlBinding());
-			}
-			selectedScheme = m_ActionMap.schemes.Count - 1;
+			m_ActionMap.controlSchemes.Add(new ControlScheme("New Control Scheme"));
+			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
@@ -190,7 +175,7 @@ public class ActionMapEditor : Editor
 		EditorGUILayout.Space();
 		
 		// Show high level controls
-		EditorGUILayout.LabelField("Actions", m_ActionMap.schemes[selectedScheme] + " Bindings");
+		EditorGUILayout.LabelField("Actions", m_ActionMap.controlSchemes[selectedScheme].name + " Bindings");
 		EditorGUILayout.BeginVertical("Box");
 		foreach (var action in m_ActionMap.actions)
 		{
@@ -203,9 +188,15 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ActionMap.actions.Remove(selectedAction);
-			if (!m_ActionMap.actions.Contains(selectedAction))
-				selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+			int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
+			m_ActionMap.actions.RemoveAt(actionIndex);
+			for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
+				m_ActionMap.controlSchemes[i].bindings.RemoveAt(actionIndex);
+			
+			if (m_ActionMap.actions.Count == 0)
+				selectedAction = null;
+			else
+				selectedAction = m_ActionMap.actions[Mathf.Min(actionIndex, m_ActionMap.actions.Count - 1)];
 			
 			RefreshPropertyNames();
 		}
@@ -213,10 +204,10 @@ public class ActionMapEditor : Editor
 		{
 			var action = new InputAction();
 			action.controlData = new InputControlData() { name = "New Control" };
-			action.bindings = new List<ControlBinding>();
-			while (action.bindings.Count < m_ActionMap.schemes.Count)
-				action.bindings.Add(new ControlBinding());
 			m_ActionMap.actions.Add(action);
+			for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
+				m_ActionMap.controlSchemes[i].bindings.Add(new ControlBinding());
+			
 			selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
 			
 			RefreshPropertyNames();
@@ -270,7 +261,8 @@ public class ActionMapEditor : Editor
 	
 	void DrawActionRow(InputAction action, int selectedScheme)
 	{
-		ControlBinding binding = (action.bindings.Count > selectedScheme ? action.bindings[selectedScheme] : null);
+		int actionIndex = m_ActionMap.actions.IndexOf(action);
+		ControlBinding binding = m_ActionMap.controlSchemes[selectedScheme].bindings[actionIndex];
 		
 		int sourceCount = 0;
 		int buttonAxisSourceCount = 0;
@@ -464,8 +456,11 @@ public class {0} : PlayerInput {{
 		
 		EditorGUILayout.Space();
 		
-		if (selectedScheme >= 0 && selectedScheme < selectedAction.bindings.Count)
-			DrawBinding(selectedAction.bindings[selectedScheme]);
+		if (selectedScheme >= 0 && selectedScheme < m_ActionMap.controlSchemes.Count)
+		{
+			int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
+			DrawBinding(m_ActionMap.controlSchemes[selectedScheme].bindings[actionIndex]);
+		}
 	}
 	
 	void DrawBinding(ControlBinding binding)

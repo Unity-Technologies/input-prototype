@@ -5,6 +5,9 @@ using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
+	// Currently this class is little more than a wrapper for InputControlData,
+	// but since we may need to store a GUID for InputActions (but not other InputControlData possibly)
+	// I'm leaving it for now.
 	[Serializable]
 	public class InputAction
 	{
@@ -13,18 +16,5 @@ namespace UnityEngine.InputNew
 		[SerializeField]
 		private InputControlData m_ControlData;
 		public InputControlData controlData { get { return m_ControlData; } set { m_ControlData = value; } }
-
-		// This is one entry for each control scheme (matching indices) -- except if there are no bindings for the entry.
-		[FormerlySerializedAs("bindings")]
-		[SerializeField]
-		private List<ControlBinding> m_Bindings = new List<ControlBinding>();
-		public List<ControlBinding> bindings { get { return m_Bindings; } set { m_Bindings = value; } }
-
-		public int controlIndex { get; set; }
-
-		public override string ToString()
-		{
-			return string.Format("({0}, bindings:{1})", controlData.name, bindings.Count);
-		}
 	}
 }

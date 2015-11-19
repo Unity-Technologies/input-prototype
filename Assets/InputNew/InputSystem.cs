@@ -90,30 +90,27 @@ namespace UnityEngine.InputNew
 
 		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
 		{
-			for (var i = 0; i < actionMap.schemes.Count; ++ i)
+			for (var i = 0; i < actionMap.controlSchemes.Count; ++ i)
 			{
-				foreach (var instance in CreateAllPotentialPlayers(actionMap, i, onlyOnePlayerPerScheme))
+				foreach (var instance in CreateAllPotentialPlayers(actionMap, actionMap.controlSchemes[i], onlyOnePlayerPerScheme))
 				{
 					yield return instance;
 				}
 			}
 		}
 
-		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, int controlSchemeIndex, bool onlyOnePlayerPerScheme = false)
+		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, ControlScheme controlScheme, bool onlyOnePlayerPerScheme = false)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
-			foreach (var action in actionMap.actions)
+			foreach (var binding in controlScheme.bindings)
 			{
-				if (action.bindings == null || action.bindings.Count <= controlSchemeIndex)
-					continue;
-
-				foreach (var control in action.bindings[controlSchemeIndex].sources)
+				foreach (var control in binding.sources)
 				{
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, control);
 				}
 
-				foreach (var axis in action.bindings[controlSchemeIndex].buttonAxisSources)
+				foreach (var axis in binding.buttonAxisSources)
 				{
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.negative);
 					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.positive);
@@ -149,7 +146,7 @@ namespace UnityEngine.InputNew
 						deviceStates.Add(state);
 					}
 
-					yield return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
+					yield return new SchemeInput(actionMap, controlScheme, deviceStates);
 				}
 			}
 			else
@@ -169,7 +166,7 @@ namespace UnityEngine.InputNew
 					deviceStates.Add(state);
 				}
 
-				yield return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
+				yield return new SchemeInput(actionMap, controlScheme, deviceStates);
 			}
 		}
 
@@ -194,10 +191,10 @@ namespace UnityEngine.InputNew
 		// and automatically determining the control scheme based on it.
 		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices)
 		{
-			int matchingControlSchemeIndex = -1;
-			for (int scheme = 0; scheme < actionMap.schemes.Count; scheme++)
+			ControlScheme matchingControlScheme = null;
+			for (int scheme = 0; scheme < actionMap.controlSchemes.Count; scheme++)
 			{
-				var types = actionMap.GetUsedDeviceTypes(scheme);
+				var types = actionMap.controlSchemes[scheme].GetUsedDeviceTypes();
 				bool matchesAll = true;
 				foreach (var type in types)
 				{
@@ -220,19 +217,19 @@ namespace UnityEngine.InputNew
 				
 				if (matchesAll)
 				{
-					matchingControlSchemeIndex = scheme;
+					matchingControlScheme = actionMap.controlSchemes[scheme];
 					break;
 				}
 			}
 			
-			if (matchingControlSchemeIndex == -1)
+			if (matchingControlScheme == null)
 				return null;
 			
-			return CreateSchemeInput(actionMap, devices, matchingControlSchemeIndex);
+			return CreateSchemeInput(actionMap, devices, matchingControlScheme);
 		}
 
 		// This is for having explicit control over what devices go into a ActionMapInstance.
-		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices, int controlSchemeIndex)
+		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices, ControlScheme controlScheme)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -242,7 +239,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			// Create map instance.
-			return new SchemeInput(actionMap, controlSchemeIndex, deviceStates);
+			return new SchemeInput(actionMap, controlScheme, deviceStates);
 		}
 
 		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
