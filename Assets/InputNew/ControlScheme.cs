@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
-	[System.Serializable]
+	[Serializable]
 	public class ControlScheme
 	{
 		[SerializeField]

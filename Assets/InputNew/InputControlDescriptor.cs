@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.InputNew
 {
-	[ Serializable ]
+	[Serializable]
 	public class InputControlDescriptor
 	{
 		public int controlIndex;
