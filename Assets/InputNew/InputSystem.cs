@@ -8,6 +8,8 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
+		public delegate void BindingListener(InputControl control);
+		
 		#region Public Methods
 
 		public static void Initialize(InputDeviceProfile[] profiles)
@@ -270,7 +272,7 @@ namespace UnityEngine.InputNew
 
 		internal static void BeginNewFrame()
 		{
-			s_EventTree.BeginNewFrame(s_EventTree);
+			s_EventTree.BeginNewFrame();
 		}
 
 		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)
@@ -288,6 +290,19 @@ namespace UnityEngine.InputNew
 				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, UnityEngine.Cursor.lockState == CursorLockMode.Locked);
 			return false;
 		}
+		
+		public static void ListenForBinding (BindingListener listener)
+		{
+			s_BindingListener = listener;
+		}
+		
+		internal static void RegisterBinding(InputControl control)
+		{
+			if (s_BindingListener == null)
+				return;
+			s_BindingListener.Invoke(control);
+			s_BindingListener = null;
+		}
 
 		#endregion
 
@@ -300,6 +315,7 @@ namespace UnityEngine.InputNew
 
 		public static IInputConsumer consumerStack { get; private set; }
 		public static IInputConsumer rewriterStack { get; private set; }
+		public static bool listeningForBinding { get { return s_BindingListener != null; } }
 
 		public static IEnumerable<InputDevice> devices
 		{
@@ -356,6 +372,7 @@ namespace UnityEngine.InputNew
 		static InputEventTree s_EventTree;
 		static bool s_SimulateMouseWithTouches;
 		static InputEventTree s_SimulateMouseWithTouchesProcess;
+		static BindingListener s_BindingListener;
 
 		#endregion
 	}

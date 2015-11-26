@@ -22,6 +22,11 @@ namespace UnityEngine.InputNew
 		{
 			get { return m_Index; }
 		}
+		
+		public InputControlProvider provider
+		{
+			get { return m_State.controlProvider; }
+		}
 
 		public bool button
 		{
@@ -75,9 +80,9 @@ namespace UnityEngine.InputNew
 			get { return m_State.IsControlEnabled(m_Index); }
 		}
 
-		private InputControlData data
+		public InputControlData data
 		{
-			get { return m_State.controlProvider.GetControlData(index); }
+			get { return provider.GetControlData(index); }
 		}
 
 		public string name

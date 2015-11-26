@@ -348,9 +348,9 @@ public class ActionMapEditor : Editor
 		if (source.negative.deviceType == source.positive.deviceType)
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
-					InputDeviceGUIUtility.GetDeviceName(source.negative),
-					InputDeviceGUIUtility.GetDeviceControlName(source.negative),
-					InputDeviceGUIUtility.GetDeviceControlName(source.positive)
+					InputDeviceUtility.GetDeviceName(source.negative),
+					InputDeviceUtility.GetDeviceControlName(source.negative),
+					InputDeviceUtility.GetDeviceControlName(source.positive)
 				)
 			);
 		else
@@ -359,7 +359,7 @@ public class ActionMapEditor : Editor
 	
 	string GetSourceString(InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", InputDeviceGUIUtility.GetDeviceName(source), InputDeviceGUIUtility.GetDeviceControlName(source));
+		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceName(source), InputDeviceUtility.GetDeviceControlName(source));
 	}
 	
 	void UpdateActionMapScript () {
@@ -589,15 +589,15 @@ public class {0} : PlayerInput {{
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
 		
-		string[] deviceNames = InputDeviceGUIUtility.GetDeviceNames();
+		string[] deviceNames = InputDeviceUtility.GetDeviceNames();
 		EditorGUI.BeginChangeCheck();
-		int deviceIndex = EditorGUI.Popup(rect, InputDeviceGUIUtility.GetDeviceIndex(source.deviceType), deviceNames);
+		int deviceIndex = EditorGUI.Popup(rect, InputDeviceUtility.GetDeviceIndex(source.deviceType), deviceNames);
 		if (EditorGUI.EndChangeCheck())
-			source.deviceType = InputDeviceGUIUtility.GetDeviceType(deviceIndex);
+			source.deviceType = InputDeviceUtility.GetDeviceType(deviceIndex);
 		
 		rect.x += rect.width + 4;
 		
-		string[] controlNames = InputDeviceGUIUtility.GetDeviceControlNames(source.deviceType);
+		string[] controlNames = InputDeviceUtility.GetDeviceControlNames(source.deviceType);
 		EditorGUI.BeginChangeCheck();
 		int controlIndex = EditorGUI.Popup(rect, source.controlIndex, controlNames);
 		if (EditorGUI.EndChangeCheck())

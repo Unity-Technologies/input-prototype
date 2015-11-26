@@ -55,7 +55,12 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		internal void BeginNewFrame(IInputConsumer consumer)
+		internal void BeginNewFrame()
+		{
+			BeginNewFrame(this);
+		}
+		
+		private void BeginNewFrame(IInputConsumer consumer)
 		{
 			var callback = consumer.beginNewFrame;
 			if (callback != null)

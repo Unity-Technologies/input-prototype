@@ -95,6 +95,15 @@ namespace UnityEngine.InputNew
 			{
 				if (!m_Enabled[index])
 					continue;
+				if (m_PreviousStates[index] == m_CurrentStates[index])
+					continue;
+				
+				if (InputSystem.listeningForBinding)
+				{
+					// TODO: Figure out how to use sensible thresholds for different controls.
+					if (Mathf.Abs(m_CurrentStates[index]) >= 0.5f && Mathf.Abs(m_PreviousStates[index]) < 0.5f)
+						InputSystem.RegisterBinding(this[index]);
+				}
 				
 				m_PreviousStates[index] = m_CurrentStates[index];
 			}
