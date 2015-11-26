@@ -6,4 +6,4 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Demo.unity
+    path: Assets/Demo/Scenes/FPSSingleplayer.unity
