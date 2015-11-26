@@ -26,6 +26,11 @@ namespace UnityEngine.InputNew
 		private void SetControls(List<InputControlData> controls)
 		{
 			m_Controls = controls;
+			RefreshBindings();
+		}
+		
+		public void RefreshBindings()
+		{
 			m_State = new InputState(this);
 		}
 

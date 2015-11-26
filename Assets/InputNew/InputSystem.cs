@@ -90,18 +90,18 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, bool onlyOnePlayerPerScheme = false)
+		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap)
 		{
 			for (var i = 0; i < actionMap.controlSchemes.Count; ++ i)
 			{
-				foreach (var instance in CreateAllPotentialPlayers(actionMap, actionMap.controlSchemes[i], onlyOnePlayerPerScheme))
+				foreach (var instance in CreateAllPotentialPlayers(actionMap, actionMap.controlSchemes[i]))
 				{
 					yield return instance;
 				}
 			}
 		}
 
-		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, ControlScheme controlScheme, bool onlyOnePlayerPerScheme = false)
+		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, ControlScheme controlScheme)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
@@ -121,49 +121,27 @@ namespace UnityEngine.InputNew
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
 
-			if (!onlyOnePlayerPerScheme)
+			// Gather available devices for each type of device.
+			var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
+			var minDeviceCountOfType = Int32.MaxValue;
+			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
 			{
-				// Gather available devices for each type of device.
-				var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
-				var minDeviceCountOfType = Int32.MaxValue;
-				foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
-				{
-					var availableDevicesOfType = s_Devices.GetDevicesOfType(deviceType);
-					if (availableDevicesOfType != null)
-						deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
+				var availableDevicesOfType = s_Devices.GetDevicesOfType(deviceType);
+				if (availableDevicesOfType != null)
+					deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
 
-					minDeviceCountOfType = Mathf.Min(minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0);
-				}
-
-				// Create map instances according to available devices.
-				for (var i = 0; i < minDeviceCountOfType; ++ i)
-				{
-					var deviceStates = new List<InputState>();
-
-					foreach (var entry in perDeviceTypeUsedControlIndices)
-					{
-						// Take i-th device of current type.
-						var device = deviceTypesToAvailableDevices[entry.Key][i];
-						var state = new InputState(device, entry.Value);
-						deviceStates.Add(state);
-					}
-
-					yield return new SchemeInput(actionMap, controlScheme, deviceStates);
-				}
+				minDeviceCountOfType = Mathf.Min(minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0);
 			}
-			else
+
+			// Create map instances according to available devices.
+			for (var i = 0; i < minDeviceCountOfType; i++)
 			{
 				var deviceStates = new List<InputState>();
 
-				// Create device states for most recently used device of given types.
 				foreach (var entry in perDeviceTypeUsedControlIndices)
 				{
-					var device = s_Devices.GetMostRecentlyUsedDevice(entry.Key);
-					if (device == null)
-					{
-						yield break; // Can't satisfy this ActionMap; no available device of given type.
-					}
-
+					// Take i-th device of current type.
+					var device = deviceTypesToAvailableDevices[entry.Key][i];
 					var state = new InputState(device, entry.Value);
 					deviceStates.Add(state);
 				}

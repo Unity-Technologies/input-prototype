@@ -13,6 +13,7 @@ namespace UnityEngine.InputNew
 		private List<SchemeInput> m_SchemeInputs;
 		private InputEventTree treeNode { get; set; }
 
+		public ActionMap actionMap { get { return m_ActionMap; } }
 		public override List<InputControlData> controls { get { return currentScheme.controls; } }
 		public override InputState state { get { return currentScheme.state; } }
 		public bool autoSwitching { get { return m_AutoSwitch; } }
@@ -35,9 +36,15 @@ namespace UnityEngine.InputNew
 			m_AutoSwitch = false;
 		}
 
-		public void Rebind()
+		public void RefreshBindings()
 		{
-			m_SchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap, false).ToList();
+			for (int i = 0; i < m_SchemeInputs.Count; i++)
+				m_SchemeInputs[i].RefreshBindings();
+		}
+
+		void Rebind()
+		{
+			m_SchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap).ToList();
 			
 			float mostRecentTime = 0;
 			for (int i = 0; i < m_SchemeInputs.Count; i++)
