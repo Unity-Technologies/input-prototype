@@ -19,18 +19,28 @@ public class CharacterInputController
 	public ActionMap actionMap;
 
 	[Space(10)]
+	
 	public Transform head;
 	public float moveSpeed = 5;
 	public GameObject projectile;
 	public float timeBetweenShots = 0.5f;
+	
+	[Space(10)]
+	
 	public CubeSizer sizer;
 	public Text controlsText;
+	public RuntimeRebinding rebinder;
 
 	public void Awake()
 	{
-		m_PlayerInput = InputSystem.CreatePlayer<FirstPersonControls>(actionMap);
-		sizer.referencePlayerInput = m_PlayerInput;
-		m_PlayerInput.Activate();
+		m_PlayerInput = new FirstPersonControls(actionMap);
+		m_PlayerInput.active = true;
+		
+		if (sizer != null)
+			sizer.referencePlayerInput = m_PlayerInput;
+		if (rebinder != null)
+			rebinder.Initialize(m_PlayerInput.currentScheme);
+		
 		m_Rigid = GetComponent<Rigidbody>();
 		
 		LockCursor(true);
@@ -39,7 +49,7 @@ public class CharacterInputController
 	public void SetupPlayer(FirstPersonControls playerInput)
 	{
 		if (m_PlayerInput != null)
-			m_PlayerInput.Deactivate();
+			m_PlayerInput.active = false;
 		m_PlayerInput = playerInput;
 		sizer.referencePlayerInput = m_PlayerInput;
 	}
@@ -84,6 +94,16 @@ public class CharacterInputController
 		
 		if (m_PlayerInput.menu.buttonDown)
 			sizer.ToggleMenu();
+		
+		if (m_PlayerInput.reconfigure.buttonDown)
+			rebinder.enabled = !rebinder.enabled;
+		
+		if (rebinder.enabled == m_PlayerInput.active)
+		{
+			LockCursor(!rebinder.enabled);
+			m_PlayerInput.active = !rebinder.enabled;
+			controlsText.enabled = !rebinder.enabled;
+		}
 		
 		HandleControlsText();
 	}

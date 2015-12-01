@@ -10,7 +10,8 @@ namespace UnityEngine.InputNew
 		IList<IInputConsumer> children { get; }
 		bool isStack { get; set; }
 		ProcessInputDelegate processInput { get; set; }
-		BeginNewFrameDelegate beginNewFrame { get; set; }
+		FrameDelegate beginFrame { get; set; }
+		FrameDelegate endFrame { get; set; }
 	}
 
 	public static class InputConsumerExtensions

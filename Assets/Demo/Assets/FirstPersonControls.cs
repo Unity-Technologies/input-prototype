@@ -16,4 +16,5 @@ public class FirstPersonControls : PlayerInput {
 	public InputControl @menu { get { return this[7]; } }
 	public InputControl @lockCursor { get { return this[8]; } }
 	public InputControl @unlockCursor { get { return this[9]; } }
+	public InputControl @reconfigure { get { return this[10]; } }
 }

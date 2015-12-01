@@ -8,7 +8,7 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
-		public delegate void BindingListener(InputControl control);
+		public delegate bool BindingListener(InputControl control);
 		
 		#region Public Methods
 
@@ -46,7 +46,7 @@ namespace UnityEngine.InputNew
 			{
 				name = "State"
 				, processInput = s_Devices.ProcessEvent
-				, beginNewFrame = s_Devices.BeginNewFrameEvent
+				, beginFrame = s_Devices.BeginFrameEvent
 			};
 			s_EventTree.children.Add(state);
 			
@@ -94,30 +94,18 @@ namespace UnityEngine.InputNew
 		{
 			for (var i = 0; i < actionMap.controlSchemes.Count; ++ i)
 			{
-				foreach (var instance in CreateAllPotentialPlayers(actionMap, actionMap.controlSchemes[i]))
+				foreach (var instance in CreateAllPotentialPlayersForControlScheme(actionMap, actionMap.controlSchemes[i]))
 				{
 					yield return instance;
 				}
 			}
 		}
 
-		public static IEnumerable<SchemeInput> CreateAllPotentialPlayers(ActionMap actionMap, ControlScheme controlScheme)
+		private static IEnumerable<SchemeInput> CreateAllPotentialPlayersForControlScheme(ActionMap actionMap, ControlScheme controlScheme)
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
-			foreach (var binding in controlScheme.bindings)
-			{
-				foreach (var control in binding.sources)
-				{
-					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, control);
-				}
-
-				foreach (var axis in binding.buttonAxisSources)
-				{
-					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.negative);
-					ExtractDeviceTypeAndControlIndexFromSource(perDeviceTypeUsedControlIndices, axis.positive);
-				}
-			}
+			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
 
 			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
 
@@ -150,14 +138,9 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public static T CreatePlayer<T>(ActionMap actionMap) where T : PlayerInput
-		{
-			return (T)Activator.CreateInstance(typeof(T), new object[] { actionMap });
-		}
-
-		// This is for creating an instance of a control map that matches the same devices as another control map instance.
-		// If the otherActionMapInstance listens to all devices, the new one will too.
-		// If the otherActionMapInstance is bound to specific devies, the new one will be bound to same ones or a subset.
+		// This is for creating a PlayerInput (from an ActionMap) that matches the same devices as another PlayerInput.
+		// If the otherPlayerInput listens to all devices, the new one will too.
+		// If the otherPlayerInput is bound to specific devies, the new one will be bound to same ones or a subset.
 		public static T CreatePlayer<T>(ActionMap actionMap, PlayerInput otherPlayerInput) where T : PlayerInput
 		{
 			if (otherPlayerInput.autoSwitching)
@@ -167,7 +150,7 @@ namespace UnityEngine.InputNew
 			return (T)Activator.CreateInstance(typeof(T), new object[] { schemeInput });
 		}
 
-		// This is for having explicit control over what devices go into a ActionMapInstance,
+		// This is for having explicit control over what devices go into a SchemeInput,
 		// and automatically determining the control scheme based on it.
 		public static SchemeInput CreateSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices)
 		{
@@ -222,18 +205,6 @@ namespace UnityEngine.InputNew
 			return new SchemeInput(actionMap, controlScheme, deviceStates);
 		}
 
-		static void ExtractDeviceTypeAndControlIndexFromSource(Dictionary<Type, List<int>> perDeviceTypeMapEntries, InputControlDescriptor control)
-		{
-			List<int> entries;
-			if (!perDeviceTypeMapEntries.TryGetValue(control.deviceType, out entries))
-			{
-				entries = new List<int>();
-				perDeviceTypeMapEntries[control.deviceType] = entries;
-			}
-			
-			entries.Add(control.controlIndex);
-		}
-
 		#endregion
 
 		#region Non-Public Methods
@@ -248,9 +219,14 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		internal static void BeginNewFrame()
+		internal static void BeginFrame()
 		{
-			s_EventTree.BeginNewFrame();
+			s_EventTree.BeginFrame();
+		}
+
+		internal static void EndFrame()
+		{
+			s_EventTree.EndFrame();
 		}
 
 		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)
@@ -271,15 +247,25 @@ namespace UnityEngine.InputNew
 		
 		public static void ListenForBinding (BindingListener listener)
 		{
-			s_BindingListener = listener;
+			s_BindingListeners.Add(listener);
 		}
 		
 		internal static void RegisterBinding(InputControl control)
 		{
-			if (s_BindingListener == null)
-				return;
-			s_BindingListener.Invoke(control);
-			s_BindingListener = null;
+			for (int i = s_BindingListeners.Count - 1; i >= 0; i--)
+			{
+				if (s_BindingListeners[i] == null)
+				{
+					s_BindingListeners.RemoveAt(i);
+					continue;
+				}
+				bool used = s_BindingListeners[i](control);
+				if (used)
+				{
+					s_BindingListeners.RemoveAt(i);
+					break;
+				}
+			}
 		}
 
 		#endregion
@@ -293,7 +279,11 @@ namespace UnityEngine.InputNew
 
 		public static IInputConsumer consumerStack { get; private set; }
 		public static IInputConsumer rewriterStack { get; private set; }
-		public static bool listeningForBinding { get { return s_BindingListener != null; } }
+
+		public static bool listeningForBinding
+		{
+			get { return s_BindingListeners.Count > 0; }
+		}
 
 		public static IEnumerable<InputDevice> devices
 		{
@@ -350,7 +340,7 @@ namespace UnityEngine.InputNew
 		static InputEventTree s_EventTree;
 		static bool s_SimulateMouseWithTouches;
 		static InputEventTree s_SimulateMouseWithTouchesProcess;
-		static BindingListener s_BindingListener;
+		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
 
 		#endregion
 	}

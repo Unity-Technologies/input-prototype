@@ -36,12 +36,6 @@ namespace UnityEngine.InputNew
 			m_AutoSwitch = false;
 		}
 
-		public void RefreshBindings()
-		{
-			for (int i = 0; i < m_SchemeInputs.Count; i++)
-				m_SchemeInputs[i].RefreshBindings();
-		}
-
 		void Rebind()
 		{
 			m_SchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap).ToList();
@@ -58,25 +52,31 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public void Activate()
+		public bool active
 		{
-			if (treeNode != null)
-				return;
-			treeNode = new InputEventTree
+			get { return (treeNode != null); }
+			set
 			{
-				name = "Map"
-				, processInput = ProcessEvent
-				, beginNewFrame = BeginNewFrameEvent
-			};
-			InputSystem.consumerStack.children.Add(treeNode);
-		}
-
-		public void Deactivate()
-		{
-			if (treeNode == null)
-				return;
-			InputSystem.consumerStack.children.Remove(treeNode);
-			treeNode = null;
+				if ((treeNode != null) == value)
+					return;
+				if (value)
+				{
+					treeNode = new InputEventTree
+					{
+						name = "Map"
+						, processInput = ProcessEvent
+						, beginFrame = BeginFrameEvent
+						, endFrame = EndFrameEvent
+					};
+					InputSystem.consumerStack.children.Add(treeNode);
+				}
+				else
+				{
+					InputSystem.consumerStack.children.Remove(treeNode);
+					treeNode = null;
+					currentScheme.Reset();
+				}
+			}
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)
@@ -101,11 +101,14 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		void BeginNewFrameEvent()
+		void BeginFrameEvent()
 		{
-			currentScheme.state.BeginNewFrame();
-			foreach (var deviceState in currentScheme.GetDeviceStates())
-				deviceState.BeginNewFrame();
+			currentScheme.BeginFrame();
+		}
+		
+		void EndFrameEvent()
+		{
+			currentScheme.EndFrame();
 		}
 	}
 }

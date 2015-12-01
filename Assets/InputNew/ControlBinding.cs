@@ -14,5 +14,19 @@ namespace UnityEngine.InputNew
 		public float sensitivity = 1000;
 		public bool snap = true;
 		public bool primaryIsButtonAxis = false;
+		
+		public void ExtractDeviceTypesAndControlIndices(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		{
+			foreach (var control in sources)
+			{
+				control.ExtractDeviceTypeAndControlIndex(controlIndicesPerDeviceType);
+			}
+			
+			foreach (var axis in buttonAxisSources)
+			{
+				axis.negative.ExtractDeviceTypeAndControlIndex(controlIndicesPerDeviceType);
+				axis.positive.ExtractDeviceTypeAndControlIndex(controlIndicesPerDeviceType);
+			}
+		}
 	}
 }

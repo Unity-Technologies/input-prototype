@@ -211,10 +211,10 @@ namespace UnityEngine.InputNew
 				handler(device, connected);
 		}
 
-		internal void BeginNewFrameEvent()
+		internal void BeginFrameEvent()
 		{
 			foreach (var device in devices)
-				device.state.BeginNewFrame ();
+				device.state.BeginFrame();
 		}
 
 		#endregion

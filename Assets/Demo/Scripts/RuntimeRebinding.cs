@@ -5,8 +5,7 @@ using UnityEngine.InputNew;
 
 public class RuntimeRebinding : MonoBehaviour
 {
-	public ActionMap actionMap;
-	public ControlScheme controlScheme;
+	SchemeInput m_SchemeInput;
 	
 	const int k_NameWidth = 200;
 	const int k_BindingWidth = 120;
@@ -14,30 +13,26 @@ public class RuntimeRebinding : MonoBehaviour
 	string[] controlSchemeNames;
 	InputControlDescriptor descriptorToBeAssigned = null;
 	
-	void Start()
+	public void Initialize(SchemeInput schemeInput)
 	{
-		controlSchemeNames = actionMap.controlSchemes.Select(e => e.name).ToArray();
+		m_SchemeInput = schemeInput;
 	}
 	
 	void OnGUI()
 	{
+		if (m_SchemeInput == null)
+		{
+			GUILayout.Label("No scheme input assigned.");
+			return;
+		}
+		
+		ActionMap actionMap = m_SchemeInput.actionMap;
+		ControlScheme controlScheme = m_SchemeInput.controlScheme;
+		
 		if (controlScheme == null)
 		{
 			GUILayout.Label("No control scheme assigned.");
 			return;
-		}
-		
-		if (actionMap == null)
-		{
-			GUILayout.Label("No action map assigned.");
-			return;
-		}
-		
-		int index = actionMap.controlSchemes.FindIndex(e => e == controlScheme);
-		int newIndex = GUILayout.Toolbar(index, controlSchemeNames);
-		if (newIndex != index)
-		{
-			controlScheme = actionMap.controlSchemes[newIndex];
 		}
 		
 		if (controlScheme.bindings.Count != actionMap.actions.Count)
@@ -52,6 +47,11 @@ public class RuntimeRebinding : MonoBehaviour
 		{
 			DisplayControlBinding(actionMap.actions[control], controlScheme.bindings[control]);
 		}
+		
+		GUILayout.Space(10);
+		
+		if (GUILayout.Button("Done"))
+			enabled = false;
 	}
 	
 	void DisplayControlBinding(InputAction action, ControlBinding controlBinding)
@@ -68,6 +68,7 @@ public class RuntimeRebinding : MonoBehaviour
 		if (controlBinding.buttonAxisSources.Count > 0)
 		{
 			GUILayout.BeginHorizontal();
+			// Use unicode minus sign that has same width as plus sign.
 			GUILayout.Label(action.name + " (\u2212)", GUILayout.Width(k_NameWidth));
 			for (int i = 0; i < controlBinding.buttonAxisSources.Count; i++)
 				DisplayButtonAxisSource(controlBinding.buttonAxisSources[i], false);
@@ -99,10 +100,10 @@ public class RuntimeRebinding : MonoBehaviour
 		}
 	}
 	
-	void BindInputControl(InputControl control)
+	bool BindInputControl(InputControl control)
 	{
-		descriptorToBeAssigned.deviceType = control.provider.GetType();
-		descriptorToBeAssigned.controlIndex = control.index;
+		m_SchemeInput.BindControl(descriptorToBeAssigned, control, false);
 		descriptorToBeAssigned = null;
+		return true;
 	}
 }

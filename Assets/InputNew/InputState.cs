@@ -18,18 +18,22 @@ namespace UnityEngine.InputNew
 			var controlCount = controlProvider.controlCount;
 			m_CurrentStates = new float[controlCount];
 			m_PreviousStates = new float[controlCount];
-
 			m_Enabled = new bool[controlCount];
+			
+			SetUsedControls(usedControlIndices);
+		}
+		
+		public void SetUsedControls(List<int> usedControlIndices)
+		{
 			if (usedControlIndices == null)
 			{
 				SetAllControlsEnabled(true);
 			}
 			else
 			{
+				SetAllControlsEnabled(false);
 				for (var i = 0; i < usedControlIndices.Count; i++)
-				{
 					m_Enabled[usedControlIndices[i]] = true;
-				}
 			}
 		}
 
@@ -83,12 +87,21 @@ namespace UnityEngine.InputNew
 				m_Enabled[i] = enabled;
 			}
 		}
+		
+		public void Reset()
+		{
+			for (int i = 0; i < m_CurrentStates.Length; i++)
+			{
+				m_CurrentStates[i] = 0;
+				m_PreviousStates[i] = 0;
+			}
+		}
 
 		#endregion
 
 		#region Non-Public Methods
 
-		internal void BeginNewFrame()
+		internal void BeginFrame()
 		{
 			var stateCount = m_Enabled.Length;
 			for (var index = 0; index < stateCount; ++index)

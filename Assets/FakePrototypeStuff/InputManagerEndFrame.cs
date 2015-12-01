@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputNew;
 
-public class InputManager
+public class InputManagerEndFrame
 	: MonoBehaviour
 {
 	public InputDeviceProfile[] profiles;
 
-	public void Awake()
-	{
-		InputSystem.Initialize(profiles);
-	}
-
 	public void Update()
 	{
-		InputSystem.BeginFrame();
+		InputSystem.EndFrame();
 	}
 }

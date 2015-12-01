@@ -55,19 +55,34 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		internal void BeginNewFrame()
+		internal void BeginFrame()
 		{
-			BeginNewFrame(this);
+			BeginFrame(this);
 		}
 		
-		private void BeginNewFrame(IInputConsumer consumer)
+		private void BeginFrame(IInputConsumer consumer)
 		{
-			var callback = consumer.beginNewFrame;
+			var callback = consumer.beginFrame;
 			if (callback != null)
 				callback();
 
 			foreach (var child in consumer.children)
-				BeginNewFrame(child);
+				BeginFrame(child);
+		}
+
+		internal void EndFrame()
+		{
+			EndFrame(this);
+		}
+		
+		private void EndFrame(IInputConsumer consumer)
+		{
+			foreach (var child in consumer.children)
+				EndFrame(child);
+			
+			var callback = consumer.endFrame;
+			if (callback != null)
+				callback();
 		}
 
 		#endregion
@@ -83,7 +98,9 @@ namespace UnityEngine.InputNew
 
 		public ProcessInputDelegate processInput { get; set; }
 
-		public BeginNewFrameDelegate beginNewFrame { get; set; }
+		public FrameDelegate beginFrame { get; set; }
+		
+		public FrameDelegate endFrame { get; set; }
 
 		#endregion
 	}

@@ -27,12 +27,12 @@ public class CubeSizer : MonoBehaviour
 		enabled = true;
 		menu.SetActive(true);
 		m_PlayerInput = InputSystem.CreatePlayer<FirstPersonControls>(actionMap, referencePlayerInput);
-		m_PlayerInput.Activate();
+		m_PlayerInput.active = true;
 	}
 	
 	public void CloseMenu()
 	{
-		m_PlayerInput.Deactivate();
+		m_PlayerInput.active = false;
 		menu.SetActive(false);
 		enabled = false;
 	}

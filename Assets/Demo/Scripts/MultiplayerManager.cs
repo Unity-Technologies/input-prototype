@@ -40,7 +40,7 @@ public class MultiplayerManager
 		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
 		{
 			if (potentialPlayers[i].player != null)
-				potentialPlayers[i].player.Deactivate();
+				potentialPlayers[i].player.active = false;
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class MultiplayerManager
 					{
 						player.status = PlayerStatus.Joined;
 						player.player = new FirstPersonControls(player.controls);
-						player.player.Activate();
+						player.player.active = true;
 						// Move to end
 						potentialPlayers.Remove(player);
 						potentialPlayers.Add(player);
@@ -72,7 +72,7 @@ public class MultiplayerManager
 						player.status = PlayerStatus.Ready;
 					if (player.player.menu.buttonDown)
 					{
-						player.player.Deactivate();
+						player.player.active = false;
 						player.player = null;
 						player.status = PlayerStatus.Inactive;
 					}

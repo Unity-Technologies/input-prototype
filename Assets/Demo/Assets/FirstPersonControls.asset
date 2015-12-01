@@ -52,6 +52,10 @@ MonoBehaviour:
       componentControlIndices: 
       controlType: 0
       name: UnlockCursor
+  - m_ControlData:
+      componentControlIndices: 
+      controlType: 0
+      name: Reconfigure
   m_ControlSchemes:
   - m_Name: KeyboardMouse
     m_Bindings:
@@ -59,7 +63,7 @@ MonoBehaviour:
       deadZone: .300000012
       buttonAxisSources:
       - negative:
-          controlIndex: 97
+          controlIndex: 113
           m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
         positive:
@@ -175,6 +179,16 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
+    - sources:
+      - controlIndex: 114
+        m_DeviceTypeName: UnityEngine.InputNew.Keyboard, Assembly-CSharp, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
   - m_Name: Gamepad
     m_Bindings:
     - sources:
@@ -265,6 +279,13 @@ MonoBehaviour:
       sensitivity: 1000
       snap: 1
       primaryIsButtonAxis: 0
+    - sources: []
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
   - m_Name: VirtualJoystick
     m_Bindings:
     - sources:
@@ -335,6 +356,13 @@ MonoBehaviour:
       - controlIndex: 14
         m_DeviceTypeName: UnityEngine.InputNew.VirtualJoystick, Assembly-CSharp, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
+      deadZone: .300000012
+      buttonAxisSources: []
+      gravity: 1000
+      sensitivity: 1000
+      snap: 1
+      primaryIsButtonAxis: 0
+    - sources: []
       deadZone: .300000012
       buttonAxisSources: []
       gravity: 1000

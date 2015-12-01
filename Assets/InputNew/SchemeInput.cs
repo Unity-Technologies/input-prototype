@@ -23,37 +23,67 @@ namespace UnityEngine.InputNew
 			Setup(actionMap, controlScheme, deviceStates);
 		}
 
+		protected void Setup(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
+		{
+			m_ActionMap = actionMap;
+			m_ControlScheme = controlScheme;
+			m_DeviceStates = deviceStates;
+			
+			// Create list of controls from ActionMap.
+			////REVIEW: doesn't handle compounds
+			var controls = new List<InputControlData>();
+			foreach (var entry in actionMap.actions)
+				controls.Add(entry.controlData);
+			SetControls(controls);
+		}
+		
 		private void SetControls(List<InputControlData> controls)
 		{
 			m_Controls = controls;
-			RefreshBindings();
-		}
-		
-		public void RefreshBindings()
-		{
 			m_State = new InputState(this);
 		}
-
-		protected void Setup(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
+		
+		public bool BindControl(InputControlDescriptor descriptor, InputControl control, bool restrictToExistingDevices)
 		{
-			m_ControlScheme = controlScheme;
-			m_DeviceStates = deviceStates;
-			m_ActionMap = actionMap;
-			
-			// Create list of controls from InputMap.
-			var controls = new List<InputControlData>();
-			foreach (var entry in actionMap.actions)
+			bool existingDevice = false;
+			for (int i = 0; i < m_DeviceStates.Count; i++)
 			{
-				////REVIEW: why are we making copies here?
-				var control = new InputControlData
+				if (control.provider == m_DeviceStates[i].controlProvider)
 				{
-					name = entry.controlData.name,
-					controlType = entry.controlData.controlType,
-					////REVIEW: doesn't handle compounds
-				};
-				controls.Add(control);
+					existingDevice = true;
+					break;
+				}
 			}
-			SetControls(controls);
+			
+			if (!existingDevice)
+			{
+				if (restrictToExistingDevices)
+					return false;
+				
+				deviceStates.Add(new InputState(control.provider, new List<int>() { control.index }));
+			}
+			
+			descriptor.controlIndex = control.index;
+			descriptor.deviceType = control.provider.GetType();
+			
+			RefreshBindings();
+			
+			return true;
+		}
+		
+		private void RefreshBindings()
+		{
+			// Gather a mapping of device types to list of bindings that use the given type.
+			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
+			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
+			
+			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
+			{
+				InputState state = GetDeviceStateForDeviceType(deviceType);
+				state.SetUsedControls(perDeviceTypeUsedControlIndices[deviceType]);
+			}
+			
+			// TODO remove device states that are no longer used by any bindings?
 		}
 		
 		public List<InputDevice> GetUsedDevices()
@@ -115,8 +145,25 @@ namespace UnityEngine.InputNew
 			if (!consumed)
 				return false;
 			
-			////REVIEW: this probably needs to be done as a post-processing step after all events have been received
-			// Synchronize the ActionMapInstance's own state.
+			return true;
+		}
+		
+		public void Reset()
+		{
+			state.Reset();
+			foreach (var deviceState in GetDeviceStates())
+				deviceState.Reset();
+		}
+
+		public void BeginFrame()
+		{
+			state.BeginFrame();
+			foreach (var deviceState in GetDeviceStates())
+				deviceState.BeginFrame();
+		}
+		
+		public void EndFrame()
+		{
 			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
 				var binding = controlScheme.bindings[entryIndex];
@@ -140,10 +187,8 @@ namespace UnityEngine.InputNew
 				
 				state.SetCurrentValue(entryIndex, controlValue);
 			}
-			
-			return true;
 		}
-		
+
 		float GetSourceValue(InputControlDescriptor source)
 		{
 			var deviceState = GetDeviceStateForDeviceType(source.deviceType);

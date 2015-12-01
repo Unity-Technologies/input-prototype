@@ -44,5 +44,11 @@ namespace UnityEngine.InputNew
 			
 			return deviceTypes;
 		}
+		
+		public void ExtractDeviceTypesAndControlIndices (Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		{
+			foreach (var binding in bindings)
+				binding.ExtractDeviceTypesAndControlIndices(controlIndicesPerDeviceType);
+		}
 	}
 }

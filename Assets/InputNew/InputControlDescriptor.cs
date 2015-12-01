@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace UnityEngine.InputNew
 {
@@ -34,6 +35,18 @@ namespace UnityEngine.InputNew
 		public override string ToString()
 		{
 			return string.Format( "(device:{0}, control:{1})", deviceType.Name, controlIndex );
+		}
+		
+		public void ExtractDeviceTypeAndControlIndex(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		{
+			List<int> entries;
+			if (!controlIndicesPerDeviceType.TryGetValue(deviceType, out entries))
+			{
+				entries = new List<int>();
+				controlIndicesPerDeviceType[deviceType] = entries;
+			}
+			
+			entries.Add(controlIndex);
 		}
 	}
 }

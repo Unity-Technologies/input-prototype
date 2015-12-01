@@ -136,6 +136,9 @@ public static class CreateDemoAssets
 		CreateControl(actionMap, "UnlockCursor", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Escape)
 		);
+		CreateControl(actionMap, "Reconfigure", InputControlType.Button,
+			CreateBinding(typeof(Keyboard), (int)KeyCode.R)
+		);
 
 		const string path = "Assets/DemoAssets/FirstPersonControls.asset";
 		AssetDatabase.CreateAsset(actionMap, path);
