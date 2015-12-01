@@ -6,8 +6,6 @@ using UnityEngine.InputNew;
 public class InputManagerEndFrame
 	: MonoBehaviour
 {
-	public InputDeviceProfile[] profiles;
-
 	public void Update()
 	{
 		InputSystem.EndFrame();
