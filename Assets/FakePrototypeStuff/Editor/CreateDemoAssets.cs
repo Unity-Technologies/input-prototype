@@ -90,15 +90,17 @@ public static class CreateDemoAssets
 			new ControlScheme("VirtualJoystick")
 		};
 
+		var gamepad = new Gamepad();
+
 		CreateControl(actionMap, "MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickX),
+			CreateBinding(typeof(Gamepad), gamepad.leftStickX.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickX)
 		);
 		
 		CreateControl(actionMap, "MoveY", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.S, (int)KeyCode.W, (int)KeyCode.DownArrow, (int)KeyCode.UpArrow),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.LeftStickY),
+			CreateBinding(typeof(Gamepad), gamepad.leftStickY.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickY)
 		);
 		
@@ -106,13 +108,13 @@ public static class CreateDemoAssets
 		
 		CreateControl(actionMap, "LookX", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaX),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickX),
+			CreateBinding(typeof(Gamepad), gamepad.rightStickX.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickX)
 		);
 		
 		CreateControl(actionMap, "LookY", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaY),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightStickY),
+			CreateBinding(typeof(Gamepad), gamepad.rightStickY.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickY)
 		);
 		
@@ -120,13 +122,13 @@ public static class CreateDemoAssets
 		
 		CreateControl(actionMap, "Fire", InputControlType.Button,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.RightTrigger),
+			CreateBinding(typeof(Gamepad), gamepad.rightTrigger.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Action1)
 		);
 		
 		CreateControl(actionMap, "Menu", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Space),
-			CreateBinding(typeof(Gamepad), (int)GamepadControl.Start),
+			CreateBinding(typeof(Gamepad), gamepad.start.index),
 			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
 		);
 	
@@ -153,38 +155,39 @@ public static class CreateDemoAssets
 
 	static void CreateXbox360MacProfileAsset()
 	{
-		var profile = ScriptableObject.CreateInstance<GamepadProfile>();
+		var profile = ScriptableObject.CreateInstance<JoystickProfile>();
+		var gamepad = new Gamepad();
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("OS X");
-		profile.SetMappingsCount(EnumHelpers.GetValueCount<GamepadControl>(), EnumHelpers.GetValueCount<GamepadControl>());
+		profile.SetMappingsCount(gamepad.controls.Count, gamepad.controls.Count);
 		
-		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
-		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);
-		profile.SetMapping(21, GamepadControl.LeftStickButton, "Left Stick Button");
+		profile.SetMapping(00, gamepad.leftStickX.index, "Left Stick X");
+		profile.SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(21, gamepad.leftStickButton.index, "Left Stick Button");
 		
-		profile.SetMapping(02, GamepadControl.RightStickX, "Right Stick X");
-		profile.SetMapping(03, GamepadControl.RightStickY, "Right Stick Y", Range.fullInverse, Range.full);
-		profile.SetMapping(22, GamepadControl.RightStickButton, "Right Stick Button");
+		profile.SetMapping(02, gamepad.rightStickX.index, "Right Stick X");
+		profile.SetMapping(03, gamepad.rightStickY.index, "Right Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(22, gamepad.rightStickButton.index, "Right Stick Button");
 		
-		profile.SetMapping(15, GamepadControl.DPadUp, "DPad Up");
-		profile.SetMapping(16, GamepadControl.DPadDown, "DPad Down");
-		profile.SetMapping(17, GamepadControl.DPadLeft, "DPad Left");
-		profile.SetMapping(18, GamepadControl.DPadRight, "DPad Right");
+		profile.SetMapping(15, gamepad.dPadUp.index, "DPad Up");
+		profile.SetMapping(16, gamepad.dPadDown.index, "DPad Down");
+		profile.SetMapping(17, gamepad.dPadLeft.index, "DPad Left");
+		profile.SetMapping(18, gamepad.dPadRight.index, "DPad Right");
 		
-		profile.SetMapping(26, GamepadControl.Action1, "A");
-		profile.SetMapping(27, GamepadControl.Action2, "B");
-		profile.SetMapping(28, GamepadControl.Action3, "X");
-		profile.SetMapping(29, GamepadControl.Action4, "Y");
+		profile.SetMapping(26, gamepad.action1.index, "A");
+		profile.SetMapping(27, gamepad.action2.index, "B");
+		profile.SetMapping(28, gamepad.action3.index, "X");
+		profile.SetMapping(29, gamepad.action4.index, "Y");
 		
-		profile.SetMapping(04, GamepadControl.LeftTrigger, "Left Trigger", Range.full, Range.positive);
-		profile.SetMapping(05, GamepadControl.RightTrigger, "Right Trigger", Range.full, Range.positive);
-		profile.SetMapping(23, GamepadControl.LeftBumper, "Left Bumper");
-		profile.SetMapping(24, GamepadControl.RightBumper, "Right Bumper");
+		profile.SetMapping(04, gamepad.leftTrigger.index, "Left Trigger", Range.full, Range.positive);
+		profile.SetMapping(05, gamepad.rightTrigger.index, "Right Trigger", Range.full, Range.positive);
+		profile.SetMapping(23, gamepad.leftBumper.index, "Left Bumper");
+		profile.SetMapping(24, gamepad.rightBumper.index, "Right Bumper");
 		
-		profile.SetMapping(19, GamepadControl.Start, "Start");
-		profile.SetMapping(20, GamepadControl.Back, "Back");
-		profile.SetMapping(25, GamepadControl.System, "System");
+		profile.SetMapping(19, gamepad.start.index, "Start");
+		profile.SetMapping(20, gamepad.back.index, "Back");
+		profile.SetMapping(25, gamepad.system.index, "System");
 		
 		const string path = "Assets/FakePrototypeStuff/Xbox360MacProfile.asset";
 		AssetDatabase.CreateAsset(profile, path);
@@ -192,37 +195,38 @@ public static class CreateDemoAssets
 	
 	static void CreateXbox360WinProfileAsset()
 	{
-		var profile = ScriptableObject.CreateInstance<GamepadProfile>();
+		var profile = ScriptableObject.CreateInstance<JoystickProfile>();
+		var gamepad = new Gamepad();
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("Windows");
-		profile.SetMappingsCount(EnumHelpers.GetValueCount<GamepadControl>(), EnumHelpers.GetValueCount<GamepadControl>());
+		profile.SetMappingsCount(gamepad.controls.Count, gamepad.controls.Count);
+
+		profile.SetMapping(00, gamepad.leftStickX.index, "Left Stick X");
+		profile.SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(18, gamepad.leftStickButton.index, "Left Stick Button");
 		
-		profile.SetMapping(00, GamepadControl.LeftStickX, "Left Stick X");
-		profile.SetMapping(01, GamepadControl.LeftStickY, "Left Stick Y", Range.fullInverse, Range.full);
-		profile.SetMapping(18, GamepadControl.LeftStickButton, "Left Stick Button");
+		profile.SetMapping(03, gamepad.rightStickX.index, "Right Stick X");
+		profile.SetMapping(04, gamepad.rightStickY.index, "Right Stick Y", Range.fullInverse, Range.full);
+		profile.SetMapping(19, gamepad.rightStickButton.index, "Right Stick Button");
 		
-		profile.SetMapping(03, GamepadControl.RightStickX, "Right Stick X");
-		profile.SetMapping(04, GamepadControl.RightStickY, "Right Stick Y", Range.fullInverse, Range.full);
-		profile.SetMapping(19, GamepadControl.RightStickButton, "Right Stick Button");
+		profile.SetMapping(06, gamepad.dPadUp.index, "DPad Up");
+		profile.SetMapping(06, gamepad.dPadDown.index, "DPad Down");
+		profile.SetMapping(05, gamepad.dPadLeft.index, "DPad Left");
+		profile.SetMapping(05, gamepad.dPadRight.index, "DPad Right");
 		
-		profile.SetMapping(06, GamepadControl.DPadUp, "DPad Up");
-		profile.SetMapping(06, GamepadControl.DPadDown, "DPad Down");
-		profile.SetMapping(05, GamepadControl.DPadLeft, "DPad Left");
-		profile.SetMapping(05, GamepadControl.DPadRight, "DPad Right"); //  TODO map one input to two outputs
+		profile.SetMapping(10, gamepad.action1.index, "A");
+		profile.SetMapping(11, gamepad.action2.index, "B");
+		profile.SetMapping(12, gamepad.action3.index, "X");
+		profile.SetMapping(13, gamepad.action4.index, "Y");
 		
-		profile.SetMapping(10, GamepadControl.Action1, "A");
-		profile.SetMapping(11, GamepadControl.Action2, "B");
-		profile.SetMapping(12, GamepadControl.Action3, "X");
-		profile.SetMapping(13, GamepadControl.Action4, "Y");
+		profile.SetMapping(08, gamepad.leftTrigger.index, "Left Trigger", Range.full, Range.positive);
+		profile.SetMapping(09, gamepad.rightTrigger.index, "Right Trigger", Range.full, Range.positive);
+		profile.SetMapping(14, gamepad.leftBumper.index, "Left Bumper");
+		profile.SetMapping(15, gamepad.rightBumper.index, "Right Bumper");
 		
-		profile.SetMapping(08, GamepadControl.LeftTrigger, "Left Trigger", Range.full, Range.positive);
-		profile.SetMapping(09, GamepadControl.RightTrigger, "Right Trigger", Range.full, Range.positive);
-		profile.SetMapping(14, GamepadControl.LeftBumper, "Left Bumper");
-		profile.SetMapping(15, GamepadControl.RightBumper, "Right Bumper");
-		
-		profile.SetMapping(17, GamepadControl.Start, "Start");
-		profile.SetMapping(16, GamepadControl.Back, "Back");
+		profile.SetMapping(17, gamepad.start.index, "Start");
+		profile.SetMapping(16, gamepad.back.index, "Back");
 		
 		const string path = "Assets/FakePrototypeStuff/Xbox360WinProfile.asset";
 		AssetDatabase.CreateAsset(profile, path);

@@ -36,6 +36,11 @@ namespace UnityEngine.InputNew
 			nameOverrides = new string[tarcontrolCount];
 		}
 
+		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName)
+		{
+			SetMapping(sourceControlIndex, targetControlIndex, displayName, Range.full, Range.full);
+		}
+
 		public void SetMapping(int sourceControlIndex, int targetControlIndex, string displayName, Range sourceRange, Range targetRange)
 		{
 			mappings[sourceControlIndex] = new JoystickControlMapping

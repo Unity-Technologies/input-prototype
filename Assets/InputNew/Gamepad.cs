@@ -9,6 +9,104 @@ namespace UnityEngine.InputNew
 	public class Gamepad
 		: Joystick
 	{
+		enum GamepadControl
+		{
+			// Standardized.
+
+			LeftStickX,
+			LeftStickY,
+			LeftStickButton,
+
+			RightStickX,
+			RightStickY,
+			RightStickButton,
+
+			DPadLeft,
+			DPadRight,
+			DPadUp,
+			DPadDown,
+
+			Action1,
+			Action2,
+			Action3,
+			Action4,
+
+			LeftTrigger,
+			RightTrigger,
+
+			LeftBumper,
+			RightBumper,
+
+			// Compound controls.
+
+			LeftStick,
+			RightStick,
+			DPad,
+
+			// Not standardized, but provided for convenience.
+
+			Back,
+			Start,
+			Select,
+			System,
+			Pause,
+			Menu,
+			Share,
+			View,
+			Options,
+			TiltX,
+			TiltY,
+			TiltZ,
+			ScrollWheel,
+			TouchPadTap,
+			TouchPadXAxis,
+			TouchPadYAxis,
+
+			// Not standardized.
+
+			Analog0,
+			Analog1,
+			Analog2,
+			Analog3,
+			Analog4,
+			Analog5,
+			Analog6,
+			Analog7,
+			Analog8,
+			Analog9,
+			Analog10,
+			Analog11,
+			Analog12,
+			Analog13,
+			Analog14,
+			Analog15,
+			Analog16,
+			Analog17,
+			Analog18,
+			Analog19,
+
+			Button0,
+			Button1,
+			Button2,
+			Button3,
+			Button4,
+			Button5,
+			Button6,
+			Button7,
+			Button8,
+			Button9,
+			Button10,
+			Button11,
+			Button12,
+			Button13,
+			Button14,
+			Button15,
+			Button16,
+			Button17,
+			Button18,
+			Button19,
+		}
+
 		#region Constructors
 
 		public Gamepad()
@@ -66,5 +164,54 @@ namespace UnityEngine.InputNew
 		}
 
 		#endregion
+
+		public InputControl leftStickX { get { return this[(int)GamepadControl.LeftStickX]; } }
+		public InputControl leftStickY { get { return this[(int)GamepadControl.LeftStickY]; } }
+		public InputControl leftStickButton { get { return this[(int)GamepadControl.LeftStickButton]; } }
+
+		public InputControl rightStickX { get { return this[(int)GamepadControl.RightStickX]; } }
+		public InputControl rightStickY { get { return this[(int)GamepadControl.RightStickY]; } }
+		public InputControl rightStickButton { get { return this[(int)GamepadControl.RightStickButton]; } }
+
+		public InputControl dPadLeft { get { return this[(int)GamepadControl.DPadLeft]; } }
+		public InputControl dPadRight { get { return this[(int)GamepadControl.DPadRight]; } }
+		public InputControl dPadUp { get { return this[(int)GamepadControl.DPadUp]; } }
+		public InputControl dPadDown { get { return this[(int)GamepadControl.DPadDown]; } }
+
+		public InputControl action1 { get { return this[(int)GamepadControl.Action1]; } }
+		public InputControl action2 { get { return this[(int)GamepadControl.Action2]; } }
+		public InputControl action3 { get { return this[(int)GamepadControl.Action3]; } }
+		public InputControl action4 { get { return this[(int)GamepadControl.Action4]; } }
+
+		public InputControl leftTrigger { get { return this[(int)GamepadControl.LeftTrigger]; } }
+		public InputControl rightTrigger { get { return this[(int)GamepadControl.RightTrigger]; } }
+
+		public InputControl leftBumper { get { return this[(int)GamepadControl.LeftBumper]; } }
+		public InputControl rightBumper { get { return this[(int)GamepadControl.RightBumper]; } }
+
+		// Compound controls.
+
+		public InputControl leftStick { get { return this[(int)GamepadControl.LeftStick]; } }
+		public InputControl rightStick { get { return this[(int)GamepadControl.RightStick]; } }
+		public InputControl dPad { get { return this[(int)GamepadControl.DPad]; } }
+
+		// Not standardized, but provided for convenience.
+
+		public InputControl back { get { return this[(int)GamepadControl.Back]; } }
+		public InputControl start { get { return this[(int)GamepadControl.Start]; } }
+		public InputControl select { get { return this[(int)GamepadControl.Select]; } }
+		public InputControl system { get { return this[(int)GamepadControl.System]; } }
+		public InputControl pause { get { return this[(int)GamepadControl.Pause]; } }
+		public InputControl menu { get { return this[(int)GamepadControl.Menu]; } }
+		public InputControl share { get { return this[(int)GamepadControl.Share]; } }
+		public InputControl view { get { return this[(int)GamepadControl.View]; } }
+		public InputControl options { get { return this[(int)GamepadControl.Options]; } }
+		public InputControl tiltX { get { return this[(int)GamepadControl.TiltX]; } }
+		public InputControl tiltY { get { return this[(int)GamepadControl.TiltY]; } }
+		public InputControl tiltZ { get { return this[(int)GamepadControl.TiltZ]; } }
+		public InputControl scrollWheel { get { return this[(int)GamepadControl.ScrollWheel]; } }
+		public InputControl touchPadTap { get { return this[(int)GamepadControl.TouchPadTap]; } }
+		public InputControl touchPadXAxis { get { return this[(int)GamepadControl.TouchPadXAxis]; } }
+		public InputControl touchPadYAxis { get { return this[(int)GamepadControl.TouchPadYAxis]; } }
 	}
 }

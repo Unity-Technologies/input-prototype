@@ -17,7 +17,7 @@ namespace UnityEngine.InputNew
 		public VirtualJoystick(string deviceName, List<InputControlData> additionalControls)
 		{
 			this.deviceName = deviceName;
-			var controlCount = EnumHelpers.GetValueCount<GamepadControl>();
+			var controlCount = EnumHelpers.GetValueCount<VirtualJoystickControl>();
 			var controls = new List<InputControlData>(controlCount);
 			for (int i = 0; i < controlCount; i++)
 				controls.Add(new InputControlData());
