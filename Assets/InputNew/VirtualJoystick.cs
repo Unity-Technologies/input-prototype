@@ -9,6 +9,38 @@ namespace UnityEngine.InputNew
 	public class VirtualJoystick
 		: Joystick
 	{
+		public enum VirtualJoystickControl
+		{
+			// Standardized.
+
+			LeftStickX,
+			LeftStickY,
+
+			RightStickX,
+			RightStickY,
+
+			Action1,
+			Action2,
+			Action3,
+			Action4,
+
+			// Compound controls.
+
+			LeftStick,
+			RightStick,
+
+			// Not standardized, but provided for convenience.
+
+			Back,
+			Start,
+			Select,
+			Pause,
+			Menu,
+			Share,
+			View,
+			Options
+		}
+
 		#region Constructors
 
 		public VirtualJoystick()
@@ -85,5 +117,32 @@ namespace UnityEngine.InputNew
 		{
 			SetAxisValue(controlIndex, state ? 1 : 0);
 		}
+
+		public InputControl leftStickX { get { return this[(int)VirtualJoystickControl.LeftStickX]; } }
+		public InputControl leftStickY { get { return this[(int)VirtualJoystickControl.LeftStickY]; } }
+
+		public InputControl rightStickX { get { return this[(int)VirtualJoystickControl.RightStickX]; } }
+		public InputControl rightStickY { get { return this[(int)VirtualJoystickControl.RightStickY]; } }
+
+		public InputControl action1 { get { return this[(int)VirtualJoystickControl.Action1]; } }
+		public InputControl action2 { get { return this[(int)VirtualJoystickControl.Action2]; } }
+		public InputControl action3 { get { return this[(int)VirtualJoystickControl.Action3]; } }
+		public InputControl action4 { get { return this[(int)VirtualJoystickControl.Action4]; } }
+
+		// Compound controls.
+
+		public InputControl leftStick { get { return this[(int)VirtualJoystickControl.LeftStick]; } }
+		public InputControl rightStick { get { return this[(int)VirtualJoystickControl.RightStick]; } }
+
+		// Not standardized, but provided for convenience.
+
+		public InputControl back { get { return this[(int)VirtualJoystickControl.Back]; } }
+		public InputControl start { get { return this[(int)VirtualJoystickControl.Start]; } }
+		public InputControl select { get { return this[(int)VirtualJoystickControl.Select]; } }
+		public InputControl pause { get { return this[(int)VirtualJoystickControl.Pause]; } }
+		public InputControl menu { get { return this[(int)VirtualJoystickControl.Menu]; } }
+		public InputControl share { get { return this[(int)VirtualJoystickControl.Share]; } }
+		public InputControl view { get { return this[(int)VirtualJoystickControl.View]; } }
+		public InputControl options { get { return this[(int)VirtualJoystickControl.Options]; } }
 	}
 }

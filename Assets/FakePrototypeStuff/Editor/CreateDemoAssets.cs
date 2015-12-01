@@ -91,17 +91,18 @@ public static class CreateDemoAssets
 		};
 
 		var gamepad = new Gamepad();
+		var virtualJoystick = new VirtualJoystick();
 
 		CreateControl(actionMap, "MoveX", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.A, (int)KeyCode.D, (int)KeyCode.LeftArrow, (int)KeyCode.RightArrow),
 			CreateBinding(typeof(Gamepad), gamepad.leftStickX.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickX)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.leftStickX.index)
 		);
 		
 		CreateControl(actionMap, "MoveY", InputControlType.RelativeAxis,
 			CreateButtonAxisBinding(typeof(Keyboard), (int)KeyCode.S, (int)KeyCode.W, (int)KeyCode.DownArrow, (int)KeyCode.UpArrow),
 			CreateBinding(typeof(Gamepad), gamepad.leftStickY.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.LeftStickY)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.leftStickY.index)
 		);
 		
 		CreateControlComposite(actionMap, "Move", InputControlType.Vector2, new[] { 0, 1 });
@@ -109,13 +110,13 @@ public static class CreateDemoAssets
 		CreateControl(actionMap, "LookX", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaX),
 			CreateBinding(typeof(Gamepad), gamepad.rightStickX.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickX)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.rightStickX.index)
 		);
 		
 		CreateControl(actionMap, "LookY", InputControlType.RelativeAxis,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LockedDeltaY),
 			CreateBinding(typeof(Gamepad), gamepad.rightStickY.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.RightStickY)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.rightStickY.index)
 		);
 		
 		CreateControlComposite(actionMap, "Look", InputControlType.Vector2, new[] { 3, 4 });
@@ -123,13 +124,13 @@ public static class CreateDemoAssets
 		CreateControl(actionMap, "Fire", InputControlType.Button,
 			CreateBinding(typeof(Pointer), (int)PointerControl.LeftButton),
 			CreateBinding(typeof(Gamepad), gamepad.rightTrigger.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Action1)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.action1.index)
 		);
 		
 		CreateControl(actionMap, "Menu", InputControlType.Button,
 			CreateBinding(typeof(Keyboard), (int)KeyCode.Space),
 			CreateBinding(typeof(Gamepad), gamepad.start.index),
-			CreateBinding(typeof(VirtualJoystick), (int)VirtualJoystickControl.Menu)
+			CreateBinding(typeof(VirtualJoystick), virtualJoystick.menu.index)
 		);
 	
 		CreateControl(actionMap, "LockCursor", InputControlType.Button,

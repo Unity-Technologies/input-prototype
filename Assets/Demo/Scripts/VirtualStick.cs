@@ -17,8 +17,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 
 		public int m_MovementRange = 100;
 		public AxisOption m_AxesToUse = AxisOption.Both; // The options for the axes that the still will use
-		public VirtualJoystickControl m_HorizontalControl = VirtualJoystickControl.LeftStickX;
-		public VirtualJoystickControl m_VerticalControl = VirtualJoystickControl.LeftStickY;
+		public VirtualJoystick.VirtualJoystickControl m_HorizontalControl = VirtualJoystick.VirtualJoystickControl.LeftStickX;
+		public VirtualJoystick.VirtualJoystickControl m_VerticalControl = VirtualJoystick.VirtualJoystickControl.LeftStickY;
 
 		Vector3 m_StartPos;
 		Vector2 m_PointerDownPos;

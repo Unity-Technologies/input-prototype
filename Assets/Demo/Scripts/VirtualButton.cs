@@ -7,7 +7,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 {
 	public class VirtualButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
-		public VirtualJoystickControl m_ButtonControl = VirtualJoystickControl.Action1;
+		public VirtualJoystick.VirtualJoystickControl m_ButtonControl = VirtualJoystick.VirtualJoystickControl.Action1;
 
 		bool m_Down = false;
 
