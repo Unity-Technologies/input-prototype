@@ -131,12 +131,12 @@ namespace UnityEngine.InputNew
 
 		public Vector3 position
 		{
-			get { return this[(int)PointerControl.Position].vector3; }
+			get { return ((Vector3InputControl)this[(int)PointerControl.Position]).vector3; }
 		}
 
 		public float pressure
 		{
-			get { return this[(int)PointerControl.Pressure].value; }
+			get { return ((AxisInputControl)this[(int)PointerControl.Pressure]).value; }
 		}
 
 		////REVIEW: okay, maybe the concept of a per-pointer cursor is bogus after all...

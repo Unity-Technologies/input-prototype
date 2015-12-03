@@ -6,15 +6,15 @@ public class FirstPersonControls : PlayerInput {
 	public FirstPersonControls (ActionMap actionMap) : base (actionMap) { }
 	public FirstPersonControls (SchemeInput schemeInput) : base (schemeInput) { }
 	
-	public InputControl @moveX { get { return this[0]; } }
-	public InputControl @moveY { get { return this[1]; } }
-	public InputControl @move { get { return this[2]; } }
-	public InputControl @lookX { get { return this[3]; } }
-	public InputControl @lookY { get { return this[4]; } }
-	public InputControl @look { get { return this[5]; } }
-	public InputControl @fire { get { return this[6]; } }
-	public InputControl @menu { get { return this[7]; } }
-	public InputControl @lockCursor { get { return this[8]; } }
-	public InputControl @unlockCursor { get { return this[9]; } }
-	public InputControl @reconfigure { get { return this[10]; } }
+	public AxisInputControl @moveX { get { return (AxisInputControl)this[0]; } }
+	public AxisInputControl @moveY { get { return (AxisInputControl)this[1]; } }
+	public Vector2InputControl @move { get { return (Vector2InputControl)this[2]; } }
+	public AxisInputControl @lookX { get { return (AxisInputControl)this[3]; } }
+	public AxisInputControl @lookY { get { return (AxisInputControl)this[4]; } }
+	public Vector2InputControl @look { get { return (Vector2InputControl)this[5]; } }
+	public ButtonInputControl @fire { get { return (ButtonInputControl)this[6]; } }
+	public ButtonInputControl @menu { get { return (ButtonInputControl)this[7]; } }
+	public ButtonInputControl @lockCursor { get { return (ButtonInputControl)this[8]; } }
+	public ButtonInputControl @unlockCursor { get { return (ButtonInputControl)this[9]; } }
+	public ButtonInputControl @reconfigure { get { return (ButtonInputControl)this[10]; } }
 }

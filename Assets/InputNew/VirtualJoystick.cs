@@ -101,7 +101,10 @@ namespace UnityEngine.InputNew
 		
 		public void SetAxisValue(int controlIndex, float value)
 		{
-			float currentValue = this[controlIndex].value;
+			var control = this[controlIndex] as AxisInputControl;
+			if (control == null)
+				return;
+			float currentValue = control.value;
 			if (value == currentValue)
 				return;
 			

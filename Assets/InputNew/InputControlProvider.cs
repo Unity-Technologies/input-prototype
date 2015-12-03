@@ -19,7 +19,24 @@ namespace UnityEngine.InputNew
 			m_State = new InputState(this);
 			m_Controls = new List<InputControl>(controlCount);
 			for (int i = 0; i < controlCount; i++)
-				m_Controls.Add(new InputControl(i, m_State));
+			{
+				switch(controls[i].controlType)
+				{
+				case InputControlType.Button:
+					m_Controls.Add(new ButtonInputControl(i, m_State));
+					break;
+				case InputControlType.AbsoluteAxis:
+				case InputControlType.RelativeAxis:
+					m_Controls.Add(new AxisInputControl(i, m_State));
+					break;
+				case InputControlType.Vector2:
+					m_Controls.Add(new Vector2InputControl(i, m_State));
+					break;
+				case InputControlType.Vector3:
+					m_Controls.Add(new Vector3InputControl(i, m_State));
+					break;
+				}
+			}
 		}
 
 		public virtual bool ProcessEvent(InputEvent inputEvent)
@@ -28,19 +45,20 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		public virtual InputControl anyButton
+		// TODO: Remove anyButton. It's a bad API.
+		public virtual ButtonInputControl anyButton
 		{
 			get
 			{
 				int count = controlCount;
 				for (int i = 0; i < count; i++)
 				{
-					var control = this[i];
-					if (control.controlType == InputControlType.Button && control.button)
+					var control = this[i] as ButtonInputControl;
+					if (control != null && control.button)
 						return control;
 				}
 				
-				return this[0];
+				return this[0] as ButtonInputControl;
 			}
 		}
 

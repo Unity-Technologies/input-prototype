@@ -378,7 +378,28 @@ public class {0} : PlayerInput {{
 ", className);
 		
 		for (int i = 0; i < m_ActionMap.actions.Count; i++)
-			str.AppendFormat("	public InputControl @{0} {{ get {{ return this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.actions[i].name, false), i);
+		{
+			InputControlType controlType = m_ActionMap.actions[i].controlData.controlType;
+			string typeStr = string.Empty;
+			switch(controlType)
+			{
+			case InputControlType.Button:
+				typeStr = "ButtonInputControl";
+				break;
+			case InputControlType.AbsoluteAxis:
+			case InputControlType.RelativeAxis:
+				typeStr = "AxisInputControl";
+				break;
+			case InputControlType.Vector2:
+				typeStr = "Vector2InputControl";
+				break;
+			case InputControlType.Vector3:
+				typeStr = "Vector3InputControl";
+				break;
+			}
+
+			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.actions[i].name, false), i, typeStr);
+		}
 		
 		str.AppendLine(@"}");
 		

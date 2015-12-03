@@ -165,53 +165,53 @@ namespace UnityEngine.InputNew
 
 		#endregion
 
-		public InputControl leftStickX { get { return this[(int)GamepadControl.LeftStickX]; } }
-		public InputControl leftStickY { get { return this[(int)GamepadControl.LeftStickY]; } }
-		public InputControl leftStickButton { get { return this[(int)GamepadControl.LeftStickButton]; } }
+		public AxisInputControl leftStickX { get { return (AxisInputControl)this[(int)GamepadControl.LeftStickX]; } }
+		public AxisInputControl leftStickY { get { return (AxisInputControl)this[(int)GamepadControl.LeftStickY]; } }
+		public ButtonInputControl leftStickButton { get { return (ButtonInputControl)this[(int)GamepadControl.LeftStickButton]; } }
 
-		public InputControl rightStickX { get { return this[(int)GamepadControl.RightStickX]; } }
-		public InputControl rightStickY { get { return this[(int)GamepadControl.RightStickY]; } }
-		public InputControl rightStickButton { get { return this[(int)GamepadControl.RightStickButton]; } }
+		public AxisInputControl rightStickX { get { return (AxisInputControl)this[(int)GamepadControl.RightStickX]; } }
+		public AxisInputControl rightStickY { get { return (AxisInputControl)this[(int)GamepadControl.RightStickY]; } }
+		public ButtonInputControl rightStickButton { get { return (ButtonInputControl)this[(int)GamepadControl.RightStickButton]; } }
 
-		public InputControl dPadLeft { get { return this[(int)GamepadControl.DPadLeft]; } }
-		public InputControl dPadRight { get { return this[(int)GamepadControl.DPadRight]; } }
-		public InputControl dPadUp { get { return this[(int)GamepadControl.DPadUp]; } }
-		public InputControl dPadDown { get { return this[(int)GamepadControl.DPadDown]; } }
+		public ButtonInputControl dPadLeft { get { return (ButtonInputControl)this[(int)GamepadControl.DPadLeft]; } }
+		public ButtonInputControl dPadRight { get { return (ButtonInputControl)this[(int)GamepadControl.DPadRight]; } }
+		public ButtonInputControl dPadUp { get { return (ButtonInputControl)this[(int)GamepadControl.DPadUp]; } }
+		public ButtonInputControl dPadDown { get { return (ButtonInputControl)this[(int)GamepadControl.DPadDown]; } }
 
-		public InputControl action1 { get { return this[(int)GamepadControl.Action1]; } }
-		public InputControl action2 { get { return this[(int)GamepadControl.Action2]; } }
-		public InputControl action3 { get { return this[(int)GamepadControl.Action3]; } }
-		public InputControl action4 { get { return this[(int)GamepadControl.Action4]; } }
+		public ButtonInputControl action1 { get { return (ButtonInputControl)this[(int)GamepadControl.Action1]; } }
+		public ButtonInputControl action2 { get { return (ButtonInputControl)this[(int)GamepadControl.Action2]; } }
+		public ButtonInputControl action3 { get { return (ButtonInputControl)this[(int)GamepadControl.Action3]; } }
+		public ButtonInputControl action4 { get { return (ButtonInputControl)this[(int)GamepadControl.Action4]; } }
 
-		public InputControl leftTrigger { get { return this[(int)GamepadControl.LeftTrigger]; } }
-		public InputControl rightTrigger { get { return this[(int)GamepadControl.RightTrigger]; } }
+		public AxisInputControl leftTrigger { get { return (AxisInputControl)this[(int)GamepadControl.LeftTrigger]; } }
+		public AxisInputControl rightTrigger { get { return (AxisInputControl)this[(int)GamepadControl.RightTrigger]; } }
 
-		public InputControl leftBumper { get { return this[(int)GamepadControl.LeftBumper]; } }
-		public InputControl rightBumper { get { return this[(int)GamepadControl.RightBumper]; } }
+		public ButtonInputControl leftBumper { get { return (ButtonInputControl)this[(int)GamepadControl.LeftBumper]; } }
+		public ButtonInputControl rightBumper { get { return (ButtonInputControl)this[(int)GamepadControl.RightBumper]; } }
 
 		// Compound controls.
 
-		public InputControl leftStick { get { return this[(int)GamepadControl.LeftStick]; } }
-		public InputControl rightStick { get { return this[(int)GamepadControl.RightStick]; } }
-		public InputControl dPad { get { return this[(int)GamepadControl.DPad]; } }
+		public Vector2InputControl leftStick { get { return (Vector2InputControl)this[(int)GamepadControl.LeftStick]; } }
+		public Vector2InputControl rightStick { get { return (Vector2InputControl)this[(int)GamepadControl.RightStick]; } }
+		public Vector2InputControl dPad { get { return (Vector2InputControl)this[(int)GamepadControl.DPad]; } }
 
 		// Not standardized, but provided for convenience.
 
-		public InputControl back { get { return this[(int)GamepadControl.Back]; } }
-		public InputControl start { get { return this[(int)GamepadControl.Start]; } }
-		public InputControl select { get { return this[(int)GamepadControl.Select]; } }
-		public InputControl system { get { return this[(int)GamepadControl.System]; } }
-		public InputControl pause { get { return this[(int)GamepadControl.Pause]; } }
-		public InputControl menu { get { return this[(int)GamepadControl.Menu]; } }
-		public InputControl share { get { return this[(int)GamepadControl.Share]; } }
-		public InputControl view { get { return this[(int)GamepadControl.View]; } }
-		public InputControl options { get { return this[(int)GamepadControl.Options]; } }
-		public InputControl tiltX { get { return this[(int)GamepadControl.TiltX]; } }
-		public InputControl tiltY { get { return this[(int)GamepadControl.TiltY]; } }
-		public InputControl tiltZ { get { return this[(int)GamepadControl.TiltZ]; } }
-		public InputControl scrollWheel { get { return this[(int)GamepadControl.ScrollWheel]; } }
-		public InputControl touchPadTap { get { return this[(int)GamepadControl.TouchPadTap]; } }
-		public InputControl touchPadXAxis { get { return this[(int)GamepadControl.TouchPadXAxis]; } }
-		public InputControl touchPadYAxis { get { return this[(int)GamepadControl.TouchPadYAxis]; } }
+		public ButtonInputControl back { get { return (ButtonInputControl)this[(int)GamepadControl.Back]; } }
+		public ButtonInputControl start { get { return (ButtonInputControl)this[(int)GamepadControl.Start]; } }
+		public ButtonInputControl select { get { return (ButtonInputControl)this[(int)GamepadControl.Select]; } }
+		public ButtonInputControl system { get { return (ButtonInputControl)this[(int)GamepadControl.System]; } }
+		public ButtonInputControl pause { get { return (ButtonInputControl)this[(int)GamepadControl.Pause]; } }
+		public ButtonInputControl menu { get { return (ButtonInputControl)this[(int)GamepadControl.Menu]; } }
+		public ButtonInputControl share { get { return (ButtonInputControl)this[(int)GamepadControl.Share]; } }
+		public ButtonInputControl view { get { return (ButtonInputControl)this[(int)GamepadControl.View]; } }
+		public ButtonInputControl options { get { return (ButtonInputControl)this[(int)GamepadControl.Options]; } }
+		public AxisInputControl tiltX { get { return (AxisInputControl)this[(int)GamepadControl.TiltX]; } }
+		public AxisInputControl tiltY { get { return (AxisInputControl)this[(int)GamepadControl.TiltY]; } }
+		public AxisInputControl tiltZ { get { return (AxisInputControl)this[(int)GamepadControl.TiltZ]; } }
+		public AxisInputControl scrollWheel { get { return (AxisInputControl)this[(int)GamepadControl.ScrollWheel]; } }
+		public ButtonInputControl touchPadTap { get { return (ButtonInputControl)this[(int)GamepadControl.TouchPadTap]; } }
+		public AxisInputControl touchPadXAxis { get { return (AxisInputControl)this[(int)GamepadControl.TouchPadXAxis]; } }
+		public AxisInputControl touchPadYAxis { get { return (AxisInputControl)this[(int)GamepadControl.TouchPadYAxis]; } }
 	}
 }

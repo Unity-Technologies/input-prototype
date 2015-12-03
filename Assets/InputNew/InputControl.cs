@@ -6,17 +6,14 @@ namespace UnityEngine.InputNew
 {
 	public class InputControl
 	{
-		#region Constructors
+		protected readonly int m_Index;
+		protected readonly InputState m_State;
 
 		internal InputControl(int index, InputState state)
 		{
 			m_Index = index;
 			m_State = state;
 		}
-
-		#endregion
-
-		#region Public Properties
 
 		public int index
 		{
@@ -26,53 +23,6 @@ namespace UnityEngine.InputNew
 		public InputControlProvider provider
 		{
 			get { return m_State.controlProvider; }
-		}
-
-		public bool button
-		{
-			get { return m_State.GetCurrentValue(m_Index) > k_buttonThreshold; }
-		}
-
-		public bool buttonDown
-		{
-			get { return button && (m_State.GetPreviousValue(m_Index) <= k_buttonThreshold); }
-		}
-
-		public bool buttonUp
-		{
-			get { return !button && (m_State.GetPreviousValue(m_Index) > k_buttonThreshold); }
-		}
-
-		public float value
-		{
-			get { return m_State.GetCurrentValue(m_Index); }
-		}
-
-		public Vector2 vector2
-		{
-			get
-			{
-				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				////TODO: typecheck control type; convert if necessary
-				return new Vector2(
-					m_State.GetCurrentValue(controlData.componentControlIndices[0])
-					, m_State.GetCurrentValue(controlData.componentControlIndices[1])
-					);
-			}
-		}
-
-		public Vector3 vector3
-		{
-			get
-			{
-				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				////TODO: typecheck control type; convert if necessary
-				return new Vector3(
-					m_State.GetCurrentValue(controlData.componentControlIndices[0])
-					, m_State.GetCurrentValue(controlData.componentControlIndices[1])
-					, m_State.GetCurrentValue(controlData.componentControlIndices[2])
-					);
-			}
 		}
 
 		public bool isEnabled
@@ -99,15 +49,86 @@ namespace UnityEngine.InputNew
 		{
 			return m_State.controlProvider.GetPrimarySourceName(index, buttonAxisFormattingString);
 		}
+	}
 
-		#endregion
+	public class AxisInputControl : InputControl
+	{
+		public readonly ButtonInputControl negative;
+		public readonly ButtonInputControl positive;
 
-		#region Fields
+		public AxisInputControl(int index, InputState state) : base(index, state)
+		{
+			negative = new ButtonInputControl(index, state);
+			negative.SetValueMultiplier(-1);
+			positive = new ButtonInputControl(index, state);
+		}
 
-		readonly int m_Index;
-		readonly InputState m_State;
-		const float k_buttonThreshold = 0.5f;
+		public float value
+		{
+			get { return m_State.GetCurrentValue(m_Index); }
+		}
+	}
 
-		#endregion
+	public class ButtonInputControl : InputControl
+	{
+		private const float k_ButtonThreshold = 0.5f;
+		private float m_ValueMultiplier = 1;
+
+		public ButtonInputControl(int index, InputState state) : base(index, state) {}
+
+		public bool button
+		{
+			get { return m_State.GetCurrentValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold; }
+		}
+
+		public bool buttonDown
+		{
+			get { return button && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
+		}
+
+		public bool buttonUp
+		{
+			get { return !button && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
+		}
+
+		public void SetValueMultiplier(float multiplier)
+		{
+			m_ValueMultiplier = multiplier;
+		}
+	}
+
+	public class Vector2InputControl : InputControl
+	{
+		public Vector2InputControl(int index, InputState state) : base(index, state) {}
+
+		public Vector2 vector2
+		{
+			get
+			{
+				var controlData = m_State.controlProvider.GetControlData(m_Index);
+				return new Vector2(
+					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[1])
+				);
+			}
+		}
+	}
+
+	public class Vector3InputControl : InputControl
+	{
+		public Vector3InputControl(int index, InputState state) : base(index, state) {}
+
+		public Vector3 vector3
+		{
+			get
+			{
+				var controlData = m_State.controlProvider.GetControlData(m_Index);
+				return new Vector3(
+					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[2])
+				);
+			}
+		}
 	}
 }

@@ -47,7 +47,10 @@ public class CubeSizer : MonoBehaviour
 	
 	void Update()
 	{
-		slider.value += m_PlayerInput.moveX.value * 0.05f;
+		if (m_PlayerInput.moveX.negative.buttonDown)
+			slider.value -= 0.1f;
+		if (m_PlayerInput.moveX.positive.buttonDown)
+			slider.value += 0.1f;
 		if (m_PlayerInput.menu.buttonDown)
 			ToggleMenu();
 	}

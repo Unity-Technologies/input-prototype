@@ -76,8 +76,10 @@ public class MultiplayerManager
 						player.player = null;
 						player.status = PlayerStatus.Inactive;
 					}
-					if (player.player.moveX.buttonDown)
+					if (player.player.moveX.positive.buttonDown)
 						player.colorIndex = ((player.colorIndex + 1) % colors.Length);
+					if (player.player.moveX.negative.buttonDown)
+						player.colorIndex = ((player.colorIndex + colors.Length - 1) % colors.Length);
 					break;
 				}
 				case PlayerStatus.Ready:

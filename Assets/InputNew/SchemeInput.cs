@@ -89,14 +89,14 @@ namespace UnityEngine.InputNew
 			return deviceStates;
 		}
 		
-		public override InputControl anyButton
+		public override ButtonInputControl anyButton
 		{
 			get
 			{
 				foreach (var state in deviceStates)
 					if (state.controlProvider.anyButton.button)
 						return state.controlProvider.anyButton;
-				return this[0];
+				return this[0] as ButtonInputControl;
 			}
 		}
 		
