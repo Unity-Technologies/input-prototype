@@ -57,18 +57,16 @@ public class CharacterInputController
 	public void Update()
 	{
 		// Move
-		var moveX = m_PlayerInput.moveX.value;
-		var moveY = m_PlayerInput.moveY.value;
+		var move = m_PlayerInput.move.vector2;
 
-		Vector3 velocity = transform.TransformDirection(new Vector3(moveX, 0, moveY)) * moveSpeed;
+		Vector3 velocity = transform.TransformDirection(new Vector3(move.x, 0, move.y)) * moveSpeed;
 		m_Rigid.velocity = new Vector3(velocity.x, m_Rigid.velocity.y, velocity.z);
 
 		// Look
-		var lookX = m_PlayerInput.lookX.value;
-		var lookY = m_PlayerInput.lookY.value;
+		var look = m_PlayerInput.look.vector2;
 
-		m_Rotation.y += lookX;
-		m_Rotation.x = Mathf.Clamp(m_Rotation.x - lookY, -89, 89);
+		m_Rotation.y += look.x;
+		m_Rotation.x = Mathf.Clamp(m_Rotation.x - look.y, -89, 89);
 
 		transform.localEulerAngles = new Vector3(0, m_Rotation.y, 0);
 		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
