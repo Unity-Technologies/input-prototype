@@ -115,7 +115,7 @@ namespace UnityEngine.InputNew
 				{
 					// TODO: Figure out how to use sensible thresholds for different controls.
 					if (Mathf.Abs(m_CurrentStates[index]) >= 0.5f && Mathf.Abs(m_PreviousStates[index]) < 0.5f)
-						InputSystem.RegisterBinding(this[index]);
+						InputSystem.RegisterBinding(controlProvider[index]);
 				}
 				
 				m_PreviousStates[index] = m_CurrentStates[index];
@@ -131,11 +131,6 @@ namespace UnityEngine.InputNew
 		public int Count
 		{
 			get { return m_CurrentStates.Length; }
-		}
-
-		public InputControl this[int index]
-		{
-			get { return new InputControl(index, this); }
 		}
 
 		#endregion

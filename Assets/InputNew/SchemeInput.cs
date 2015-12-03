@@ -192,7 +192,7 @@ namespace UnityEngine.InputNew
 		float GetSourceValue(InputControlDescriptor source)
 		{
 			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
-			return deviceState[source.controlIndex].value;
+			return deviceState.GetCurrentValue(source.controlIndex);
 		}
 		
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
