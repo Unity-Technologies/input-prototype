@@ -6,14 +6,10 @@ namespace UnityEngine.InputNew
 {
 	public class SchemeInput : InputControlProvider
 	{
-		private List<InputControlData> m_Controls;
-		private InputState m_State;
 		private ActionMap m_ActionMap;
 		private ControlScheme m_ControlScheme;
 		private List<InputState> m_DeviceStates;
 
-		public override List<InputControlData> controls { get { return m_Controls; } }
-		public override InputState state { get { return m_State; } }
 		public ActionMap actionMap { get { return m_ActionMap; } }
 		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 		protected List<InputState> deviceStates { get { return m_DeviceStates; } }
@@ -35,12 +31,6 @@ namespace UnityEngine.InputNew
 			foreach (var entry in actionMap.actions)
 				controls.Add(entry.controlData);
 			SetControls(controls);
-		}
-		
-		private void SetControls(List<InputControlData> controls)
-		{
-			m_Controls = controls;
-			m_State = new InputState(this);
 		}
 		
 		public bool BindControl(InputControlDescriptor descriptor, InputControl control, bool restrictToExistingDevices)

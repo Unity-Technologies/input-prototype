@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class PlayerInput : InputControlProvider
+	public class PlayerInput : IInputControlProvider
 	{
 		private ActionMap m_ActionMap;
 		private bool m_AutoSwitch = false;
@@ -14,8 +14,8 @@ namespace UnityEngine.InputNew
 		private InputEventTree treeNode { get; set; }
 
 		public ActionMap actionMap { get { return m_ActionMap; } }
-		public override List<InputControlData> controls { get { return currentScheme.controls; } }
-		public override InputState state { get { return currentScheme.state; } }
+		public List<InputControlData> controlDataList { get { return currentScheme.controlDataList; } }
+		public InputState state { get { return currentScheme.state; } }
 		public bool autoSwitching { get { return m_AutoSwitch; } }
 		public SchemeInput currentScheme { get { return m_SchemeInputs[m_SchemeIndex]; } }
 
@@ -79,7 +79,12 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public override bool ProcessEvent(InputEvent inputEvent)
+		public InputControl this[int index]
+		{
+			get { return currentScheme[index]; }
+		}
+
+		public bool ProcessEvent(InputEvent inputEvent)
 		{
 			if (currentScheme.ProcessEvent(inputEvent))
 				return true;

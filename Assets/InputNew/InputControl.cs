@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public struct InputControl
+	public class InputControl
 	{
 		#region Constructors
 

@@ -4,10 +4,23 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public abstract class InputControlProvider
+	public abstract class InputControlProvider : IInputControlProvider
 	{
-		public abstract InputState state { get; }
-		public abstract List<InputControlData> controls { get; }
+		public List<InputControlData> controlDataList { get { return m_ControlDataList; } }
+		public InputState state { get { return m_State; } }
+
+		private List<InputControlData> m_ControlDataList;
+		private List<InputControl> m_Controls;
+		private InputState m_State;
+
+		protected void SetControls(List<InputControlData> controls)
+		{
+			m_ControlDataList = controls;
+			m_State = new InputState(this);
+			m_Controls = new List<InputControl>(controlCount);
+			for (int i = 0; i < controlCount; i++)
+				m_Controls.Add(new InputControl(i, m_State));
+		}
 
 		public virtual bool ProcessEvent(InputEvent inputEvent)
 		{
@@ -33,26 +46,26 @@ namespace UnityEngine.InputNew
 
 		public InputControlData GetControlData(int index)
 		{
-			return controls[index];
+			return controlDataList[index];
 		}
 		
 		public int controlCount
 		{
-			get { return controls.Count; }
+			get { return controlDataList.Count; }
 		}
 		
 		public InputControl this[int index]
 		{
-			get { return new InputControl(index, state); }
+			get { return m_Controls[index]; }
 		}
 		
 		public InputControl this[string controlName]
 		{
 			get
 			{
-				for (var i = 0; i < controls.Count; ++ i)
+				for (var i = 0; i < controlDataList.Count; ++ i)
 				{
-					if (controls[i].name == controlName)
+					if (controlDataList[i].name == controlName)
 						return this[i];
 				}
 				
@@ -67,16 +80,11 @@ namespace UnityEngine.InputNew
 		
 		protected void SetControlNameOverride(int controlIndex, string nameOverride)
 		{
-			InputControlData data = controls[controlIndex];
+			InputControlData data = controlDataList[controlIndex];
 			data.name = nameOverride;
-			controls[controlIndex] = data;
+			controlDataList[controlIndex] = data;
 		}
 
 		public float lastEventTime { get; protected set; }
-
-		protected List<InputControlData> GetControls()
-		{
-			return controls;
-		}
 	}
 }

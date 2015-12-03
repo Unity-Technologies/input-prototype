@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 		public Pointer()
 			: this("Pointer", null) { }
 		
-		public Pointer(string deviceName, List<InputControlData> additionalControls)
+		protected Pointer(string deviceName, List<InputControlData> additionalControls)
 		{
 			this.deviceName = deviceName;
 			var controls = new List<InputControlData>();

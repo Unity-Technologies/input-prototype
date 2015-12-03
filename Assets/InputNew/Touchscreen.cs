@@ -17,10 +17,10 @@ namespace UnityEngine.InputNew
 		public Touchscreen()
 			: this("Touchscreen", null) { }
 
-		public Touchscreen(string deviceName, List<InputControlData> additionalControls)
+		protected Touchscreen(string deviceName, List<InputControlData> additionalControls)
 			: base(deviceName, null)
 		{
-			var controls = GetControls();
+			var controls = this.controlDataList;
 
 			for (var i = 0; i < MaxConcurrentTouches; ++i)
 				AddControlsForTouch(i, controls);

@@ -161,7 +161,7 @@ public static class CreateDemoAssets
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("OS X");
-		profile.SetMappingsCount(gamepad.controls.Count, gamepad.controls.Count);
+		profile.SetMappingsCount(gamepad.controlCount, gamepad.controlCount);
 		
 		profile.SetMapping(00, gamepad.leftStickX.index, "Left Stick X");
 		profile.SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", Range.fullInverse, Range.full);
@@ -201,7 +201,7 @@ public static class CreateDemoAssets
 		
 		profile.AddDeviceName("Gamepad");
 		profile.AddSupportedPlatform("Windows");
-		profile.SetMappingsCount(gamepad.controls.Count, gamepad.controls.Count);
+		profile.SetMappingsCount(gamepad.controlDataList.Count, gamepad.controlDataList.Count);
 
 		profile.SetMapping(00, gamepad.leftStickX.index, "Left Stick X");
 		profile.SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", Range.fullInverse, Range.full);
