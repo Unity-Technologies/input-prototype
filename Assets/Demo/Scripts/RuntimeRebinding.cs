@@ -5,7 +5,7 @@ using UnityEngine.InputNew;
 
 public class RuntimeRebinding : MonoBehaviour
 {
-	SchemeInput m_SchemeInput;
+	ControlSchemeInput m_ControlSchemeInput;
 	
 	const int k_NameWidth = 200;
 	const int k_BindingWidth = 120;
@@ -13,21 +13,21 @@ public class RuntimeRebinding : MonoBehaviour
 	string[] controlSchemeNames;
 	InputControlDescriptor descriptorToBeAssigned = null;
 	
-	public void Initialize(SchemeInput schemeInput)
+	public void Initialize(ControlSchemeInput controlSchemeInput)
 	{
-		m_SchemeInput = schemeInput;
+		m_ControlSchemeInput = controlSchemeInput;
 	}
 	
 	void OnGUI()
 	{
-		if (m_SchemeInput == null)
+		if (m_ControlSchemeInput == null)
 		{
 			GUILayout.Label("No scheme input assigned.");
 			return;
 		}
 		
-		ActionMap actionMap = m_SchemeInput.actionMap;
-		ControlScheme controlScheme = m_SchemeInput.controlScheme;
+		ActionMap actionMap = m_ControlSchemeInput.actionMap;
+		ControlScheme controlScheme = m_ControlSchemeInput.controlScheme;
 		
 		if (controlScheme == null)
 		{
@@ -102,7 +102,7 @@ public class RuntimeRebinding : MonoBehaviour
 	
 	bool BindInputControl(InputControl control)
 	{
-		m_SchemeInput.BindControl(descriptorToBeAssigned, control, false);
+		m_ControlSchemeInput.BindControl(descriptorToBeAssigned, control, false);
 		descriptorToBeAssigned = null;
 		return true;
 	}

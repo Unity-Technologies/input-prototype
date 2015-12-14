@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.InputNew;
 
 // GENERATED FILE - DO NOT EDIT MANUALLY
-public class FirstPersonControls : PlayerInput {
+public class FirstPersonControls : ActionMapInput {
 	public FirstPersonControls (ActionMap actionMap) : base (actionMap) { }
-	public FirstPersonControls (SchemeInput schemeInput) : base (schemeInput) { }
+	public FirstPersonControls (ControlSchemeInput controlSchemeInput) : base (controlSchemeInput) { }
 	
 	public AxisInputControl @moveX { get { return (AxisInputControl)this[0]; } }
 	public AxisInputControl @moveY { get { return (AxisInputControl)this[1]; } }

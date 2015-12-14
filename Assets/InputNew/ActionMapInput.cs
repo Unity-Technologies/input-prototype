@@ -5,21 +5,21 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class PlayerInput : IInputControlProvider
+	public class ActionMapInput : IInputControlProvider
 	{
 		private ActionMap m_ActionMap;
 		private bool m_AutoSwitch = false;
 		private int m_SchemeIndex = 0;
-		private List<SchemeInput> m_SchemeInputs;
+		private List<ControlSchemeInput> m_ControlSchemeInputs;
 		private InputEventTree treeNode { get; set; }
 
 		public ActionMap actionMap { get { return m_ActionMap; } }
-		public List<InputControlData> controlDataList { get { return currentScheme.controlDataList; } }
-		public InputState state { get { return currentScheme.state; } }
+		public List<InputControlData> controlDataList { get { return currentControlScheme.controlDataList; } }
+		public InputState state { get { return currentControlScheme.state; } }
 		public bool autoSwitching { get { return m_AutoSwitch; } }
-		public SchemeInput currentScheme { get { return m_SchemeInputs[m_SchemeIndex]; } }
+		public ControlSchemeInput currentControlScheme { get { return m_ControlSchemeInputs[m_SchemeIndex]; } }
 
-		public PlayerInput(ActionMap actionMap)
+		public ActionMapInput(ActionMap actionMap)
 		{
 			m_ActionMap = actionMap;
 			m_AutoSwitch = true;
@@ -28,22 +28,22 @@ namespace UnityEngine.InputNew
 			Rebind();
 		}
 
-		public PlayerInput(SchemeInput schemeInput)
+		public ActionMapInput(ControlSchemeInput controlSchemeInput)
 		{
-			m_ActionMap = schemeInput.actionMap;
-			m_SchemeInputs = new List<SchemeInput> ();
-			m_SchemeInputs.Add (schemeInput);
+			m_ActionMap = controlSchemeInput.actionMap;
+			m_ControlSchemeInputs = new List<ControlSchemeInput>();
+			m_ControlSchemeInputs.Add(controlSchemeInput);
 			m_AutoSwitch = false;
 		}
 
 		void Rebind()
 		{
-			m_SchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap).ToList();
+			m_ControlSchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap).ToList();
 			
 			float mostRecentTime = 0;
-			for (int i = 0; i < m_SchemeInputs.Count; i++)
+			for (int i = 0; i < m_ControlSchemeInputs.Count; i++)
 			{
-				float time = m_SchemeInputs[i].lastEventTime;
+				float time = m_ControlSchemeInputs[i].lastEventTime;
 				if (time > mostRecentTime)
 				{
 					mostRecentTime = time;
@@ -74,29 +74,29 @@ namespace UnityEngine.InputNew
 				{
 					InputSystem.consumerStack.children.Remove(treeNode);
 					treeNode = null;
-					currentScheme.Reset();
+					currentControlScheme.Reset();
 				}
 			}
 		}
 
 		public InputControl this[int index]
 		{
-			get { return currentScheme[index]; }
+			get { return currentControlScheme[index]; }
 		}
 
 		public bool ProcessEvent(InputEvent inputEvent)
 		{
-			if (currentScheme.ProcessEvent(inputEvent))
+			if (currentControlScheme.ProcessEvent(inputEvent))
 				return true;
 			
 			if (!m_AutoSwitch)
 				return false;
 			
-			for (int i = 0; i < m_SchemeInputs.Count; i++)
+			for (int i = 0; i < m_ControlSchemeInputs.Count; i++)
 			{
 				if (i == m_SchemeIndex)
 					continue;
-				bool consumed = m_SchemeInputs[i].ProcessEvent(inputEvent);
+				bool consumed = m_ControlSchemeInputs[i].ProcessEvent(inputEvent);
 				if (consumed)
 				{
 					m_SchemeIndex = i;
@@ -108,12 +108,12 @@ namespace UnityEngine.InputNew
 
 		void BeginFrameEvent()
 		{
-			currentScheme.BeginFrame();
+			currentControlScheme.BeginFrame();
 		}
 		
 		void EndFrameEvent()
 		{
-			currentScheme.EndFrame();
+			currentControlScheme.EndFrame();
 		}
 	}
 }

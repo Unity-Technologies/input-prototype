@@ -39,7 +39,7 @@ public class CharacterInputController
 		if (sizer != null)
 			sizer.referencePlayerInput = m_PlayerInput;
 		if (rebinder != null)
-			rebinder.Initialize(m_PlayerInput.currentScheme);
+			rebinder.Initialize(m_PlayerInput.currentControlScheme);
 		
 		m_Rigid = GetComponent<Rigidbody>();
 		

@@ -121,7 +121,7 @@ public class ActionMapEditor : Editor
 	
 	void CalculateBlackList()
 	{
-		m_PropertyBlacklist = new HashSet<string>(typeof(PlayerInput).GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).Select(e => e.Name));
+		m_PropertyBlacklist = new HashSet<string>(typeof(ActionMapInput).GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).Select(e => e.Name));
 	}
 	
 	public override void OnInspectorGUI()
@@ -371,9 +371,9 @@ public class ActionMapEditor : Editor
 using UnityEngine.InputNew;
 
 // GENERATED FILE - DO NOT EDIT MANUALLY
-public class {0} : PlayerInput {{
+public class {0} : ActionMapInput {{
 	public {0} (ActionMap actionMap) : base (actionMap) {{ }}
-	public {0} (SchemeInput schemeInput) : base (schemeInput) {{ }}
+	public {0} (ControlSchemeInput controlSchemeInput) : base (controlSchemeInput) {{ }}
 	
 ", className);
 		

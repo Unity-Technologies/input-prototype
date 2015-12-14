@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class SchemeInput : InputControlProvider
+	public class ControlSchemeInput : InputControlProvider
 	{
 		private ActionMap m_ActionMap;
 		private ControlScheme m_ControlScheme;
@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 		protected List<InputState> deviceStates { get { return m_DeviceStates; } }
 
-		public SchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
+		public ControlSchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
 		{
 			Setup(actionMap, controlScheme, deviceStates);
 		}

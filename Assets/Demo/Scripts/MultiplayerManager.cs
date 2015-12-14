@@ -18,7 +18,7 @@ public class MultiplayerManager
 	
 	class PlayerInfo
 	{
-		public SchemeInput controls;
+		public ControlSchemeInput controls;
 		public FirstPersonControls player;
 		public PlayerStatus status;
 		public int colorIndex;
