@@ -133,6 +133,7 @@ public class MultiplayerManager
 			var player = (GameObject)Instantiate(playerPrefab, Vector3.right * 2 * i, Quaternion.identity);
 			player.GetComponent<CharacterInputController>().SetupPlayer(playerInfo.playerHandle.index);
 			player.GetComponentInChildren<Camera>().rect = new Rect(0, fraction * i, 1, fraction);
+			player.transform.Find("Canvas/Virtual Joystick").gameObject.SetActive(false);
 		}
 		
 		gameObject.SetActive(false);
