@@ -90,119 +90,39 @@ namespace UnityEngine.InputNew
 			return newEvent;
 		}
 
-		public static IEnumerable<ControlSchemeInput> CreateAllPotentialPlayers(ActionMap actionMap)
+		public static void ListenForBinding (BindingListener listener)
 		{
-			for (var i = 0; i < actionMap.controlSchemes.Count; ++ i)
-			{
-				foreach (var instance in CreateAllPotentialPlayersForControlScheme(actionMap, actionMap.controlSchemes[i]))
-				{
-					yield return instance;
-				}
-			}
+			s_BindingListeners.Add(listener);
 		}
 
-		private static IEnumerable<ControlSchemeInput> CreateAllPotentialPlayersForControlScheme(ActionMap actionMap, ControlScheme controlScheme)
+		public static PlayerHandle CreatePlayerHandle(ActionMap initialActionMap, bool localMultiplayer)
 		{
-			// Gather a mapping of device types to list of bindings that use the given type.
-			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
-			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
+			if (s_NewPlayerHandle == null)
+				s_NewPlayerHandle = new PlayerHandle();
 
-			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
+			s_NewPlayerHandle.index = s_NextPlayerIndex;
+			s_NewPlayerHandle.autoSwitching = !localMultiplayer;
 
-			// Gather available devices for each type of device.
-			var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
-			var minDeviceCountOfType = Int32.MaxValue;
-			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
-			{
-				var availableDevicesOfType = s_Devices.GetDevicesOfType(deviceType);
-				if (availableDevicesOfType != null)
-					deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
-
-				minDeviceCountOfType = Mathf.Min(minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0);
-			}
-
-			// Create map instances according to available devices.
-			for (var i = 0; i < minDeviceCountOfType; i++)
-			{
-				var deviceStates = new List<InputState>();
-
-				foreach (var entry in perDeviceTypeUsedControlIndices)
-				{
-					// Take i-th device of current type.
-					var device = deviceTypesToAvailableDevices[entry.Key][i];
-					var state = new InputState(device, entry.Value);
-					deviceStates.Add(state);
-				}
-
-				yield return new ControlSchemeInput(actionMap, controlScheme, deviceStates);
-			}
-		}
-
-		// This is for creating a PlayerInput (from an ActionMap) that matches the same devices as another PlayerInput.
-		// If the otherPlayerInput listens to all devices, the new one will too.
-		// If the otherPlayerInput is bound to specific devies, the new one will be bound to same ones or a subset.
-		public static T CreatePlayer<T>(ActionMap actionMap, ActionMapInput otherPlayerInput) where T : ActionMapInput
-		{
-			if (otherPlayerInput.autoSwitching)
-				return (T)Activator.CreateInstance(typeof(T), new object[] { actionMap });
-			
-			ControlSchemeInput schemeInput = CreateControlSchemeInput(actionMap, otherPlayerInput.currentControlScheme.GetUsedDevices());
-			return (T)Activator.CreateInstance(typeof(T), new object[] { schemeInput });
-		}
-
-		// This is for having explicit control over what devices go into a SchemeInput,
-		// and automatically determining the control scheme based on it.
-		public static ControlSchemeInput CreateControlSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices)
-		{
-			ControlScheme matchingControlScheme = null;
-			for (int scheme = 0; scheme < actionMap.controlSchemes.Count; scheme++)
-			{
-				var types = actionMap.controlSchemes[scheme].GetUsedDeviceTypes();
-				bool matchesAll = true;
-				foreach (var type in types)
-				{
-					bool foundMatch = false;
-					foreach (var device in devices)
-					{
-						if (type.IsInstanceOfType(device))
-						{
-							foundMatch = true;
-							break;
-						}
-					}
-					
-					if (!foundMatch)
-					{
-						matchesAll = false;
-						break;
-					}
-				}
-				
-				if (matchesAll)
-				{
-					matchingControlScheme = actionMap.controlSchemes[scheme];
-					break;
-				}
-			}
-			
-			if (matchingControlScheme == null)
+			var actionMapInput = s_NewPlayerHandle.AssignActions(initialActionMap, initialActionMap.custumActionMapType);
+			if (actionMapInput == null)
 				return null;
-			
-			return CreateControlSchemeInput(actionMap, devices, matchingControlScheme);
+
+			// At this point we know the action map was successfully assigned,
+			// so the player handle should be made valid.
+			var handle = s_NewPlayerHandle;
+			s_NewPlayerHandle = null;
+			s_NextPlayerIndex++;
+
+			s_Players[handle.index] = handle;
+			return handle;
 		}
 
-		// This is for having explicit control over what devices go into a ActionMapInstance.
-		public static ControlSchemeInput CreateControlSchemeInput(ActionMap actionMap, IEnumerable<InputDevice> devices, ControlScheme controlScheme)
+		// Gets existing handle for index if available.
+		public static PlayerHandle GetPlayerHandle(int index)
 		{
-			// Create state for every device.
-			var deviceStates = new List<InputState>();
-			foreach (var device in devices)
-			{
-				deviceStates.Add(new InputState(device));
-			}
-			
-			// Create map instance.
-			return new ControlSchemeInput(actionMap, controlScheme, deviceStates);
+			PlayerHandle player = null;
+			s_Players.TryGetValue(index, out player);
+			return player;
 		}
 
 		#endregion
@@ -243,11 +163,6 @@ namespace UnityEngine.InputNew
 			if (touchEvent != null)
 				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, UnityEngine.Cursor.lockState == CursorLockMode.Locked);
 			return false;
-		}
-		
-		public static void ListenForBinding (BindingListener listener)
-		{
-			s_BindingListeners.Add(listener);
 		}
 		
 		internal static void RegisterBinding(InputControl control)
@@ -295,6 +210,11 @@ namespace UnityEngine.InputNew
 		{
 			return s_Devices.GetMostRecentlyUsedDevice<TDevice>();
 		}
+
+		public static List<InputDevice> GetDevicesOfType(Type deviceType)
+		{
+			return s_Devices.GetDevicesOfType(deviceType);
+		}
 		
 		public static List<InputDevice> leastToMostRecentlyUsedDevices
 		{
@@ -341,6 +261,10 @@ namespace UnityEngine.InputNew
 		static bool s_SimulateMouseWithTouches;
 		static InputEventTree s_SimulateMouseWithTouchesProcess;
 		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
+
+		static Dictionary<int, PlayerHandle> s_Players = new Dictionary<int, PlayerHandle>();
+		static PlayerHandle s_NewPlayerHandle = null;
+		static int s_NextPlayerIndex = 0;
 
 		#endregion
 	}

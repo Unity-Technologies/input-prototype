@@ -18,85 +18,68 @@ public class MultiplayerManager
 	
 	class PlayerInfo
 	{
-		public ControlSchemeInput controls;
-		public FirstPersonControls player;
-		public PlayerStatus status;
+		public PlayerHandle playerHandle;
+		public FirstPersonControls actions;
+		public bool ready = false;
 		public int colorIndex;
-	}
-	
-	List<PlayerInfo> potentialPlayers = new List<PlayerInfo>();
-	
-	public void Start()
-	{
-		var potentialPlayerInputs = InputSystem.CreateAllPotentialPlayers(actionMap);
-		foreach (var playerInput in potentialPlayerInputs)
+
+		public PlayerInfo(PlayerHandle playerHandle)
 		{
-			potentialPlayers.Add(new PlayerInfo() { controls = playerInput });
+			this.playerHandle = playerHandle;
+			actions = playerHandle.GetActions<FirstPersonControls>();
+			actions.active = true;
 		}
 	}
 	
+	List<PlayerInfo> players = new List<PlayerInfo>();
+	
 	public void Destroy()
 	{
-		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
+		for (int i = players.Count - 1; i >= 0; i--)
 		{
-			if (potentialPlayers[i].player != null)
-				potentialPlayers[i].player.active = false;
+			if (players[i].actions != null)
+				players[i].actions.active = false;
 		}
 	}
 	
 	public void Update()
 	{
-		int joinedCount = 0;
-		int readyCount = 0;
-		for (int i = potentialPlayers.Count - 1; i >= 0; i--)
+		if (players.Count < 4)
 		{
-			var player = potentialPlayers[i];
-			switch(player.status)
+			PlayerHandle newPlayer = InputSystem.CreatePlayerHandle(actionMap, true);
+			if (newPlayer != null)
+				players.Add(new PlayerInfo(newPlayer));
+		}
+
+		int readyCount = 0;
+		for (int i = players.Count - 1; i >= 0; i--)
+		{
+			var player = players[i];
+			if (!player.ready)
 			{
-				case PlayerStatus.Inactive:
+				if (player.actions.fire.buttonDown)
+					player.ready = true;
+				if (player.actions.menu.buttonDown)
 				{
-					if (player.controls.anyButton.buttonDown)
-					{
-						player.status = PlayerStatus.Joined;
-						player.player = new FirstPersonControls(player.controls);
-						player.player.active = true;
-						// Move to end
-						potentialPlayers.Remove(player);
-						potentialPlayers.Add(player);
-					}
-					break;
+					player.playerHandle.Destroy();
+					players.Remove(player);
+					continue;
 				}
-				case PlayerStatus.Joined:
-				{
-					if (player.player.fire.buttonDown)
-						player.status = PlayerStatus.Ready;
-					if (player.player.menu.buttonDown)
-					{
-						player.player.active = false;
-						player.player = null;
-						player.status = PlayerStatus.Inactive;
-					}
-					if (player.player.moveX.positive.buttonDown)
-						player.colorIndex = ((player.colorIndex + 1) % colors.Length);
-					if (player.player.moveX.negative.buttonDown)
-						player.colorIndex = ((player.colorIndex + colors.Length - 1) % colors.Length);
-					break;
-				}
-				case PlayerStatus.Ready:
-				{
-					if (player.player.fire.buttonDown || player.player.menu.buttonDown)
-						player.status = PlayerStatus.Joined;
-					break;
-				}
+				if (player.actions.moveX.positive.buttonDown)
+					player.colorIndex = ((player.colorIndex + 1) % colors.Length);
+				if (player.actions.moveX.negative.buttonDown)
+					player.colorIndex = ((player.colorIndex + colors.Length - 1) % colors.Length);
 			}
-			
-			if (player.status == PlayerStatus.Joined)
-				joinedCount++;
-			else if (player.status == PlayerStatus.Ready)
+			else
+			{
+				if (player.actions.fire.buttonDown || player.actions.menu.buttonDown)
+					player.ready = false;
+			}
+			if (player.ready)
 				readyCount++;
 		}
-		
-		if (readyCount > 1 && joinedCount == 0)
+
+		if (readyCount >= 1 && (players.Count - readyCount) == 0)
 			StartGame();
 	}
 	
@@ -107,11 +90,9 @@ public class MultiplayerManager
 		float width = 200;
 		float height = 300;
 		int playerNum = 0;
-		for (int i = 0; i < potentialPlayers.Count; i++)
+		for (int i = 0; i < players.Count; i++)
 		{
-			PlayerInfo player = potentialPlayers[i];
-			if (player.status == PlayerStatus.Inactive)
-				continue;
+			PlayerInfo player = players[i];
 			
 			Rect rect = new Rect(20 + (width + 20) * playerNum, (Screen.height - height) * 0.5f, width, height);
 			GUILayout.BeginArea(rect, "Player", "box");
@@ -123,8 +104,8 @@ public class MultiplayerManager
 			
 			GUILayout.BeginVertical();
 			GUILayout.FlexibleSpace();
-			if (player.status != PlayerStatus.Ready)
-				GUILayout.Label(string.Format("Press {0} when ready", player.player.fire.GetPrimarySourceName()));
+			if (!player.ready)
+				GUILayout.Label(string.Format("Press {0} when ready", player.actions.fire.GetPrimarySourceName()));
 			else
 				GUILayout.Label("READY");
 			GUILayout.EndVertical();
@@ -138,24 +119,20 @@ public class MultiplayerManager
 	{
 		hubCamera.SetActive(false);
 		
-		int playerCount = 0;
-		for (int i = 0; i < potentialPlayers.Count; i++)
-			if (potentialPlayers[i].status == PlayerStatus.Ready)
-				playerCount++;
-		
-		int playerNum = 0;
+		int playerCount = players.Count;
 		float fraction = 1f / playerCount;
-		for (int i = 0; i < potentialPlayers.Count; i++)
+		for (int i = 0; i < players.Count; i++)
 		{
-			PlayerInfo playerInfo = potentialPlayers[i];
-			if (playerInfo.status != PlayerStatus.Ready)
+			PlayerInfo playerInfo = players[i];
+			if (!playerInfo.ready)
+			{
+				playerInfo.playerHandle.Destroy();
 				continue;
+			}
 			
-			var player = (GameObject)Instantiate(playerPrefab, Vector3.right * 2 * playerNum, Quaternion.identity);
-			player.GetComponent<CharacterInputController>().SetupPlayer(playerInfo.player);
-			player.GetComponentInChildren<Camera>().rect = new Rect(0, fraction * playerNum, 1, fraction);
-			
-			playerNum++;
+			var player = (GameObject)Instantiate(playerPrefab, Vector3.right * 2 * i, Quaternion.identity);
+			player.GetComponent<CharacterInputController>().SetupPlayer(playerInfo.playerHandle.index);
+			player.GetComponentInChildren<Camera>().rect = new Rect(0, fraction * i, 1, fraction);
 		}
 		
 		gameObject.SetActive(false);

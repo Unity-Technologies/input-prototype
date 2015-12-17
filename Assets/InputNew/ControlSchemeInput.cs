@@ -14,6 +14,18 @@ namespace UnityEngine.InputNew
 		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 		protected List<InputState> deviceStates { get { return m_DeviceStates; } }
 
+		public ControlSchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputDevice> devices)
+		{
+			// Create state for every device.
+			var deviceStates = new List<InputState>();
+			foreach (var device in devices)
+			{
+				deviceStates.Add(new InputState(device));
+			}
+
+			Setup(actionMap, controlScheme, deviceStates);
+		}
+
 		public ControlSchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
 		{
 			Setup(actionMap, controlScheme, deviceStates);

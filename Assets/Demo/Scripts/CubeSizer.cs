@@ -14,7 +14,7 @@ public class CubeSizer : MonoBehaviour
 	
 	[FormerlySerializedAs("controlMap")]
 	public ActionMap actionMap;
-	public FirstPersonControls referencePlayerInput;
+	public int playerIndex;
 	
 	[Space(10)]
 	public GameObject menu;
@@ -26,7 +26,7 @@ public class CubeSizer : MonoBehaviour
 	{
 		enabled = true;
 		menu.SetActive(true);
-		m_PlayerInput = InputSystem.CreatePlayer<FirstPersonControls>(actionMap, referencePlayerInput);
+		m_PlayerInput = InputSystem.GetPlayerHandle(playerIndex).AssignActions<FirstPersonControls>(actionMap);
 		m_PlayerInput.active = true;
 	}
 	

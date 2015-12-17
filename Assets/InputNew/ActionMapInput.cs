@@ -38,7 +38,7 @@ namespace UnityEngine.InputNew
 
 		void Rebind()
 		{
-			m_ControlSchemeInputs = InputSystem.CreateAllPotentialPlayers(m_ActionMap).ToList();
+			m_ControlSchemeInputs = CreateAllPotentialPlayers(m_ActionMap).ToList();
 			
 			float mostRecentTime = 0;
 			for (int i = 0; i < m_ControlSchemeInputs.Count; i++)
@@ -114,6 +114,54 @@ namespace UnityEngine.InputNew
 		void EndFrameEvent()
 		{
 			currentControlScheme.EndFrame();
+		}
+
+		private static IEnumerable<ControlSchemeInput> CreateAllPotentialPlayers(ActionMap actionMap)
+		{
+			for (var i = 0; i < actionMap.controlSchemes.Count; ++ i)
+			{
+				foreach (var instance in CreateAllPotentialPlayersForControlScheme(actionMap, actionMap.controlSchemes[i]))
+				{
+					yield return instance;
+				}
+			}
+		}
+
+		private static IEnumerable<ControlSchemeInput> CreateAllPotentialPlayersForControlScheme(ActionMap actionMap, ControlScheme controlScheme)
+		{
+			// Gather a mapping of device types to list of bindings that use the given type.
+			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
+			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
+
+			////REVIEW: what to do about disconnected devices here? skip? include? make parameter?
+
+			// Gather available devices for each type of device.
+			var deviceTypesToAvailableDevices = new Dictionary<Type, List<InputDevice>>();
+			var minDeviceCountOfType = Int32.MaxValue;
+			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
+			{
+				var availableDevicesOfType = InputSystem.GetDevicesOfType(deviceType);
+				if (availableDevicesOfType != null)
+					deviceTypesToAvailableDevices[deviceType] = availableDevicesOfType;
+
+				minDeviceCountOfType = Mathf.Min(minDeviceCountOfType, availableDevicesOfType != null ? availableDevicesOfType.Count : 0);
+			}
+
+			// Create map instances according to available devices.
+			for (var i = 0; i < minDeviceCountOfType; i++)
+			{
+				var deviceStates = new List<InputState>();
+
+				foreach (var entry in perDeviceTypeUsedControlIndices)
+				{
+					// Take i-th device of current type.
+					var device = deviceTypesToAvailableDevices[entry.Key][i];
+					var state = new InputState(device, entry.Value);
+					deviceStates.Add(state);
+				}
+
+				yield return new ControlSchemeInput(actionMap, controlScheme, deviceStates);
+			}
 		}
 	}
 }

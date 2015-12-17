@@ -20,6 +20,7 @@ public class CharacterInputController
 
 	[Space(10)]
 	
+	public int playerIndex = -1;
 	public Transform head;
 	public float moveSpeed = 5;
 	public GameObject projectile;
@@ -31,27 +32,28 @@ public class CharacterInputController
 	public Text controlsText;
 	public RuntimeRebinding rebinder;
 
-	public void Awake()
+	public void Start()
 	{
-		m_PlayerInput = new FirstPersonControls(actionMap);
+		if (playerIndex == -1)
+		{
+			playerIndex = InputSystem.CreatePlayerHandle(actionMap, false).index;
+			SetupPlayer(playerIndex);
+		}
+	}
+	
+	public void SetupPlayer(int playerIndex)
+	{
+		this.playerIndex = playerIndex;
+		m_PlayerInput = InputSystem.GetPlayerHandle(playerIndex).GetActions<FirstPersonControls>();
 		m_PlayerInput.active = true;
 		
 		if (sizer != null)
-			sizer.referencePlayerInput = m_PlayerInput;
+			sizer.playerIndex = playerIndex;
 		if (rebinder != null)
 			rebinder.Initialize(m_PlayerInput.currentControlScheme);
 		
 		m_Rigid = GetComponent<Rigidbody>();
-		
 		LockCursor(true);
-	}
-	
-	public void SetupPlayer(FirstPersonControls playerInput)
-	{
-		if (m_PlayerInput != null)
-			m_PlayerInput.active = false;
-		m_PlayerInput = playerInput;
-		sizer.referencePlayerInput = m_PlayerInput;
 	}
 
 	public void Update()
@@ -92,15 +94,18 @@ public class CharacterInputController
 		
 		if (m_PlayerInput.menu.buttonDown)
 			sizer.ToggleMenu();
-		
-		if (m_PlayerInput.reconfigure.buttonDown)
-			rebinder.enabled = !rebinder.enabled;
-		
-		if (rebinder.enabled == m_PlayerInput.active)
+
+		if (rebinder != null)
 		{
-			LockCursor(!rebinder.enabled);
-			m_PlayerInput.active = !rebinder.enabled;
-			controlsText.enabled = !rebinder.enabled;
+			if (m_PlayerInput.reconfigure.buttonDown)
+				rebinder.enabled = !rebinder.enabled;
+			
+			if (rebinder.enabled == m_PlayerInput.active)
+			{
+				LockCursor(!rebinder.enabled);
+				m_PlayerInput.active = !rebinder.enabled;
+				controlsText.enabled = !rebinder.enabled;
+			}
 		}
 		
 		HandleControlsText();
