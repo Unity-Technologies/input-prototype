@@ -26,7 +26,9 @@ public class MouseInputToEvents
 	{
 		if (Input.GetMouseButtonDown(buttonIndex))
 		{
-			if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+			if (UnityEngine.EventSystems.EventSystem.current != null &&
+				UnityEngine.Cursor.lockState != CursorLockMode.Locked &&
+				UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
 				m_Ignore = true;
 			else
 				SendClickEvent(buttonEnumValue, true);
