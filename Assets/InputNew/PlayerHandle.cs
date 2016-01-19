@@ -66,7 +66,7 @@ namespace UnityEngine.InputNew
 				for (int i = availableDevices.Count - 1; i >= 0; i--)
 				{
 					InputDevice joinedDevice = availableDevices[i];
-					if (joinedDevice.assignments.Count == 0 && (joinedDevice.anyButton != null) && joinedDevice.anyButton.buttonDown)
+					if (joinedDevice.assignments.Count == 0 && (joinedDevice.anyButton != null) && joinedDevice.anyButton.wasJustPressed)
 					{
 						List<InputDevice> foundDevices;
 						ControlSchemeInput schemeInput = CreateControlSchemeInput(actionMap, joinedDevice, availableDevices, out foundDevices);

@@ -76,19 +76,19 @@ namespace UnityEngine.InputNew
 
 		public ButtonInputControl(int index, InputState state) : base(index, state) {}
 
-		public bool button
+		public bool isHeld
 		{
 			get { return m_State.GetCurrentValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold; }
 		}
 
-		public bool buttonDown
+		public bool wasJustPressed
 		{
-			get { return button && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
+			get { return isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
 		}
 
-		public bool buttonUp
+		public bool wasJustReleased
 		{
-			get { return !button && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
+			get { return !isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
 		}
 
 		public void SetValueMultiplier(float multiplier)

@@ -54,7 +54,7 @@ namespace UnityEngine.InputNew
 				for (int i = 0; i < count; i++)
 				{
 					var control = this[i] as ButtonInputControl;
-					if (control != null && control.button)
+					if (control != null && control.isHeld)
 						return control;
 				}
 				

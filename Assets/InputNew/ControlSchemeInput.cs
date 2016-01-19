@@ -106,7 +106,7 @@ namespace UnityEngine.InputNew
 			get
 			{
 				foreach (var state in deviceStates)
-					if (state.controlProvider.anyButton.button)
+					if (state.controlProvider.anyButton.isHeld)
 						return state.controlProvider.anyButton;
 				return this[0] as ButtonInputControl;
 			}

@@ -57,22 +57,22 @@ public class MultiplayerManager
 			var player = players[i];
 			if (!player.ready)
 			{
-				if (player.actions.fire.buttonDown)
+				if (player.actions.fire.wasJustPressed)
 					player.ready = true;
-				if (player.actions.menu.buttonDown)
+				if (player.actions.menu.wasJustPressed)
 				{
 					player.playerHandle.Destroy();
 					players.Remove(player);
 					continue;
 				}
-				if (player.actions.moveX.positive.buttonDown)
+				if (player.actions.moveX.positive.wasJustPressed)
 					player.colorIndex = ((player.colorIndex + 1) % colors.Length);
-				if (player.actions.moveX.negative.buttonDown)
+				if (player.actions.moveX.negative.wasJustPressed)
 					player.colorIndex = ((player.colorIndex + colors.Length - 1) % colors.Length);
 			}
 			else
 			{
-				if (player.actions.fire.buttonDown || player.actions.menu.buttonDown)
+				if (player.actions.fire.wasJustPressed || player.actions.menu.wasJustPressed)
 					player.ready = false;
 			}
 			if (player.ready)

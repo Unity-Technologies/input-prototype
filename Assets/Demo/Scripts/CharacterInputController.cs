@@ -74,7 +74,7 @@ public class CharacterInputController
 		head.localEulerAngles = new Vector3(m_Rotation.x, 0, 0);
 
 		// Fire
-		var fire = m_PlayerInput.fire.button;
+		var fire = m_PlayerInput.fire.isHeld;
 		if (fire)
 		{
 			var currentTime = Time.time;
@@ -86,18 +86,18 @@ public class CharacterInputController
 			}
 		}
 
-		if (m_PlayerInput.lockCursor.buttonDown)
+		if (m_PlayerInput.lockCursor.wasJustPressed)
 			LockCursor(true);
 
-		if (m_PlayerInput.unlockCursor.buttonDown)
+		if (m_PlayerInput.unlockCursor.wasJustPressed)
 			LockCursor(false);
 		
-		if (m_PlayerInput.menu.buttonDown)
+		if (m_PlayerInput.menu.wasJustPressed)
 			sizer.ToggleMenu();
 
 		if (rebinder != null)
 		{
-			if (m_PlayerInput.reconfigure.buttonDown)
+			if (m_PlayerInput.reconfigure.wasJustPressed)
 				rebinder.enabled = !rebinder.enabled;
 			
 			if (rebinder.enabled == m_PlayerInput.active)
