@@ -74,6 +74,7 @@ public class ActionMapEditor : Editor
 	{
 		EditorGUIUtility.keyboardControl = 0;
 		
+		m_ActionMap.name = target.name;
 		SerializedObject temp = new SerializedObject(m_ActionMap);
 		temp.Update();
 		SerializedProperty prop = temp.GetIterator();
