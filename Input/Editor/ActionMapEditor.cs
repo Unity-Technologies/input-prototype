@@ -132,6 +132,8 @@ public class ActionMapEditor : Editor
 			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
 		
 		// Show schemes
+		EditorGUILayout.LabelField("Control Schemes");
+
 		EditorGUIUtility.GetControlID(FocusType.Passive);
 		for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
 		{
@@ -171,62 +173,67 @@ public class ActionMapEditor : Editor
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
-		
-		EditorGUILayout.Space();
-		
-		// Show high level controls
-		EditorGUILayout.LabelField("Actions", m_ActionMap.controlSchemes[selectedScheme].name + " Bindings");
-		EditorGUILayout.BeginVertical("Box");
-		foreach (var action in m_ActionMap.actions)
+
+		if (m_ActionMap.controlSchemes.Count > 0)
 		{
-			DrawActionRow(action, selectedScheme);
-		}
-		EditorGUILayout.EndVertical();
-		
-		// Remove an add buttons
-		EditorGUILayout.BeginHorizontal();
-		GUILayout.Space(15 * EditorGUI.indentLevel);
-		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
-		{
-			int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
-			m_ActionMap.actions.RemoveAt(actionIndex);
-			for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
-				m_ActionMap.controlSchemes[i].bindings.RemoveAt(actionIndex);
+			EditorGUILayout.Space();
 			
+			// Show high level controls
+			EditorGUILayout.LabelField("Actions", m_ActionMap.controlSchemes[selectedScheme].name + " Bindings");
+			EditorGUILayout.BeginVertical("Box");
+			foreach (var action in m_ActionMap.actions)
+			{
+				DrawActionRow(action, selectedScheme);
+			}
 			if (m_ActionMap.actions.Count == 0)
-				selectedAction = null;
-			else
-				selectedAction = m_ActionMap.actions[Mathf.Min(actionIndex, m_ActionMap.actions.Count - 1)];
+				EditorGUILayout.GetControlRect();
+			EditorGUILayout.EndVertical();
 			
-			RefreshPropertyNames();
-		}
-		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
-		{
-			var action = new InputAction();
-			action.controlData = new InputControlData() { name = "New Control" };
-			m_ActionMap.actions.Add(action);
-			for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
-				m_ActionMap.controlSchemes[i].bindings.Add(new ControlBinding());
+			// Remove an add buttons
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(15 * EditorGUI.indentLevel);
+			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+			{
+				int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
+				m_ActionMap.actions.RemoveAt(actionIndex);
+				for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
+					m_ActionMap.controlSchemes[i].bindings.RemoveAt(actionIndex);
+				
+				if (m_ActionMap.actions.Count == 0)
+					selectedAction = null;
+				else
+					selectedAction = m_ActionMap.actions[Mathf.Min(actionIndex, m_ActionMap.actions.Count - 1)];
+				
+				RefreshPropertyNames();
+			}
+			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+			{
+				var action = new InputAction();
+				action.controlData = new InputControlData() { name = "New Control" };
+				m_ActionMap.actions.Add(action);
+				for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
+					m_ActionMap.controlSchemes[i].bindings.Add(new ControlBinding());
+				
+				selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+				
+				RefreshPropertyNames();
+			}
+			GUILayout.FlexibleSpace();
+			EditorGUILayout.EndHorizontal();
 			
-			selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+			EditorGUILayout.Space();
 			
-			RefreshPropertyNames();
+			if (selectedAction != null)
+				DrawActionGUI();
+			
+			if (EditorGUI.EndChangeCheck())
+			{
+				EditorUtility.SetDirty(m_ActionMap);
+				m_Modified = true;
+			}
+			
+			EditorGUILayout.Space();
 		}
-		GUILayout.FlexibleSpace();
-		EditorGUILayout.EndHorizontal();
-		
-		EditorGUILayout.Space();
-		
-		if (selectedAction != null)
-			DrawActionGUI();
-		
-		if (EditorGUI.EndChangeCheck())
-		{
-			EditorUtility.SetDirty(m_ActionMap);
-			m_Modified = true;
-		}
-		
-		EditorGUILayout.Space();
 		
 		ApplyRevertGUI();
 	}

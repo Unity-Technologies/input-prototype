@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
+	[CreateAssetMenu()]
 	public class ActionMap : ScriptableObject
 	{
 		[FormerlySerializedAs("entries")]
