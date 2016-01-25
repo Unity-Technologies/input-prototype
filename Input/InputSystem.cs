@@ -8,6 +8,8 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
+		// For now, initialize prototype stuff here.
+		// This should not be included here in final code.
 		static InputSystem()
 		{
 			GameObject go = new GameObject("Input Prototype Controller");
@@ -21,6 +23,13 @@ namespace UnityEngine.InputNew
 			go.AddComponent<KeyboardInputToEvents>();
 			go.AddComponent<TouchInputToEvents>();
 			go.AddComponent<ExecuteAllEvents>();
+
+			InputDeviceProfile[] profiles = new InputDeviceProfile[]
+			{
+				new Xbox360MacProfile(),
+				new Xbox360WinProfile()
+			};
+			InputSystem.Initialize(profiles);
 		}
 
 		public delegate bool BindingListener(InputControl control);

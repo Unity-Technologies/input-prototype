@@ -6,7 +6,6 @@ using UnityEngine;
 namespace UnityEngine.InputNew
 {
 	public abstract class InputDeviceProfile
-		: ScriptableObject
 	{
 		#region Public Methods
 
