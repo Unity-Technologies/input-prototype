@@ -10,6 +10,8 @@ public class InputManager
 
 	public void Awake()
 	{
+		if (profiles == null)
+			profiles = new InputDeviceProfile[] {};
 		InputSystem.Initialize(profiles);
 	}
 

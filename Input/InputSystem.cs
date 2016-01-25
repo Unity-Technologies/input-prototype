@@ -8,6 +8,21 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
+		static InputSystem()
+		{
+			GameObject go = new GameObject("Input Prototype Controller");
+			go.hideFlags = HideFlags.HideAndDontSave;
+
+			go.AddComponent<InputManager>();
+			go.AddComponent<InputManager>();
+			go.AddComponent<InputManagerEndFrame>();
+			go.AddComponent<GamepadInputToEvents>();
+			go.AddComponent<MouseInputToEvents>();
+			go.AddComponent<KeyboardInputToEvents>();
+			go.AddComponent<TouchInputToEvents>();
+			go.AddComponent<ExecuteAllEvents>();
+		}
+
 		public delegate bool BindingListener(InputControl control);
 		
 		#region Public Methods
