@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputNew;
 
-public class GamepadInputToEvents
+public class JoystickInputToEvents
 	: MonoBehaviour
 {
 	#region Public Methods
@@ -17,15 +17,16 @@ public class GamepadInputToEvents
 	#region Non-Public Methods
 
 	// Fake gamepad has 10 axes (index 0 - 9) and 20 buttons (index 10 - 29).
-	const int k_AxisCount = 10;
-	const int k_ButtonCount = 20;
-	private float[,] m_LastValues = new float[2, k_AxisCount + k_ButtonCount];
+	public const int axisCount = 10;
+	public const int buttonCount = 20;
+	public const int joystickCount = 10;
+	private float[,] m_LastValues = new float[joystickCount, axisCount + buttonCount];
 	
 	private void SendAxisEvents()
 	{
 		int first = 1;
 		int last = 10;
-		for (int device = 0; device < 2; device++)
+		for (int device = 0; device < joystickCount; device++)
 		{
 			for (int i = 0; i <= last - first; i++)
 			{
@@ -38,28 +39,17 @@ public class GamepadInputToEvents
 	private void SendButtonEvents()
 	{
 		
-		for (int device = 0; device < 2; device++)
+		for (int device = 0; device < joystickCount; device++)
 		{
-			int first = 0;
-			int last = 0;
-			switch (device)
-			{
-			case 0:
-				first = (int)KeyCode.Joystick1Button0;
-				last = (int)KeyCode.Joystick1Button19;
-				break;
-			case 1:
-				first = (int)KeyCode.Joystick2Button0;
-				last = (int)KeyCode.Joystick2Button19;
-				break;
-			}
+			int first = (int)KeyCode.Joystick1Button0 + device * 20;
+			int last = (int)KeyCode.Joystick1Button19 + device * 20;
 			
 			for (int i = 0; i <= last - first; i++)
 			{
 				if (Input.GetKeyDown((KeyCode)(i + first)))
-					SendEvent(device, k_AxisCount + i, 1.0f);
+					SendEvent(device, axisCount + i, 1.0f);
 				if (Input.GetKeyUp((KeyCode)(i + first)))
-					SendEvent(device, k_AxisCount + i, 0.0f);
+					SendEvent(device, axisCount + i, 0.0f);
 			}
 		}
 	}
