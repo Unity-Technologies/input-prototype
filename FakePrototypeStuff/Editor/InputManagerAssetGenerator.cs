@@ -338,7 +338,7 @@ internal class InputManagerAssetGenerator
 			this.snap = false;
 			this.invert = false;
 			this.type = 2;
-			this.axis = analog;
+			this.axis = analog - 1;
 			this.joyNum = device;
 		}
 
