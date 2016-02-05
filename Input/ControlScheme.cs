@@ -12,14 +12,19 @@ namespace UnityEngine.InputNew
 		[SerializeField]
 		private string m_Name;
 		public string name { get { return m_Name; } set { m_Name = value; } }
+
+		[SerializeField]
+		private ActionMap m_ActionMap;
+		public ActionMap actionMap { get { return m_ActionMap; } }
 		
 		[SerializeField]
 		private List<ControlBinding> m_Bindings = new List<ControlBinding> ();
 		public List<ControlBinding> bindings { get { return m_Bindings; } set { m_Bindings = value; } }
 		
-		public ControlScheme(string name)
+		public ControlScheme(string name, ActionMap actionMap)
 		{
-			this.name = name;
+			m_Name = name;
+			m_ActionMap = actionMap;
 		}
 		
 		public IEnumerable<Type> GetUsedDeviceTypes()
@@ -43,6 +48,12 @@ namespace UnityEngine.InputNew
 			}
 			
 			return deviceTypes;
+		}
+
+		public int GetDevicesHash()
+		{
+			// Note: Xor is associative, so order doesn't matter (when no shifting is involved).
+			return GetUsedDeviceTypes().Aggregate(0, (result, element) => result ^ element.GetHashCode());
 		}
 		
 		public void ExtractDeviceTypesAndControlIndices (Dictionary<Type, List<int>> controlIndicesPerDeviceType)

@@ -127,7 +127,7 @@ namespace UnityEngine.InputNew
 			s_NewPlayerHandle.index = s_NextPlayerIndex;
 			s_NewPlayerHandle.autoSwitching = !localMultiplayer;
 
-			var actionMapInput = s_NewPlayerHandle.AssignActions(initialActionMap, initialActionMap.custumActionMapType);
+			var actionMapInput = s_NewPlayerHandle.AssignActions(initialActionMap);
 			if (actionMapInput == null)
 				return null;
 

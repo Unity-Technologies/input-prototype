@@ -16,7 +16,7 @@ namespace UnityEngine.InputNew
 		// or if buttons are pressed on applicable devices that are not already assigned.
 		public T AssignActions<T>(ActionMap actionMap) where T : ActionMapInput
 		{
-			return (T)AssignActions(actionMap, typeof(T));
+			return (T)AssignActions(actionMap);
 		}
 
 		public T GetActions<T>() where T : ActionMapInput
@@ -36,16 +36,16 @@ namespace UnityEngine.InputNew
 				assignments[i].Unassign();
 		}
 
-		internal ActionMapInput AssignActions(ActionMap actionMap, Type customActionMapType)
+		internal ActionMapInput AssignActions(ActionMap actionMap)
 		{
 			// If already contains actionMap if this type, return that.
 			for (int i = 0; i < maps.Count; i++)
-				if (maps[i].GetType() == customActionMapType)
+				if (maps[i].GetType() == actionMap.customActionMapType)
 					return maps[i];
 
 			if (autoSwitching)
 			{
-				ActionMapInput map = (ActionMapInput)Activator.CreateInstance(customActionMapType, new object[] { actionMap });
+				ActionMapInput map = (ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
 				maps.Add(map);
 				return map;
 				// Do not track device assignments for auto switching player.
@@ -57,7 +57,7 @@ namespace UnityEngine.InputNew
 				List<InputDevice> dummyList = null;
 				ControlSchemeInput controlSchemeInput = CreateControlSchemeInput(actionMap, null, devices, out dummyList);
 				if (controlSchemeInput != null)
-					return (ActionMapInput)Activator.CreateInstance(customActionMapType, new object[] { controlSchemeInput });
+					return (ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { controlSchemeInput });
 
 				// If a player pressed a button on an unassigned device,
 				// and this device fit one of the control schemes, assign that device and control scheme.
@@ -72,7 +72,7 @@ namespace UnityEngine.InputNew
 						ControlSchemeInput schemeInput = CreateControlSchemeInput(actionMap, joinedDevice, availableDevices, out foundDevices);
 						if (schemeInput != null)
 						{
-							ActionMapInput map = (ActionMapInput)Activator.CreateInstance(customActionMapType, new object[] { schemeInput });
+							ActionMapInput map = (ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { schemeInput });
 							for (int j = 0; j < foundDevices.Count; j++)
 								AssignDevice(foundDevices[j], true, false);
 							maps.Add(map);
@@ -145,7 +145,7 @@ namespace UnityEngine.InputNew
 				return null;
 			}
 			
-			return new ControlSchemeInput(actionMap, matchingControlScheme, foundDevices);
+			return new ControlSchemeInput(matchingControlScheme, foundDevices);
 		}
 
 		private bool AssignDevice(InputDevice device, bool assign, bool allowShared = false)

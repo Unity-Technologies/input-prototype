@@ -18,7 +18,33 @@ namespace UnityEngine.InputNew
 		private List<ControlScheme> m_ControlSchemes = new List<ControlScheme>();
 		public List<ControlScheme> controlSchemes { get { return m_ControlSchemes; } set { m_ControlSchemes = value; } }
 
-		public Type custumActionMapType {
+		public Type mapType
+		{
+			get
+			{
+				if ( m_CachedMapType == null )
+				{
+					if (m_MapTypeName == null)
+						return null;
+					m_CachedMapType = Type.GetType( m_MapTypeName );
+				}
+				return m_CachedMapType;
+			}
+			set
+			{
+				m_CachedMapType = value;
+				m_MapTypeName = m_CachedMapType.AssemblyQualifiedName;
+			}
+		}
+		[ SerializeField ]
+		private string m_MapTypeName;
+		private Type m_CachedMapType;
+		public void SetMapTypeName(string name)
+		{
+			m_MapTypeName = name;
+		}
+
+		public Type customActionMapType {
 			get
 			{
 				string typeString = string.Format(

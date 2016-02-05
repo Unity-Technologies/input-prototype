@@ -160,7 +160,7 @@ namespace UnityEngine.InputNew
 					deviceStates.Add(state);
 				}
 
-				yield return new ControlSchemeInput(actionMap, controlScheme, deviceStates);
+				yield return new ControlSchemeInput(controlScheme, deviceStates);
 			}
 		}
 	}

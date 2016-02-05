@@ -169,7 +169,7 @@ public class ActionMapEditor : Editor
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			m_ActionMap.controlSchemes.Add(new ControlScheme("New Control Scheme"));
+			m_ActionMap.controlSchemes.Add(new ControlScheme("New Control Scheme", m_ActionMap));
 			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
 		}
 		GUILayout.FlexibleSpace();
@@ -415,6 +415,8 @@ public class {0} : ActionMapInput {{
 		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
 		File.WriteAllText(path, str.ToString());
 		AssetDatabase.ImportAsset(path);
+
+		original.SetMapTypeName(className+", "+"Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
 	}
 	
 	string GetCamelCaseString(string input, bool capitalFirstLetter)

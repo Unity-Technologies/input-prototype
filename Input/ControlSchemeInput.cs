@@ -6,15 +6,14 @@ namespace UnityEngine.InputNew
 {
 	public class ControlSchemeInput : InputControlProvider
 	{
-		private ActionMap m_ActionMap;
 		private ControlScheme m_ControlScheme;
 		private List<InputState> m_DeviceStates;
 
-		public ActionMap actionMap { get { return m_ActionMap; } }
+		public ActionMap actionMap { get { return m_ControlScheme.actionMap; } }
 		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 		protected List<InputState> deviceStates { get { return m_DeviceStates; } }
 
-		public ControlSchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputDevice> devices)
+		public ControlSchemeInput(ControlScheme controlScheme, List<InputDevice> devices)
 		{
 			// Create state for every device.
 			var deviceStates = new List<InputState>();
@@ -23,17 +22,16 @@ namespace UnityEngine.InputNew
 				deviceStates.Add(new InputState(device));
 			}
 
-			Setup(actionMap, controlScheme, deviceStates);
+			Setup(controlScheme, deviceStates);
 		}
 
-		public ControlSchemeInput(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
+		public ControlSchemeInput(ControlScheme controlScheme, List<InputState> deviceStates)
 		{
-			Setup(actionMap, controlScheme, deviceStates);
+			Setup(controlScheme, deviceStates);
 		}
 
-		protected void Setup(ActionMap actionMap, ControlScheme controlScheme, List<InputState> deviceStates)
+		protected void Setup(ControlScheme controlScheme, List<InputState> deviceStates)
 		{
-			m_ActionMap = actionMap;
 			m_ControlScheme = controlScheme;
 			m_DeviceStates = deviceStates;
 			
