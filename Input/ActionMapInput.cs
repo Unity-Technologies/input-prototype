@@ -17,23 +17,75 @@ namespace UnityEngine.InputNew
 		public List<InputControlData> controlDataList { get { return currentControlScheme.controlDataList; } }
 		public InputState state { get { return currentControlScheme.state; } }
 		public bool autoSwitching { get { return m_AutoSwitch; } }
-		public ControlSchemeInput currentControlScheme { get { return m_ControlSchemeInputs[m_SchemeIndex]; } }
-
-		public ActionMapInput(ActionMap actionMap)
+		public ControlSchemeInput currentControlScheme
 		{
-			m_ActionMap = actionMap;
-			m_AutoSwitch = true;
-			
-			// TODO: Invoke Rebind when new input devices have been plugged in when m_AutoSwitch is true.
-			Rebind();
+			get { return m_ControlSchemeInputs.Count == 0 ? null : m_ControlSchemeInputs[m_SchemeIndex]; }
 		}
 
-		public ActionMapInput(ControlSchemeInput controlSchemeInput)
+		public static ActionMapInput Create(ActionMap actionMap)
 		{
-			m_ActionMap = controlSchemeInput.actionMap;
+			ActionMapInput map =
+				(ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
+			return map;
+		}
+
+		protected ActionMapInput(ActionMap actionMap)
+		{
+			m_ActionMap = actionMap;
 			m_ControlSchemeInputs = new List<ControlSchemeInput>();
+		}
+
+		public void AssignGlobal()
+		{
+			m_AutoSwitch = true;
+			Rebind();
+			// TODO: Invoke Rebind when new input devices have been plugged in when m_AutoSwitch is true.
+		}
+
+		public void Assign(ControlSchemeInput controlSchemeInput)
+		{
+			if (controlSchemeInput.actionMap != actionMap)
+				throw new Exception(string.Format("ControlSchemeInput doesn't match ActionMap {0}.", actionMap.name));
+			m_ControlSchemeInputs.Clear();
 			m_ControlSchemeInputs.Add(controlSchemeInput);
 			m_AutoSwitch = false;
+		}
+
+		public void Assign(List<InputDevice> availableDevices)
+		{
+			List<InputDevice> foundDevices = new List<InputDevice>();
+			for (int scheme = 0; scheme < actionMap.controlSchemes.Count; scheme++)
+			{
+				foundDevices.Clear();
+				var types = actionMap.controlSchemes[scheme].GetUsedDeviceTypes().ToList();
+				bool matchesAll = true;
+				foreach (var type in types)
+				{
+					bool foundMatch = false;
+					foreach (var device in availableDevices)
+					{
+						if (type.IsInstanceOfType(device))
+						{
+							foundDevices.Add(device);
+							foundMatch = true;
+							break;
+						}
+					}
+					
+					if (!foundMatch)
+					{
+						matchesAll = false;
+						break;
+					}
+				}
+				if (!matchesAll)
+					continue;
+
+				// If we reach this point we know that control scheme both matches required and matches all.
+				ControlScheme matchingControlScheme = actionMap.controlSchemes[scheme];
+				Assign(new ControlSchemeInput(matchingControlScheme, foundDevices));
+				return;
+			}
 		}
 
 		void Rebind()

@@ -119,25 +119,11 @@ namespace UnityEngine.InputNew
 			s_BindingListeners.Add(listener);
 		}
 
-		public static PlayerHandle CreatePlayerHandle(ActionMap initialActionMap, bool localMultiplayer)
+		public static PlayerHandle GetNewPlayerHandle()
 		{
-			if (s_NewPlayerHandle == null)
-				s_NewPlayerHandle = new PlayerHandle();
-
-			s_NewPlayerHandle.index = s_NextPlayerIndex;
-			s_NewPlayerHandle.autoSwitching = !localMultiplayer;
-
-			var actionMapInput = s_NewPlayerHandle.AssignActions(initialActionMap);
-			if (actionMapInput == null)
-				return null;
-
-			// At this point we know the action map was successfully assigned,
-			// so the player handle should be made valid.
-			var handle = s_NewPlayerHandle;
-			s_NewPlayerHandle = null;
-			s_NextPlayerIndex++;
-
+			PlayerHandle handle = new PlayerHandle(s_NextPlayerIndex);
 			s_Players[handle.index] = handle;
+			s_NextPlayerIndex++;
 			return handle;
 		}
 
@@ -287,7 +273,6 @@ namespace UnityEngine.InputNew
 		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
 
 		static Dictionary<int, PlayerHandle> s_Players = new Dictionary<int, PlayerHandle>();
-		static PlayerHandle s_NewPlayerHandle = null;
 		static int s_NextPlayerIndex = 0;
 
 		#endregion

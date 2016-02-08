@@ -381,7 +381,6 @@ using UnityEngine.InputNew;
 // GENERATED FILE - DO NOT EDIT MANUALLY
 public class {0} : ActionMapInput {{
 	public {0} (ActionMap actionMap) : base (actionMap) {{ }}
-	public {0} (ControlSchemeInput controlSchemeInput) : base (controlSchemeInput) {{ }}
 	
 ", className);
 		

@@ -72,11 +72,11 @@ namespace UnityEngine.InputNew
 
 		public string deviceName { get; protected set; }
 
-		public List<PlayerDeviceAssignment> assignments { get { return m_Assignments; } set { m_Assignments = value; } }
+		public PlayerDeviceAssignment assignment { get { return m_Assignment; } set { m_Assignment = value; } }
 
 		#endregion
 		
 		private InputDeviceProfile m_Profile;
-		private List<PlayerDeviceAssignment> m_Assignments = new List<PlayerDeviceAssignment>();
+		private PlayerDeviceAssignment m_Assignment = null;
 	}
 }

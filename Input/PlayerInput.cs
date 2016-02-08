@@ -1,15 +1,12 @@
+using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace UnityEngine.InputNew
 {
 	public class PlayerInput : MonoBehaviour
 	{
-		public enum DeviceAssignmentMethod
-		{
-			AnyAvailable, // single player or local multi-player
-			PressedByPlayer, // local multi-player
-		}
-
 		public enum DeviceAssignmentStatus
 		{
 			Disabled,
@@ -18,13 +15,12 @@ namespace UnityEngine.InputNew
 		}
 
 		public List<ActionMap> actionMaps = new List<ActionMap>();
-
 		// Should this player handle request assignment of an input device as soon as the component awakes?
 		public bool autoSinglePlayerAssign;
 
 		public DeviceAssignmentStatus status { get; private set; }
+		public PlayerHandle handle { get; set; }
 
-		public PlayerHandle handle;
 
 		void Awake()
 		{
@@ -42,18 +38,16 @@ namespace UnityEngine.InputNew
 		{
 			if (status == DeviceAssignmentStatus.Enabled)
 				return;
-
-			status = DeviceAssignmentStatus.Pending;
-
-			if (actionMaps.Count == 0 || actionMaps[0] == null)
-				return;
 			
-			ActionMap actionMap = actionMaps[0];
-
-			handle = InputSystem.CreatePlayerHandle(actionMap, false);
-
-			if (handle != null)
-				status = DeviceAssignmentStatus.Enabled;
+			handle = InputSystem.GetNewPlayerHandle();
+			foreach (ActionMap actionMap in actionMaps)
+			{
+				ActionMapInput actionMapInput = ActionMapInput.Create(actionMap);
+				actionMapInput.AssignGlobal();
+				actionMapInput.active = true;
+				handle.maps.Add(actionMapInput);
+			}
+			status = DeviceAssignmentStatus.Enabled;
 		}
 
 		public T GetActions<T>() where T : ActionMapInput
