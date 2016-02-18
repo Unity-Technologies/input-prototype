@@ -18,7 +18,7 @@ public class ActionMapEditor : Editor
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
 	}
 	
-	ActionMap m_ActionMap;
+	ActionMap m_ActionMapEditCopy;
 	
 	int m_SelectedScheme = 0;
 	[System.NonSerialized]
@@ -73,13 +73,20 @@ public class ActionMapEditor : Editor
 	void Apply()
 	{
 		EditorGUIUtility.keyboardControl = 0;
-		
-		m_ActionMap.name = target.name;
-		SerializedObject temp = new SerializedObject(m_ActionMap);
+
+		m_ActionMapEditCopy.name = target.name;
+		SerializedObject temp = new SerializedObject(m_ActionMapEditCopy);
 		temp.Update();
 		SerializedProperty prop = temp.GetIterator();
 		while (prop.Next(true))
 			serializedObject.CopyFromSerializedProperty(prop);
+
+		// Make sure references in control schemes to action amp itself are stored correctly.
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+			serializedObject.FindProperty("m_ControlSchemes")
+				.GetArrayElementAtIndex(i)
+				.FindPropertyRelative("m_ActionMap").objectReferenceValue = target;
+		
 		serializedObject.ApplyModifiedProperties();
 		
 		UpdateActionMapScript();
@@ -92,8 +99,8 @@ public class ActionMapEditor : Editor
 		EditorGUIUtility.keyboardControl = 0;
 		
 		ActionMap original = (ActionMap)serializedObject.targetObject;
-		m_ActionMap = Instantiate<ActionMap>(original);
-		m_ActionMap.name = original.name;
+		m_ActionMapEditCopy = Instantiate<ActionMap>(original);
+		m_ActionMapEditCopy.name = original.name;
 		
 		m_Modified = false;
 	}
@@ -102,8 +109,8 @@ public class ActionMapEditor : Editor
 	{
 		// Calculate property names.
 		m_PropertyNames.Clear();
-		for (int i = 0; i < m_ActionMap.actions.Count; i++)
-			m_PropertyNames.Add(GetCamelCaseString(m_ActionMap.actions[i].name, false));
+		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
+			m_PropertyNames.Add(GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false));
 		
 		// Calculate duplicates.
 		HashSet<string> duplicates = new HashSet<string>(m_PropertyNames.GroupBy(x => x).Where(group => group.Count() > 1).Select(group => group.Key));
@@ -129,14 +136,14 @@ public class ActionMapEditor : Editor
 	{
 		EditorGUI.BeginChangeCheck();
 		
-		if (selectedScheme >= m_ActionMap.controlSchemes.Count)
-			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
+		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
+			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 		
 		// Show schemes
 		EditorGUILayout.LabelField("Control Schemes");
 
 		EditorGUIUtility.GetControlID(FocusType.Passive);
-		for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
 			
@@ -150,9 +157,9 @@ public class ActionMapEditor : Editor
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 			
 			EditorGUI.BeginChangeCheck();
-			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMap.controlSchemes[i].name);
+			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMapEditCopy.controlSchemes[i].name);
 			if (EditorGUI.EndChangeCheck())
-				m_ActionMap.controlSchemes[i].name = schemeName;
+				m_ActionMapEditCopy.controlSchemes[i].name = schemeName;
 			
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 				Event.current.Use();
@@ -163,30 +170,30 @@ public class ActionMapEditor : Editor
 		GUILayout.Space(15 * EditorGUI.indentLevel);
 		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ActionMap.controlSchemes.RemoveAt(selectedScheme);
-			if (selectedScheme >= m_ActionMap.controlSchemes.Count)
-				selectedScheme = m_ActionMap.controlSchemes.Count - 1;
+			m_ActionMapEditCopy.controlSchemes.RemoveAt(selectedScheme);
+			if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
+				selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 		}
 		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 		{
-			m_ActionMap.controlSchemes.Add(new ControlScheme("New Control Scheme", m_ActionMap));
-			selectedScheme = m_ActionMap.controlSchemes.Count - 1;
+			m_ActionMapEditCopy.controlSchemes.Add(new ControlScheme("New Control Scheme", m_ActionMapEditCopy));
+			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 		}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 
-		if (m_ActionMap.controlSchemes.Count > 0)
+		if (m_ActionMapEditCopy.controlSchemes.Count > 0)
 		{
 			EditorGUILayout.Space();
 			
 			// Show high level controls
-			EditorGUILayout.LabelField("Actions", m_ActionMap.controlSchemes[selectedScheme].name + " Bindings");
+			EditorGUILayout.LabelField("Actions", m_ActionMapEditCopy.controlSchemes[selectedScheme].name + " Bindings");
 			EditorGUILayout.BeginVertical("Box");
-			foreach (var action in m_ActionMap.actions)
+			foreach (var action in m_ActionMapEditCopy.actions)
 			{
 				DrawActionRow(action, selectedScheme);
 			}
-			if (m_ActionMap.actions.Count == 0)
+			if (m_ActionMapEditCopy.actions.Count == 0)
 				EditorGUILayout.GetControlRect();
 			EditorGUILayout.EndVertical();
 			
@@ -195,15 +202,15 @@ public class ActionMapEditor : Editor
 			GUILayout.Space(15 * EditorGUI.indentLevel);
 			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 			{
-				int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
-				m_ActionMap.actions.RemoveAt(actionIndex);
-				for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
-					m_ActionMap.controlSchemes[i].bindings.RemoveAt(actionIndex);
+				int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
+				m_ActionMapEditCopy.actions.RemoveAt(actionIndex);
+				for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+					m_ActionMapEditCopy.controlSchemes[i].bindings.RemoveAt(actionIndex);
 				
-				if (m_ActionMap.actions.Count == 0)
+				if (m_ActionMapEditCopy.actions.Count == 0)
 					selectedAction = null;
 				else
-					selectedAction = m_ActionMap.actions[Mathf.Min(actionIndex, m_ActionMap.actions.Count - 1)];
+					selectedAction = m_ActionMapEditCopy.actions[Mathf.Min(actionIndex, m_ActionMapEditCopy.actions.Count - 1)];
 				
 				RefreshPropertyNames();
 			}
@@ -211,11 +218,11 @@ public class ActionMapEditor : Editor
 			{
 				var action = new InputAction();
 				action.controlData = new InputControlData() { name = "New Control" };
-				m_ActionMap.actions.Add(action);
-				for (int i = 0; i < m_ActionMap.controlSchemes.Count; i++)
-					m_ActionMap.controlSchemes[i].bindings.Add(new ControlBinding());
+				m_ActionMapEditCopy.actions.Add(action);
+				for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+					m_ActionMapEditCopy.controlSchemes[i].bindings.Add(new ControlBinding());
 				
-				selectedAction = m_ActionMap.actions[m_ActionMap.actions.Count - 1];
+				selectedAction = m_ActionMapEditCopy.actions[m_ActionMapEditCopy.actions.Count - 1];
 				
 				RefreshPropertyNames();
 			}
@@ -229,7 +236,7 @@ public class ActionMapEditor : Editor
 			
 			if (EditorGUI.EndChangeCheck())
 			{
-				EditorUtility.SetDirty(m_ActionMap);
+				EditorUtility.SetDirty(m_ActionMapEditCopy);
 				m_Modified = true;
 			}
 			
@@ -269,8 +276,8 @@ public class ActionMapEditor : Editor
 	
 	void DrawActionRow(InputAction action, int selectedScheme)
 	{
-		int actionIndex = m_ActionMap.actions.IndexOf(action);
-		ControlBinding binding = m_ActionMap.controlSchemes[selectedScheme].bindings[actionIndex];
+		int actionIndex = m_ActionMapEditCopy.actions.IndexOf(action);
+		ControlBinding binding = m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex];
 		
 		int sourceCount = 0;
 		int buttonAxisSourceCount = 0;
@@ -384,9 +391,9 @@ public class {0} : ActionMapInput {{
 	
 ", className);
 		
-		for (int i = 0; i < m_ActionMap.actions.Count; i++)
+		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 		{
-			InputControlType controlType = m_ActionMap.actions[i].controlData.controlType;
+			InputControlType controlType = m_ActionMapEditCopy.actions[i].controlData.controlType;
 			string typeStr = string.Empty;
 			switch(controlType)
 			{
@@ -405,7 +412,7 @@ public class {0} : ActionMapInput {{
 				break;
 			}
 
-			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMap.actions[i].name, false), i, typeStr);
+			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);
 		}
 		
 		str.AppendLine(@"}");
@@ -486,10 +493,10 @@ public class {0} : ActionMapInput {{
 		
 		EditorGUILayout.Space();
 		
-		if (selectedScheme >= 0 && selectedScheme < m_ActionMap.controlSchemes.Count)
+		if (selectedScheme >= 0 && selectedScheme < m_ActionMapEditCopy.controlSchemes.Count)
 		{
-			int actionIndex = m_ActionMap.actions.IndexOf(selectedAction);
-			DrawBinding(m_ActionMap.controlSchemes[selectedScheme].bindings[actionIndex]);
+			int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
+			DrawBinding(m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex]);
 		}
 	}
 	
