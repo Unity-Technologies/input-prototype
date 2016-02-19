@@ -164,6 +164,9 @@ namespace UnityEngine.InputNew
 		
 		public void EndFrame()
 		{
+			foreach (var deviceState in GetDeviceStates())
+				deviceState.EndFrame();
+
 			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
 				var binding = controlScheme.bindings[entryIndex];
@@ -187,6 +190,8 @@ namespace UnityEngine.InputNew
 				
 				state.SetCurrentValue(entryIndex, controlValue);
 			}
+
+			state.EndFrame();
 		}
 
 		float GetSourceValue(InputControlDescriptor source)
