@@ -9,6 +9,8 @@ namespace UnityEngine.InputNew
 		public readonly int index;
 		public List<PlayerDeviceAssignment> assignments = new List<PlayerDeviceAssignment>();
 		public List<ActionMapInput> maps = new List<ActionMapInput>();
+
+		private bool m_Global = false;
 		private InputEventTree treeNode { get; set; }
 
 		internal PlayerHandle(int index)
@@ -23,6 +25,28 @@ namespace UnityEngine.InputNew
 				endFrame = EndFrameEvent
 			};
 			InputSystem.consumerStack.children.Add(treeNode);
+		}
+
+		public bool global
+		{
+			get { return m_Global; }
+			set
+			{
+				if (value == m_Global)
+					return;
+
+				m_Global = value;
+				if (value)
+				{
+					InputSystem.consumerStack.children.Remove(treeNode);
+					InputSystem.globalConsumerStack.children.Add(treeNode);
+				}
+				else
+				{
+					InputSystem.globalConsumerStack.children.Remove(treeNode);
+					InputSystem.consumerStack.children.Add(treeNode);
+				}
+			}
 		}
 
 		public T GetActions<T>() where T : ActionMapInput
@@ -77,11 +101,15 @@ namespace UnityEngine.InputNew
 
 		bool ProcessEvent(InputEvent inputEvent)
 		{
+			if (!global && (inputEvent.device.assignment == null || inputEvent.device.assignment.player != this))
+				return false;
+
 			for (int i = 0; i < maps.Count; i++)
 			{
 				if (maps[i].active && maps[i].ProcessEvent(inputEvent))
 					return true;
 			}
+
 			return false;
 		}
 

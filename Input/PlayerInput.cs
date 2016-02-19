@@ -40,10 +40,11 @@ namespace UnityEngine.InputNew
 				return;
 			
 			handle = InputSystem.GetNewPlayerHandle();
+			handle.global = true;
 			foreach (ActionMap actionMap in actionMaps)
 			{
 				ActionMapInput actionMapInput = ActionMapInput.Create(actionMap);
-				actionMapInput.AssignGlobal();
+				actionMapInput.TryInitializeControlSchemeGlobal();
 				actionMapInput.active = true;
 				handle.maps.Add(actionMapInput);
 			}

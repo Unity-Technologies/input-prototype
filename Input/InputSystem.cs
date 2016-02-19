@@ -81,6 +81,14 @@ namespace UnityEngine.InputNew
 			};
 			s_EventTree.children.Add(consumerStack);
 
+			// Global consumer stack should come last.
+			globalConsumerStack = new InputEventTree
+			{
+				name = "Global Consumers"
+				, isStack = true
+			};
+			s_EventTree.children.Add(globalConsumerStack);
+
 			simulateMouseWithTouches = true;
 		}
 
@@ -207,6 +215,7 @@ namespace UnityEngine.InputNew
 			get { return s_EventTree; }
 		}
 
+		public static IInputConsumer globalConsumerStack { get; private set; }
 		public static IInputConsumer consumerStack { get; private set; }
 		public static IInputConsumer rewriterStack { get; private set; }
 

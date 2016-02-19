@@ -31,6 +31,9 @@ namespace UnityEngine.InputNew
 
 		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
+			if (base.ProcessEventIntoState(inputEvent, intoState))
+				return true;
+
 			var consumed = false;
 
 			var genericEvent = inputEvent as GenericControlEvent;
@@ -39,10 +42,7 @@ namespace UnityEngine.InputNew
 				consumed |= intoState.SetCurrentValue(genericEvent.controlIndex, genericEvent.value);
 			}
 
-			if (consumed)
-				return true;
-
-			return base.ProcessEventIntoState(inputEvent, intoState);
+			return consumed;
 		}
 	}
 }
