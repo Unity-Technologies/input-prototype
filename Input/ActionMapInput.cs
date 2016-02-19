@@ -11,7 +11,6 @@ namespace UnityEngine.InputNew
 		private bool m_AutoSwitch = false;
 		private int m_SchemeIndex = 0;
 		private List<ControlSchemeInput> m_ControlSchemeInputs;
-		private InputEventTree treeNode { get; set; }
 
 		public ActionMap actionMap { get { return m_ActionMap; } }
 		public List<InputControlData> controlDataList { get { return currentControlScheme.controlDataList; } }
@@ -107,29 +106,7 @@ namespace UnityEngine.InputNew
 
 		public bool active
 		{
-			get { return (treeNode != null); }
-			set
-			{
-				if ((treeNode != null) == value)
-					return;
-				if (value)
-				{
-					treeNode = new InputEventTree
-					{
-						name = "Map"
-						, processInput = ProcessEvent
-						, beginFrame = BeginFrameEvent
-						, endFrame = EndFrameEvent
-					};
-					InputSystem.consumerStack.children.Add(treeNode);
-				}
-				else
-				{
-					InputSystem.consumerStack.children.Remove(treeNode);
-					treeNode = null;
-					currentControlScheme.Reset();
-				}
-			}
+			get; set;
 		}
 
 		public InputControl this[int index]
@@ -137,7 +114,7 @@ namespace UnityEngine.InputNew
 			get { return currentControlScheme[index]; }
 		}
 
-		public bool ProcessEvent(InputEvent inputEvent)
+		internal bool ProcessEvent(InputEvent inputEvent)
 		{
 			if (currentControlScheme.ProcessEvent(inputEvent))
 				return true;
@@ -159,12 +136,12 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		void BeginFrameEvent()
+		internal void BeginFrameEvent()
 		{
 			currentControlScheme.BeginFrame();
 		}
 		
-		void EndFrameEvent()
+		internal void EndFrameEvent()
 		{
 			currentControlScheme.EndFrame();
 		}

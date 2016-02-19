@@ -9,10 +9,20 @@ namespace UnityEngine.InputNew
 		public readonly int index;
 		public List<PlayerDeviceAssignment> assignments = new List<PlayerDeviceAssignment>();
 		public List<ActionMapInput> maps = new List<ActionMapInput>();
+		private InputEventTree treeNode { get; set; }
 
 		internal PlayerHandle(int index)
 		{
 			this.index = index;
+
+			treeNode = new InputEventTree
+			{
+				name = "Player "+index,
+				processInput = ProcessEvent,
+				beginFrame = BeginFrameEvent,
+				endFrame = EndFrameEvent
+			};
+			InputSystem.consumerStack.children.Add(treeNode);
 		}
 
 		public T GetActions<T>() where T : ActionMapInput
@@ -28,8 +38,12 @@ namespace UnityEngine.InputNew
 		{
 			foreach (var map in maps)
 				map.active = false;
+
 			for (int i = assignments.Count - 1; i >= 0; i--)
 				assignments[i].Unassign();
+			
+			InputSystem.consumerStack.children.Remove(treeNode);
+			treeNode = null;
 		}
 
 		public bool AssignDevice(InputDevice device, bool assign)
@@ -58,6 +72,34 @@ namespace UnityEngine.InputNew
 					return true;
 				}
 				return false;
+			}
+		}
+
+		bool ProcessEvent(InputEvent inputEvent)
+		{
+			for (int i = 0; i < maps.Count; i++)
+			{
+				if (maps[i].active && maps[i].ProcessEvent(inputEvent))
+					return true;
+			}
+			return false;
+		}
+
+		void BeginFrameEvent()
+		{
+			for (int i = 0; i < maps.Count; i++)
+			{
+				if (maps[i].active)
+					maps[i].BeginFrameEvent();
+			}
+		}
+		
+		void EndFrameEvent()
+		{
+			for (int i = 0; i < maps.Count; i++)
+			{
+				if (maps[i].active)
+					maps[i].EndFrameEvent();
 			}
 		}
 	}
