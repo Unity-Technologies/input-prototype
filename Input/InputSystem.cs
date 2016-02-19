@@ -94,6 +94,11 @@ namespace UnityEngine.InputNew
 			return s_Devices.LookupDevice(deviceType, deviceIndex);
 		}
 
+		public static int GetDeviceIndex(InputDevice device)
+		{
+			return s_Devices.GetDeviceIndex(device);
+		}
+
 		public static void QueueEvent(InputEvent inputEvent)
 		{
 			s_EventQueue.Queue(inputEvent);

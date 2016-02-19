@@ -90,7 +90,8 @@ namespace UnityEngine.InputNew
 
 		void Rebind()
 		{
-			m_ControlSchemeInputs = CreateAllPotentialPlayers(m_ActionMap).ToList();
+			m_ControlSchemeInputs.Clear();
+			m_ControlSchemeInputs.AddRange(CreateAllPotentialPlayers(m_ActionMap));
 			
 			float mostRecentTime = 0;
 			for (int i = 0; i < m_ControlSchemeInputs.Count; i++)

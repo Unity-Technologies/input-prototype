@@ -94,6 +94,15 @@ namespace UnityEngine.InputNew
 			return list[deviceIndex];
 		}
 
+		public int GetDeviceIndex(InputDevice device)
+		{
+			List<InputDevice> list;
+			if (!m_Devices.TryGetValue(device.GetType(), out list))
+				return -1;
+
+			return list.IndexOf(device);
+		}
+
 		////REVIEW: an alternative to these two methods is to hook every single device into the event tree independently; may be better
 
 		public bool ProcessEvent(InputEvent inputEvent)

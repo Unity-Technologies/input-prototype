@@ -32,7 +32,7 @@ namespace UnityEngine.InputNew
 				assignments[i].Unassign();
 		}
 
-		private bool AssignDevice(InputDevice device, bool assign)
+		public bool AssignDevice(InputDevice device, bool assign)
 		{
 			if (assign)
 			{
