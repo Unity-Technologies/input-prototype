@@ -5,12 +5,36 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
+	/*
+	Things to test for action map / control schemes.
+
+	- When pressing e.g. mouse button or gamepad trigger in one action map creates a new action map
+	  based on the same device, the new action map should not immediately have wasJustPressed be true.
+	  Hence the state in the newly created control scheme should be initialized to the state
+	  of the devices it's based on.
+	
+	- When pressing e.g. mouse button or gamepad trigger and it causes a switch in control scheme
+	  within an existing action map, the new control scheme *should* immediately have wasJustPressed be true.
+	  Hence the state in the newly created control scheme should not be initialized to the state
+	  of the devices it's based on.
+
+	*/
 	public class ActionMapInput : IInputControlProvider
 	{
 		private ActionMap m_ActionMap;
 		public ActionMap actionMap { get { return m_ActionMap; } }
 
-		public bool active { get; set; }
+		bool m_Active;
+		public bool active {
+			get {
+				return m_Active;
+			}
+			set {
+				m_Active = value;
+				if (m_ControlSchemeInput != null)
+					m_ControlSchemeInput.Reset(value);
+			}
+		}
 
 		private ControlSchemeInput m_ControlSchemeInput = null;
 		public ControlSchemeInput controlSchemeInput { get { return m_ControlSchemeInput; } }
@@ -30,27 +54,27 @@ namespace UnityEngine.InputNew
 			m_ActionMap = actionMap;
 		}
 
-		public void TryInitializeControlScheme(InputDevice inputDevice)
+		public bool TryInitializeControlScheme(InputDevice inputDevice)
 		{
 			if (inputDevice.assignment == null)
-				TryInitializeControlSchemeGlobal();
+				return TryInitializeControlSchemeGlobal();
 			else
-				TryInitializeControlSchemeForPlayer(inputDevice.assignment.player);
+				return TryInitializeControlSchemeForPlayer(inputDevice.assignment.player);
 		}
 
-		public void TryInitializeControlSchemeGlobal()
+		public bool TryInitializeControlSchemeGlobal()
 		{
 			var devices = InputSystem.leastToMostRecentlyUsedDevices.Where(e => e.assignment == null).Reverse().ToList();
-			Assign(devices);
+			return Assign(devices);
 		}
 
-		public void TryInitializeControlSchemeForPlayer(PlayerHandle player)
+		public bool TryInitializeControlSchemeForPlayer(PlayerHandle player)
 		{
 			var devices = player.assignments.Select(e => e.device).ToList();
-			Assign(devices);
+			return Assign(devices);
 		}
 
-		public void Assign(List<InputDevice> availableDevices)
+		public bool Assign(List<InputDevice> availableDevices)
 		{
 			int bestScheme = -1;
 			List<InputDevice> bestFoundDevices = null;
@@ -96,10 +120,11 @@ namespace UnityEngine.InputNew
 			}
 
 			if (bestScheme == -1)
-				return;
+				return false;
 			
 			ControlScheme matchingControlScheme = actionMap.controlSchemes[bestScheme];
 			Assign(new ControlSchemeInput(matchingControlScheme, bestFoundDevices));
+			return true;
 		}
 
 		private void Assign(ControlSchemeInput controlSchemeInput)
@@ -107,6 +132,7 @@ namespace UnityEngine.InputNew
 			if (controlSchemeInput.actionMap != actionMap)
 				throw new Exception(string.Format("ControlSchemeInput doesn't match ActionMap {0}.", actionMap.name));
 			m_ControlSchemeInput = controlSchemeInput;
+			m_ControlSchemeInput.Reset();
 		}
 
 		public InputControl this[int index]
@@ -123,6 +149,10 @@ namespace UnityEngine.InputNew
 				return false;
 
 			TryInitializeControlScheme(inputEvent.device);
+
+			// When changing control scheme, we do not want to init control scheme to device states
+			// like we normally want, so do a hard reset here, before processing the new event.
+			m_ControlSchemeInput.Reset(false);
 
 			return controlSchemeInput.ProcessEvent(inputEvent);
 		}

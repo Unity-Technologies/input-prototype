@@ -148,11 +148,24 @@ namespace UnityEngine.InputNew
 			return true;
 		}
 		
-		public void Reset()
+		public void Reset(bool initToDeviceState = true)
 		{
-			state.Reset();
-			foreach (var deviceState in GetDeviceStates())
-				deviceState.Reset();
+			if (initToDeviceState)
+			{
+				foreach (var deviceState in GetDeviceStates())
+					deviceState.InitToDevice();
+				
+				ExtractCurrentValuesFromSources();
+
+				// Copy current values into prev values.
+				state.BeginFrame();
+			}
+			else
+			{
+				foreach (var deviceState in GetDeviceStates())
+					deviceState.Reset();
+				state.Reset();
+			}
 		}
 
 		public void BeginFrame()
@@ -164,9 +177,11 @@ namespace UnityEngine.InputNew
 		
 		public void EndFrame()
 		{
-			foreach (var deviceState in GetDeviceStates())
-				deviceState.EndFrame();
+			ExtractCurrentValuesFromSources();
+		}
 
+		void ExtractCurrentValuesFromSources()
+		{
 			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
 				var binding = controlScheme.bindings[entryIndex];
@@ -190,8 +205,6 @@ namespace UnityEngine.InputNew
 				
 				state.SetCurrentValue(entryIndex, controlValue);
 			}
-
-			state.EndFrame();
 		}
 
 		float GetSourceValue(InputControlDescriptor source)

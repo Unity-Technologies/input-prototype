@@ -36,14 +36,6 @@ namespace UnityEngine.InputNew
 		public virtual bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
 			lastEventTime = inputEvent.time;
-
-			if (inputEvent is DeviceStateResetEvent)
-			{
-				intoState.Reset();
-				// All states that use this device should be reset, so don't use event.
-				return false;
-			}
-
 			return false;
 		}
 
@@ -88,14 +80,6 @@ namespace UnityEngine.InputNew
 			}
 			set
 			{
-				if (m_Assignment == value)
-					return;
-
-				var inputEvent = InputSystem.CreateEvent<DeviceStateResetEvent>();
-				inputEvent.deviceType = GetType();
-				inputEvent.deviceIndex = InputSystem.GetDeviceIndex(this);
-				InputSystem.ExecuteEvent(inputEvent);
-				
 				m_Assignment = value;
 			}
 		}
@@ -105,6 +89,4 @@ namespace UnityEngine.InputNew
 		private InputDeviceProfile m_Profile;
 		private PlayerDeviceAssignment m_Assignment = null;
 	}
-
-	public class DeviceStateResetEvent : InputEvent {}
 }

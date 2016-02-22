@@ -87,6 +87,27 @@ namespace UnityEngine.InputNew
 				m_Enabled[i] = enabled;
 			}
 		}
+
+		public void InitToDevice()
+		{
+			if (controlProvider.state == this)
+				return;
+			
+			float[] referenceStates = controlProvider.state.m_CurrentStates;
+			for (int i = 0; i < m_CurrentStates.Length; i++)
+			{
+				if (m_Enabled[i])
+				{
+					m_CurrentStates[i] = referenceStates[i];
+					m_PreviousStates[i] = m_CurrentStates[i];
+				}
+				else
+				{
+					m_CurrentStates[i] = 0;
+					m_PreviousStates[i] = 0;
+				}
+			}
+		}
 		
 		public void Reset()
 		{
@@ -95,7 +116,6 @@ namespace UnityEngine.InputNew
 				m_CurrentStates[i] = 0;
 				m_PreviousStates[i] = 0;
 			}
-			m_FirstFrameAfterReset = true;
 		}
 
 		#endregion
@@ -123,28 +143,6 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		internal void EndFrame()
-		{
-			if (!m_FirstFrameAfterReset)
-				return;
-			
-			// The first frame after resetting, we want the previous value to be the same as the new value.
-			// Effectively there was no previous value, and we should not detect a change just because
-			// the first registered value is different from the default initialized value.
-			// This prevents registering a button press for a button that is held down while the state
-			// becomes activated.
-			// For example, when pressing a menu button, the user might switch to a different action map,
-			// and in the new action map we don't want to immediately register the menu button as being
-			// pressed down again (potentially closing the menu).
-			// The problem doesn't exist with e.g. mouse clicks since they only generate a single event
-			// when pressed and when released.
-			// But for a button based on an axis, such as a gamepad trigger, we have continuous events.
-			m_FirstFrameAfterReset = false;
-			var stateCount = m_Enabled.Length;
-			for (var index = 0; index < stateCount; ++index)
-				m_PreviousStates[index] = m_CurrentStates[index];
-		}
-
 		#endregion
 
 		#region Public Properties
@@ -160,7 +158,6 @@ namespace UnityEngine.InputNew
 
 		#region Fields
 
-		private bool m_FirstFrameAfterReset = true;
 		readonly float[] m_CurrentStates;
 		readonly float[] m_PreviousStates;
 		readonly bool[] m_Enabled;
