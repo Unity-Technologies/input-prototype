@@ -15,11 +15,11 @@ namespace UnityEngine.InputNew
 			SetMappingsCount(gamepad.controlDataList.Count, gamepad.controlDataList.Count);
 
 			SetMapping(00, gamepad.leftStickX.index, "Left Stick X");
-			SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", Range.fullInverse, Range.full);
+			SetMapping(01, gamepad.leftStickY.index, "Left Stick Y", defaultDeadZones, Range.fullInverse, Range.full);
 			SetMapping(18, gamepad.leftStickButton.index, "Left Stick Button");
 			
 			SetMapping(03, gamepad.rightStickX.index, "Right Stick X");
-			SetMapping(04, gamepad.rightStickY.index, "Right Stick Y", Range.fullInverse, Range.full);
+			SetMapping(04, gamepad.rightStickY.index, "Right Stick Y", defaultDeadZones, Range.fullInverse, Range.full);
 			SetMapping(19, gamepad.rightStickButton.index, "Right Stick Button");
 			
 			SetMapping(06, gamepad.dPadUp.index, "DPad Up");
@@ -32,8 +32,8 @@ namespace UnityEngine.InputNew
 			SetMapping(12, gamepad.action3.index, "X");
 			SetMapping(13, gamepad.action4.index, "Y");
 			
-			SetMapping(08, gamepad.leftTrigger.index, "Left Trigger", Range.full, Range.positive);
-			SetMapping(09, gamepad.rightTrigger.index, "Right Trigger", Range.full, Range.positive);
+			SetMapping(08, gamepad.leftTrigger.index, "Left Trigger", defaultDeadZones, Range.full, Range.positive);
+			SetMapping(09, gamepad.rightTrigger.index, "Right Trigger", defaultDeadZones, Range.full, Range.positive);
 			SetMapping(14, gamepad.leftBumper.index, "Left Bumper");
 			SetMapping(15, gamepad.rightBumper.index, "Right Bumper");
 			

@@ -11,5 +11,6 @@ namespace UnityEngine.InputNew
 		public int targetIndex;
 		public Range fromRange;
 		public Range toRange;
+		public Range interDeadZoneRange;
 	}
 }
