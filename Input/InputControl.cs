@@ -49,6 +49,11 @@ namespace UnityEngine.InputNew
 		{
 			return m_State.controlProvider.GetPrimarySourceName(index, buttonAxisFormattingString);
 		}
+
+		public float rawValue
+		{
+			get { return m_State.GetCurrentValue(m_Index); }
+		}
 	}
 
 	public class AxisInputControl : InputControl
