@@ -118,7 +118,7 @@ namespace UnityEngine.InputNew
 			for (int i = 0; i < maps.Count; i++)
 			{
 				if (maps[i].active)
-					maps[i].BeginFrameEvent();
+					maps[i].BeginFrame();
 			}
 		}
 		
@@ -127,7 +127,7 @@ namespace UnityEngine.InputNew
 			for (int i = 0; i < maps.Count; i++)
 			{
 				if (maps[i].active)
-					maps[i].EndFrameEvent();
+					maps[i].EndFrame();
 			}
 		}
 	}

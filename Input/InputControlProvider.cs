@@ -45,23 +45,6 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		// TODO: Remove anyButton. It's a bad API.
-		public virtual ButtonInputControl anyButton
-		{
-			get
-			{
-				int count = controlCount;
-				for (int i = 0; i < count; i++)
-				{
-					var control = this[i] as ButtonInputControl;
-					if (control != null && control.isHeld)
-						return control;
-				}
-				
-				return this[0] as ButtonInputControl;
-			}
-		}
-
 		public InputControlData GetControlData(int index)
 		{
 			return controlDataList[index];

@@ -19,10 +19,16 @@ namespace UnityEngine.InputNew
 	  of the devices it's based on.
 
 	*/
-	public class ActionMapInput : IInputControlProvider
+	public class ActionMapInput : InputControlProvider
 	{
 		private ActionMap m_ActionMap;
 		public ActionMap actionMap { get { return m_ActionMap; } }
+
+		private ControlScheme m_ControlScheme;
+		public ControlScheme controlScheme { get { return m_ControlScheme; } }
+
+		private List<InputState> m_DeviceStates;
+		private List<InputState> deviceStates { get { return m_DeviceStates; } }
 
 		bool m_Active;
 		public bool active {
@@ -31,16 +37,9 @@ namespace UnityEngine.InputNew
 			}
 			set {
 				m_Active = value;
-				if (m_ControlSchemeInput != null)
-					m_ControlSchemeInput.Reset(value);
+				Reset(value);
 			}
 		}
-
-		private ControlSchemeInput m_ControlSchemeInput = null;
-		public ControlSchemeInput controlSchemeInput { get { return m_ControlSchemeInput; } }
-
-		public List<InputControlData> controlDataList { get { return controlSchemeInput.controlDataList; } }
-		public InputState state { get { return controlSchemeInput.state; } }
 
 		public static ActionMapInput Create(ActionMap actionMap)
 		{
@@ -123,48 +122,223 @@ namespace UnityEngine.InputNew
 				return false;
 			
 			ControlScheme matchingControlScheme = actionMap.controlSchemes[bestScheme];
-			Assign(new ControlSchemeInput(matchingControlScheme, bestFoundDevices));
+			Assign(matchingControlScheme, bestFoundDevices);
 			return true;
 		}
 
-		private void Assign(ControlSchemeInput controlSchemeInput)
+		private void Assign(ControlScheme controlScheme, List<InputDevice> devices)
 		{
-			if (controlSchemeInput.actionMap != actionMap)
-				throw new Exception(string.Format("ControlSchemeInput doesn't match ActionMap {0}.", actionMap.name));
-			m_ControlSchemeInput = controlSchemeInput;
-			m_ControlSchemeInput.Reset();
+			m_ControlScheme = controlScheme;
+
+			// Create state for every device.
+			var deviceStates = new List<InputState>();
+			foreach (var device in devices)
+				deviceStates.Add(new InputState(device));
+			m_DeviceStates = deviceStates;
+
+			// Create list of controls from ActionMap.
+			////REVIEW: doesn't handle compounds
+			var controls = new List<InputControlData>();
+			foreach (var entry in actionMap.actions)
+				controls.Add(entry.controlData);
+			SetControls(controls);
+
+			Reset();
 		}
 
-		public InputControl this[int index]
+		public override bool ProcessEvent(InputEvent inputEvent)
 		{
-			get { return controlSchemeInput[index]; }
-		}
-
-		internal bool ProcessEvent(InputEvent inputEvent)
-		{
-			if (controlSchemeInput.ProcessEvent(inputEvent))
+			if (ProcessEventForScheme(inputEvent))
 				return true;
 
-			if (controlSchemeInput.GetDeviceStates().Any(e => e.controlProvider == inputEvent.device))
+			if (deviceStates.Any(e => e.controlProvider == inputEvent.device))
 				return false;
 
-			TryInitializeControlScheme(inputEvent.device);
+			if (!TryInitializeControlScheme(inputEvent.device))
+				return false;
 
 			// When changing control scheme, we do not want to init control scheme to device states
 			// like we normally want, so do a hard reset here, before processing the new event.
-			m_ControlSchemeInput.Reset(false);
+			Reset(false);
 
-			return controlSchemeInput.ProcessEvent(inputEvent);
+			return ProcessEventForScheme(inputEvent);
 		}
 
-		internal void BeginFrameEvent()
+		private bool ProcessEventForScheme(InputEvent inputEvent)
 		{
-			controlSchemeInput.BeginFrame();
+			var consumed = false;
+			
+			// Update device state (if event actually goes to one of the devices we talk to).
+			foreach (var deviceState in deviceStates)
+			{
+				////FIXME: should refer to proper type
+				var device = (InputDevice)deviceState.controlProvider;
+				
+				// Skip state if event is not meant for device associated with it.
+				if (device != inputEvent.device)
+					continue;
+				
+				// Give device a stab at converting the event into state.
+				if (device.ProcessEventIntoState(inputEvent, deviceState))
+				{
+					consumed = true;
+					break;
+				}
+			}
+			
+			if (!consumed)
+				return false;
+			
+			return true;
+		}
+
+		public void Reset(bool initToDeviceState = true)
+		{
+			if (initToDeviceState)
+			{
+				foreach (var deviceState in deviceStates)
+					deviceState.InitToDevice();
+				
+				ExtractCurrentValuesFromSources();
+
+				// Copy current values into prev values.
+				state.BeginFrame();
+			}
+			else
+			{
+				foreach (var deviceState in deviceStates)
+					deviceState.Reset();
+				state.Reset();
+			}
+		}
+
+		public List<InputDevice> GetCurrentlyUsedDevices()
+		{
+			List<InputDevice> list = new List<InputDevice>();
+			for (int i = 0; i < deviceStates.Count; i++)
+				list.Add(deviceStates[i].controlProvider as InputDevice);
+			return list;
+		}
+
+		private InputState GetDeviceStateForDeviceType(Type deviceType)
+		{
+			foreach (var deviceState in deviceStates)
+			{
+				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
+					return deviceState;
+			}
+			throw new ArgumentException("deviceType");
+		}
+
+		public void BeginFrame()
+		{
+			state.BeginFrame();
+			foreach (var deviceState in deviceStates)
+				deviceState.BeginFrame();
 		}
 		
-		internal void EndFrameEvent()
+		public void EndFrame()
 		{
-			controlSchemeInput.EndFrame();
+			ExtractCurrentValuesFromSources();
+		}
+
+		private void ExtractCurrentValuesFromSources()
+		{
+			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
+			{
+				var binding = controlScheme.bindings[entryIndex];
+				
+				var controlValue = 0.0f;
+				foreach (var source in binding.sources)
+				{
+					var value = GetSourceValue(source);
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
+						controlValue = value;
+				}
+				
+				foreach (var axis in binding.buttonAxisSources)
+				{
+					var negativeValue = GetSourceValue(axis.negative);
+					var positiveValue = GetSourceValue(axis.positive);
+					var value = positiveValue - negativeValue;
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
+						controlValue = value;
+				}
+				
+				state.SetCurrentValue(entryIndex, controlValue);
+			}
+		}
+
+		private float GetSourceValue(InputControlDescriptor source)
+		{
+			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
+			return deviceState.GetCurrentValue(source.controlIndex);
+		}
+
+		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
+		{
+			var binding = controlScheme.bindings[controlIndex];
+			
+			if (binding.primaryIsButtonAxis && binding.buttonAxisSources != null && binding.buttonAxisSources.Count > 0)
+			{
+				return string.Format(buttonAxisFormattingString,
+					GetSourceName(binding.buttonAxisSources[0].negative),
+					GetSourceName(binding.buttonAxisSources[0].positive));
+			}
+			else if (binding.sources != null && binding.sources.Count > 0)
+			{
+				return GetSourceName(binding.sources[0]);
+			}
+			return string.Empty;
+		}
+
+		private string GetSourceName(InputControlDescriptor source)
+		{
+			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
+			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
+		}
+
+		public bool BindControl(InputControlDescriptor descriptor, InputControl control, bool restrictToExistingDevices)
+		{
+			bool existingDevice = false;
+			for (int i = 0; i < m_DeviceStates.Count; i++)
+			{
+				if (control.provider == m_DeviceStates[i].controlProvider)
+				{
+					existingDevice = true;
+					break;
+				}
+			}
+			
+			if (!existingDevice)
+			{
+				if (restrictToExistingDevices)
+					return false;
+				
+				deviceStates.Add(new InputState(control.provider, new List<int>() { control.index }));
+			}
+			
+			descriptor.controlIndex = control.index;
+			descriptor.deviceType = control.provider.GetType();
+			
+			RefreshBindings();
+			
+			return true;
+		}
+
+		private void RefreshBindings()
+		{
+			// Gather a mapping of device types to list of bindings that use the given type.
+			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
+			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
+			
+			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
+			{
+				InputState state = GetDeviceStateForDeviceType(deviceType);
+				state.SetUsedControls(perDeviceTypeUsedControlIndices[deviceType]);
+			}
+			
+			// TODO remove device states that are no longer used by any bindings?
 		}
 	}
 }
