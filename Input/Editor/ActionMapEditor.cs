@@ -165,68 +165,51 @@ public class ActionMapEditor : Editor
 				Event.current.Use();
 		}
 		
-		// Remove an add buttons
+		// Control scheme remove and add buttons
 		EditorGUILayout.BeginHorizontal();
-		GUILayout.Space(15 * EditorGUI.indentLevel);
-		if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 		{
-			m_ActionMapEditCopy.controlSchemes.RemoveAt(selectedScheme);
-			if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
-				selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
+			GUILayout.Space(15 * EditorGUI.indentLevel);
+
+			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+				RemoveControlScheme();
+			
+			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+				AddControlScheme();
+
+			GUILayout.FlexibleSpace();
 		}
-		if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
-		{
-			m_ActionMapEditCopy.controlSchemes.Add(new ControlScheme("New Control Scheme", m_ActionMapEditCopy));
-			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
-		}
-		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 
 		if (m_ActionMapEditCopy.controlSchemes.Count > 0)
 		{
 			EditorGUILayout.Space();
 			
-			// Show high level controls
+			// Show actions
 			EditorGUILayout.LabelField("Actions", m_ActionMapEditCopy.controlSchemes[selectedScheme].name + " Bindings");
 			EditorGUILayout.BeginVertical("Box");
-			foreach (var action in m_ActionMapEditCopy.actions)
 			{
-				DrawActionRow(action, selectedScheme);
+				foreach (var action in m_ActionMapEditCopy.actions)
+				{
+					DrawActionRow(action, selectedScheme);
+				}
+				if (m_ActionMapEditCopy.actions.Count == 0)
+					EditorGUILayout.GetControlRect();
 			}
-			if (m_ActionMapEditCopy.actions.Count == 0)
-				EditorGUILayout.GetControlRect();
 			EditorGUILayout.EndVertical();
 			
-			// Remove an add buttons
+			// Action remove and add buttons
 			EditorGUILayout.BeginHorizontal();
-			GUILayout.Space(15 * EditorGUI.indentLevel);
-			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 			{
-				int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
-				m_ActionMapEditCopy.actions.RemoveAt(actionIndex);
-				for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
-					m_ActionMapEditCopy.controlSchemes[i].bindings.RemoveAt(actionIndex);
+				GUILayout.Space(15 * EditorGUI.indentLevel);
+
+				if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+					RemoveAction();
 				
-				if (m_ActionMapEditCopy.actions.Count == 0)
-					selectedAction = null;
-				else
-					selectedAction = m_ActionMapEditCopy.actions[Mathf.Min(actionIndex, m_ActionMapEditCopy.actions.Count - 1)];
+				if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+					AddAction();
 				
-				RefreshPropertyNames();
+				GUILayout.FlexibleSpace();
 			}
-			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
-			{
-				var action = new InputAction();
-				action.controlData = new InputControlData() { name = "New Control" };
-				m_ActionMapEditCopy.actions.Add(action);
-				for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
-					m_ActionMapEditCopy.controlSchemes[i].bindings.Add(new ControlBinding());
-				
-				selectedAction = m_ActionMapEditCopy.actions[m_ActionMapEditCopy.actions.Count - 1];
-				
-				RefreshPropertyNames();
-			}
-			GUILayout.FlexibleSpace();
 			EditorGUILayout.EndHorizontal();
 			
 			EditorGUILayout.Space();
@@ -244,6 +227,53 @@ public class ActionMapEditor : Editor
 		}
 		
 		ApplyRevertGUI();
+	}
+
+	void AddControlScheme()
+	{
+		var controlScheme = new ControlScheme("New Control Scheme", m_ActionMapEditCopy);
+
+		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
+			controlScheme.bindings.Add(new ControlBinding());
+
+		m_ActionMapEditCopy.controlSchemes.Add(controlScheme);
+
+		selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
+	}
+
+	void RemoveControlScheme()
+	{
+		m_ActionMapEditCopy.controlSchemes.RemoveAt(selectedScheme);
+		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
+			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
+	}
+
+	void AddAction()
+	{
+		var action = new InputAction();
+		action.controlData = new InputControlData() { name = "New Control" };
+		m_ActionMapEditCopy.actions.Add(action);
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+			m_ActionMapEditCopy.controlSchemes[i].bindings.Add(new ControlBinding());
+		
+		selectedAction = m_ActionMapEditCopy.actions[m_ActionMapEditCopy.actions.Count - 1];
+		
+		RefreshPropertyNames();
+	}
+
+	void RemoveAction()
+	{
+		int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
+		m_ActionMapEditCopy.actions.RemoveAt(actionIndex);
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+			m_ActionMapEditCopy.controlSchemes[i].bindings.RemoveAt(actionIndex);
+		
+		if (m_ActionMapEditCopy.actions.Count == 0)
+			selectedAction = null;
+		else
+			selectedAction = m_ActionMapEditCopy.actions[Mathf.Min(actionIndex, m_ActionMapEditCopy.actions.Count - 1)];
+		
+		RefreshPropertyNames();
 	}
 	
 	void ApplyRevertGUI()
