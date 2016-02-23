@@ -16,6 +16,17 @@ public class ActionMapEditor : Editor
 		public static GUIContent iconToolbarPlus =	EditorGUIUtility.IconContent("Toolbar Plus", "Add to list");
 		public static GUIContent iconToolbarMinus =	EditorGUIUtility.IconContent("Toolbar Minus", "Remove from list");
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
+		public static Dictionary<InputControlType, string[]> controlTypeSubLabels;
+
+		static Styles()
+		{
+			controlTypeSubLabels = new Dictionary<InputControlType, string[]>();
+			controlTypeSubLabels[InputControlType.Vector2] = new string[] { "X", "Y" };
+			controlTypeSubLabels[InputControlType.Vector3] = new string[] { "X", "Y", "Z" };
+			controlTypeSubLabels[InputControlType.Vector4] = new string[] { "X", "Y", "Z", "W" };
+			controlTypeSubLabels[InputControlType.Quaternion] = new string[] { "X", "Y", "Z", "W" };
+
+		}
 	}
 	
 	ActionMap m_ActionMapEditCopy;
@@ -522,11 +533,38 @@ public class {0} : ActionMapInput {{
 		}
 		
 		EditorGUILayout.Space();
-		
-		if (selectedScheme >= 0 && selectedScheme < m_ActionMapEditCopy.controlSchemes.Count)
+
+		if (Styles.controlTypeSubLabels.ContainsKey(selectedAction.controlData.controlType))
 		{
-			int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
-			DrawBinding(m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex]);
+			DrawCompositeControl(selectedAction);
+		}
+		else
+		{
+			if (selectedScheme >= 0 && selectedScheme < m_ActionMapEditCopy.controlSchemes.Count)
+			{
+				int actionIndex = m_ActionMapEditCopy.actions.IndexOf(selectedAction);
+				DrawBinding(m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex]);
+			}
+		}
+	}
+
+	void DrawCompositeControl(InputAction action)
+	{
+		string[] subLabels = Styles.controlTypeSubLabels[action.controlData.controlType];
+		for (int i = 0; i < subLabels.Length; i++)
+		{
+			DrawCompositeSource(string.Format("Source ({0})", subLabels[i]), action, i);
+		}
+	}
+
+	void DrawCompositeSource(string label, InputAction action, int index)
+	{
+		EditorGUI.BeginChangeCheck();
+		string[] actionStrings = m_ActionMapEditCopy.actions.Select(e => e.name).ToArray();
+		int controlIndex = EditorGUILayout.Popup(label, action.controlData.componentControlIndices[index], actionStrings);
+		if (EditorGUI.EndChangeCheck())
+		{
+			action.controlData.componentControlIndices[index] = controlIndex;
 		}
 	}
 	
