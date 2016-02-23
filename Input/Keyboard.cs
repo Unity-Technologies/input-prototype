@@ -52,16 +52,16 @@ namespace UnityEngine.InputNew
 
 		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
+			if (base.ProcessEventIntoState(inputEvent, intoState))
+				return true;
+
 			var consumed = false;
 
 			var keyEvent = inputEvent as KeyboardEvent;
 			if (keyEvent != null)
 				consumed |= intoState.SetCurrentValue((int)keyEvent.key, keyEvent.isDown);
 
-			if (consumed)
-				return true;
-
-			return base.ProcessEventIntoState(inputEvent, intoState);
+			return consumed;
 		}
 
 		#endregion
