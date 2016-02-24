@@ -5,13 +5,20 @@ using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
-	// Currently this class is little more than a wrapper for InputControlData,
-	// but since we may need to store a GUID for InputActions (but not other InputControlData possibly)
-	// I'm leaving it for now.
-	[Serializable]
-	public class InputAction
+	public class InputAction : ScriptableObject
 	{
-		public string name { get { return m_ControlData.name; } set { m_ControlData.name = value; } }
+		public new string name
+		{
+			get
+			{
+				return m_ControlData.name;
+			}
+			set
+			{
+				m_ControlData.name = value;
+				base.name = value;
+			}
+		}
 
 		[SerializeField]
 		private InputControlData m_ControlData;

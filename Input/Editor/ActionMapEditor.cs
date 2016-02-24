@@ -92,17 +92,30 @@ public class ActionMapEditor : Editor
 		while (prop.Next(true))
 			serializedObject.CopyFromSerializedProperty(prop);
 
-		// Make sure references in control schemes to action amp itself are stored correctly.
+		// Make sure references in control schemes to action map itself are stored correctly.
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 			serializedObject.FindProperty("m_ControlSchemes")
 				.GetArrayElementAtIndex(i)
 				.FindPropertyRelative("m_ActionMap").objectReferenceValue = target;
 		
 		serializedObject.ApplyModifiedProperties();
+
+		var existingAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(target));
+
+		// Add action sub-assets.
+		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
+		{
+			InputAction action = m_ActionMapEditCopy.actions[i];
+			if (existingAssets.Contains(action))
+				continue;
+			AssetDatabase.AddObjectToAsset(action, target);
+		}
+
+		m_Modified = false;
+		// Reimporting is needed in order for the sub-assets to show up.
+		AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(target));
 		
 		UpdateActionMapScript();
-		
-		m_Modified = false;
 	}
 	
 	void Revert ()
@@ -228,15 +241,15 @@ public class ActionMapEditor : Editor
 			if (selectedAction != null)
 				DrawActionGUI();
 			
-			if (EditorGUI.EndChangeCheck())
-			{
-				EditorUtility.SetDirty(m_ActionMapEditCopy);
-				m_Modified = true;
-			}
-			
 			EditorGUILayout.Space();
 		}
-		
+
+		if (EditorGUI.EndChangeCheck())
+		{
+			EditorUtility.SetDirty(m_ActionMapEditCopy);
+			m_Modified = true;
+		}
+
 		ApplyRevertGUI();
 	}
 
@@ -261,8 +274,8 @@ public class ActionMapEditor : Editor
 
 	void AddAction()
 	{
-		var action = new InputAction();
-		action.controlData = new InputControlData() { name = "New Control" };
+		var action = ScriptableObject.CreateInstance<InputAction>();
+		action.name = "New Control";
 		m_ActionMapEditCopy.actions.Add(action);
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 			m_ActionMapEditCopy.controlSchemes[i].bindings.Add(new ControlBinding());
@@ -278,6 +291,7 @@ public class ActionMapEditor : Editor
 		m_ActionMapEditCopy.actions.RemoveAt(actionIndex);
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 			m_ActionMapEditCopy.controlSchemes[i].bindings.RemoveAt(actionIndex);
+		ScriptableObject.DestroyImmediate(selectedAction, true);
 		
 		if (m_ActionMapEditCopy.actions.Count == 0)
 			selectedAction = null;
@@ -511,8 +525,6 @@ public class {0} : ActionMapInput {{
 	void DrawActionGUI()
 	{
 		EditorGUI.BeginChangeCheck();
-		
-		EditorGUI.BeginChangeCheck();
 		string name = EditorGUILayout.TextField("Name", selectedAction.controlData.name);
 		if (EditorGUI.EndChangeCheck())
 		{
@@ -551,6 +563,13 @@ public class {0} : ActionMapInput {{
 	void DrawCompositeControl(InputAction action)
 	{
 		string[] subLabels = Styles.controlTypeSubLabels[action.controlData.controlType];
+		if (action.controlData.componentControlIndices == null ||
+			action.controlData.componentControlIndices.Length != subLabels.Length)
+		{
+			var data = action.controlData;
+			data.componentControlIndices = new int[subLabels.Length];
+			action.controlData = data;
+		}
 		for (int i = 0; i < subLabels.Length; i++)
 		{
 			DrawCompositeSource(string.Format("Source ({0})", subLabels[i]), action, i);
