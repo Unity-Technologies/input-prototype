@@ -15,12 +15,18 @@ namespace UnityEngine.InputNew
 		{
 			player.assignments.Add(this);
 			device.assignment = this;
+
+			if (PlayerHandle.onChange != null)
+				PlayerHandle.onChange.Invoke();
 		}
 
 		public void Unassign()
 		{
 			player.assignments.Remove(this);
 			device.assignment = null;
+
+			if (PlayerHandle.onChange != null)
+				PlayerHandle.onChange.Invoke();
 		}
 	}
 }

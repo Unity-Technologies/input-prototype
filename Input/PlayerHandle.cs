@@ -13,6 +13,9 @@ namespace UnityEngine.InputNew
 		private bool m_Global = false;
 		private InputEventTree treeNode { get; set; }
 
+		public delegate void ChangeEvent();
+		public static ChangeEvent onChange;
+
 		internal PlayerHandle(int index)
 		{
 			this.index = index;
@@ -25,6 +28,9 @@ namespace UnityEngine.InputNew
 				endFrame = EndFrameEvent
 			};
 			InputSystem.consumerStack.children.Add(treeNode);
+
+			if (onChange != null)
+				onChange.Invoke();
 		}
 
 		public bool global
@@ -46,6 +52,9 @@ namespace UnityEngine.InputNew
 					InputSystem.globalConsumerStack.children.Remove(treeNode);
 					InputSystem.consumerStack.children.Add(treeNode);
 				}
+
+				if (onChange != null)
+					onChange.Invoke();
 			}
 		}
 
@@ -68,6 +77,10 @@ namespace UnityEngine.InputNew
 			
 			InputSystem.consumerStack.children.Remove(treeNode);
 			treeNode = null;
+
+			InputSystem.RemovePlayerHandle(this);
+			if (onChange != null)
+				onChange.Invoke();
 		}
 
 		public bool AssignDevice(InputDevice device, bool assign)

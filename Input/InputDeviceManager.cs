@@ -28,18 +28,23 @@ namespace UnityEngine.InputNew
 		{
 			// In the prototype, just create a set of default devices. In the real thing, these would be registered
 			// and configured by the platform layer according to what's really available on the system.
-			var mouseDevice = new Mouse();
-			var keyboardDevice = new Keyboard();
-			var touchscreenDevice = new Touchscreen();
-			var gamepadDevice1 = new Gamepad();
-			var gamepadDevice2 = new Gamepad();
-			var virtualJoystickDevice = new VirtualJoystick();
 
+			var mouseDevice = new Mouse();
 			RegisterDevice(mouseDevice);
+
+			var touchscreenDevice = new Touchscreen();
 			RegisterDevice(touchscreenDevice); // Register after mouse; multiplayer code will pick the first applicable device. It doesn't use MRU.
+
+			var keyboardDevice = new Keyboard();
 			RegisterDevice(keyboardDevice);
+
+			var gamepadDevice1 = new Gamepad();
 			RegisterDevice(gamepadDevice1);
+
+			var gamepadDevice2 = new Gamepad();
 			RegisterDevice(gamepadDevice2);
+
+			var virtualJoystickDevice = new VirtualJoystick();
 			RegisterDevice(virtualJoystickDevice);
 		}
 
@@ -79,8 +84,15 @@ namespace UnityEngine.InputNew
 
 		public List<InputDevice> GetDevicesOfType(Type deviceType)
 		{
+			if (!typeof(InputDevice).IsAssignableFrom(deviceType))
+				throw new System.Exception("deviceType must be derived from type InputDevice.");
+			
 			List<InputDevice> list;
-			m_Devices.TryGetValue(deviceType, out list);
+			if (!m_Devices.TryGetValue(deviceType, out list))
+			{
+				list = new List<InputDevice>();
+				m_Devices[deviceType] = list;
+			}
 			return list;
 		}
 

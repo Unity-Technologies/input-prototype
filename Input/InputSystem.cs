@@ -12,6 +12,8 @@ namespace UnityEngine.InputNew
 		// This should not be included here in final code.
 		static InputSystem()
 		{
+			s_Devices = new InputDeviceManager();
+
 			GameObject go = new GameObject("Input Prototype Controller");
 			go.hideFlags = HideFlags.HideAndDontSave;
 
@@ -29,16 +31,6 @@ namespace UnityEngine.InputNew
 				new Xbox360MacProfile(),
 				new Xbox360WinProfile()
 			};
-			InputSystem.Initialize(profiles);
-		}
-
-		public delegate bool BindingListener(InputControl control);
-		
-		#region Public Methods
-
-		public static void Initialize(InputDeviceProfile[] profiles)
-		{
-			s_Devices = new InputDeviceManager();
 			s_EventQueue = new InputEventQueue();
 			s_EventPool = new InputEventPool();
 
@@ -54,43 +46,47 @@ namespace UnityEngine.InputNew
 
 			var remap = new InputEventTree
 			{
-				name = "Remap"
-				, processInput = s_Devices.RemapEvent
+				name = "Remap",
+				processInput = s_Devices.RemapEvent
 			};
 			s_EventTree.children.Add(remap);
 
 			rewriterStack = new InputEventTree
 			{
-				name = "Rewriters"
-				, isStack = true
+				name = "Rewriters",
+				isStack = true
 			};
 			s_EventTree.children.Add(rewriterStack);
 
 			var state = new InputEventTree
 			{
-				name = "State"
-				, processInput = s_Devices.ProcessEvent
-				, beginFrame = s_Devices.BeginFrameEvent
+				name = "State",
+				processInput = s_Devices.ProcessEvent,
+				beginFrame = s_Devices.BeginFrameEvent
 			};
 			s_EventTree.children.Add(state);
 			
 			consumerStack = new InputEventTree
 			{
-				name = "Consumers"
-				, isStack = true
+				name = "Consumers",
+				isStack = true
 			};
 			s_EventTree.children.Add(consumerStack);
 
 			// Global consumer stack should come last.
 			globalConsumerStack = new InputEventTree
 			{
-				name = "Global Consumers"
-				, isStack = true
+				name = "Global Consumers",
+				isStack = true
 			};
 			s_EventTree.children.Add(globalConsumerStack);
 
 			simulateMouseWithTouches = true;
 		}
+
+		public delegate bool BindingListener(InputControl control);
+		
+		#region Public Methods
 
 		public static void RegisterProfile(InputDeviceProfile profile)
 		{
@@ -146,6 +142,11 @@ namespace UnityEngine.InputNew
 			PlayerHandle player = null;
 			s_Players.TryGetValue(index, out player);
 			return player;
+		}
+
+		internal static void RemovePlayerHandle(PlayerHandle handle)
+		{
+			s_Players.Remove(handle.index);
 		}
 
 		#endregion
@@ -273,6 +274,8 @@ namespace UnityEngine.InputNew
 				s_SimulateMouseWithTouches = value;
 			}
 		}
+
+		public static IEnumerable<PlayerHandle> players { get { return s_Players.Values; } }
 
 		#endregion
 

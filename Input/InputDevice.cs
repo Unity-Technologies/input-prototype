@@ -13,11 +13,13 @@ namespace UnityEngine.InputNew
 		{
 			SetControls(controls);
 			this.deviceName = deviceName;
+			deviceIndex = InputSystem.GetDevicesOfType(GetType()).Count;
 		}
 
 		protected InputDevice()
 		{
 			this.deviceName = "Generic Input Device";
+			deviceIndex = InputSystem.GetDevicesOfType(GetType()).Count;
 		}
 
 		#endregion
@@ -71,6 +73,7 @@ namespace UnityEngine.InputNew
 		}
 
 		public string deviceName { get; protected set; }
+		public int deviceIndex { get; private set; }
 
 		public PlayerDeviceAssignment assignment
 		{
@@ -82,6 +85,11 @@ namespace UnityEngine.InputNew
 			{
 				m_Assignment = value;
 			}
+		}
+
+		public override string ToString ()
+		{
+			return (deviceName ?? GetType().Name) + " " + deviceIndex;
 		}
 
 		#endregion
