@@ -144,6 +144,9 @@ namespace UnityEngine.InputNew
 			SetControls(controls);
 
 			Reset();
+
+			if (PlayerHandle.onChange != null)
+				PlayerHandle.onChange.Invoke();
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)
