@@ -11,8 +11,10 @@ public class MouseInputToEvents
 
 	public void Update()
 	{
+#if !UNITY_IOS && !UNITY_ANDROID
 		SendButtonEvents();
 		SendMoveEvent();
+#endif
 	}
 
 	void SendButtonEvents()
