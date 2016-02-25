@@ -103,9 +103,12 @@ public class ActionMapEditor : Editor
 		var existingAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(target));
 
 		// Add action sub-assets.
+		ActionMap actionMap = (ActionMap)target;
 		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 		{
 			InputAction action = m_ActionMapEditCopy.actions[i];
+			action.actionMap = actionMap;
+			action.actionIndex = i;
 			if (existingAssets.Contains(action))
 				continue;
 			AssetDatabase.AddObjectToAsset(action, target);

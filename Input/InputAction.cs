@@ -21,6 +21,14 @@ namespace UnityEngine.InputNew
 		}
 
 		[SerializeField]
+		private ActionMap m_ActionMap;
+		public ActionMap actionMap { get { return m_ActionMap; } set { m_ActionMap = value; } }
+
+		[SerializeField]
+		private int m_ActionIndex;
+		public int actionIndex { get { return m_ActionIndex; } set { m_ActionIndex = value; } }
+
+		[SerializeField]
 		private InputControlData m_ControlData;
 		public InputControlData controlData { get { return m_ControlData; } set { m_ControlData = value; } }
 	}
