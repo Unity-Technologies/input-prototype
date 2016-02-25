@@ -63,6 +63,10 @@ namespace UnityEngine.InputNew
 
 		public bool TryInitializeControlSchemeGlobal()
 		{
+			// The reverse is needed!
+			// Although we check for control scheme with latest time stamp in function below,
+			// we early out when we reach the first matching device of a given time,
+			// so it's important that the first found device is the latest used one.
 			var devices = InputSystem.leastToMostRecentlyUsedDevices.Where(e => e.assignment == null).Reverse().ToList();
 			return Assign(devices);
 		}
@@ -84,7 +88,7 @@ namespace UnityEngine.InputNew
 			{
 				float timeForScheme = -1;
 				foundDevices.Clear();
-				var types = actionMap.controlSchemes[scheme].GetUsedDeviceTypes().ToList();
+				var types = actionMap.controlSchemes[scheme].deviceTypes;
 				bool matchesAll = true;
 				foreach (var type in types)
 				{

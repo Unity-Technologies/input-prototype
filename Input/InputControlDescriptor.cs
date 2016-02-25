@@ -7,30 +7,7 @@ namespace UnityEngine.InputNew
 	public class InputControlDescriptor
 	{
 		public int controlIndex;
-
-		public Type deviceType
-		{
-			get
-			{
-				if ( m_CachedDeviceType == null )
-				{
-					if (m_DeviceTypeName == null)
-						return null;
-					m_CachedDeviceType = Type.GetType( m_DeviceTypeName );
-				}
-				return m_CachedDeviceType;
-			}
-			set
-			{
-				m_CachedDeviceType = value;
-				m_DeviceTypeName = m_CachedDeviceType.AssemblyQualifiedName;
-			}
-		}
-
-		[ SerializeField ]
-		private string m_DeviceTypeName;
-
-		private Type m_CachedDeviceType;
+		public SerializableType deviceType;
 		
 		public override string ToString()
 		{
@@ -40,10 +17,10 @@ namespace UnityEngine.InputNew
 		public void ExtractDeviceTypeAndControlIndex(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
 		{
 			List<int> entries;
-			if (!controlIndicesPerDeviceType.TryGetValue(deviceType, out entries))
+			if (!controlIndicesPerDeviceType.TryGetValue(deviceType.value, out entries))
 			{
 				entries = new List<int>();
-				controlIndicesPerDeviceType[deviceType] = entries;
+				controlIndicesPerDeviceType[deviceType.value] = entries;
 			}
 			
 			entries.Add(controlIndex);

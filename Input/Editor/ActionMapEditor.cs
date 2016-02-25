@@ -32,6 +32,7 @@ public class ActionMapEditor : Editor
 	ActionMap m_ActionMapEditCopy;
 	
 	int m_SelectedScheme = 0;
+	int m_SelectedDeviceIndex = 0;
 	[System.NonSerialized]
 	InputAction m_SelectedAction = null;
 	List<string> m_PropertyNames = new List<string>();
@@ -162,7 +163,37 @@ public class ActionMapEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		EditorGUI.BeginChangeCheck();
-		
+
+		DrawControlSchemeSelection();
+
+		if (m_ActionMapEditCopy.controlSchemes.Count > 0)
+		{
+			EditorGUILayout.Space();
+			DrawControlSchemeGUI();
+
+			EditorGUILayout.Space();
+			DrawActionList();
+			
+			if (selectedAction != null)
+			{
+				EditorGUILayout.Space();
+				DrawActionGUI();
+			}
+			
+			EditorGUILayout.Space();
+		}
+
+		if (EditorGUI.EndChangeCheck())
+		{
+			EditorUtility.SetDirty(m_ActionMapEditCopy);
+			m_Modified = true;
+		}
+
+		ApplyRevertGUI();
+	}
+
+	void DrawControlSchemeSelection()
+	{
 		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
 			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 		
@@ -170,6 +201,7 @@ public class ActionMapEditor : Editor
 		EditorGUILayout.LabelField("Control Schemes");
 
 		EditorGUIUtility.GetControlID(FocusType.Passive);
+		EditorGUILayout.BeginVertical("Box");
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
@@ -178,19 +210,15 @@ public class ActionMapEditor : Editor
 			{
 				EditorGUIUtility.keyboardControl = 0;
 				selectedScheme = i;
+				Event.current.Use();
 			}
 			
 			if (selectedScheme == i)
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 			
-			EditorGUI.BeginChangeCheck();
-			string schemeName = EditorGUI.TextField(rect, "Control Scheme " + i, m_ActionMapEditCopy.controlSchemes[i].name);
-			if (EditorGUI.EndChangeCheck())
-				m_ActionMapEditCopy.controlSchemes[i].name = schemeName;
-			
-			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-				Event.current.Use();
+			EditorGUI.LabelField(rect, m_ActionMapEditCopy.controlSchemes[i].name);
 		}
+		EditorGUILayout.EndVertical();
 		
 		// Control scheme remove and add buttons
 		EditorGUILayout.BeginHorizontal();
@@ -206,54 +234,6 @@ public class ActionMapEditor : Editor
 			GUILayout.FlexibleSpace();
 		}
 		EditorGUILayout.EndHorizontal();
-
-		if (m_ActionMapEditCopy.controlSchemes.Count > 0)
-		{
-			EditorGUILayout.Space();
-			
-			// Show actions
-			EditorGUILayout.LabelField("Actions", m_ActionMapEditCopy.controlSchemes[selectedScheme].name + " Bindings");
-			EditorGUILayout.BeginVertical("Box");
-			{
-				foreach (var action in m_ActionMapEditCopy.actions)
-				{
-					DrawActionRow(action, selectedScheme);
-				}
-				if (m_ActionMapEditCopy.actions.Count == 0)
-					EditorGUILayout.GetControlRect();
-			}
-			EditorGUILayout.EndVertical();
-			
-			// Action remove and add buttons
-			EditorGUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(15 * EditorGUI.indentLevel);
-
-				if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
-					RemoveAction();
-				
-				if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
-					AddAction();
-				
-				GUILayout.FlexibleSpace();
-			}
-			EditorGUILayout.EndHorizontal();
-			
-			EditorGUILayout.Space();
-			
-			if (selectedAction != null)
-				DrawActionGUI();
-			
-			EditorGUILayout.Space();
-		}
-
-		if (EditorGUI.EndChangeCheck())
-		{
-			EditorUtility.SetDirty(m_ActionMapEditCopy);
-			m_Modified = true;
-		}
-
-		ApplyRevertGUI();
 	}
 
 	void AddControlScheme()
@@ -273,6 +253,101 @@ public class ActionMapEditor : Editor
 		m_ActionMapEditCopy.controlSchemes.RemoveAt(selectedScheme);
 		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
 			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
+	}
+
+	void DrawControlSchemeGUI()
+	{
+		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+
+		EditorGUI.BeginChangeCheck();
+		string schemeName = EditorGUILayout.TextField("Control Scheme Name", scheme.name);
+		if (EditorGUI.EndChangeCheck())
+			scheme.name = schemeName;
+
+		string[] deviceNames = InputDeviceUtility.GetDeviceNames();
+
+		for (int i = 0; i < scheme.serializableDeviceTypes.Count; i++)
+		{
+			Rect rect = EditorGUILayout.GetControlRect();
+
+			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+			{
+				m_SelectedDeviceIndex = i;
+				Repaint();
+			}
+			if (m_SelectedDeviceIndex == i)
+				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+
+			EditorGUI.BeginChangeCheck();
+			int deviceIndex = EditorGUI.Popup(
+				rect,
+				"Device Type",
+				InputDeviceUtility.GetDeviceIndex(scheme.serializableDeviceTypes[i].value),
+				deviceNames);
+			if (EditorGUI.EndChangeCheck())
+				scheme.serializableDeviceTypes[i].value = InputDeviceUtility.GetDeviceType(deviceIndex);
+		}
+
+		// Device remove and add buttons
+		EditorGUILayout.BeginHorizontal();
+		{
+			GUILayout.Space(15 * EditorGUI.indentLevel);
+
+			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+				RemoveDevice();
+			
+			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+				AddDevice();
+			
+			GUILayout.FlexibleSpace();
+		}
+		EditorGUILayout.EndHorizontal();
+	}
+
+	void AddDevice()
+	{
+		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+		scheme.serializableDeviceTypes.Add(new SerializableType(null));
+	}
+
+	void RemoveDevice()
+	{
+		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+		if (m_SelectedDeviceIndex >= 0 && m_SelectedDeviceIndex < scheme.serializableDeviceTypes.Count)
+		{
+			scheme.serializableDeviceTypes.RemoveAt(m_SelectedDeviceIndex);
+		}
+	}
+
+	void DrawActionList()
+	{
+		// Show actions
+		EditorGUILayout.LabelField("Actions", m_ActionMapEditCopy.controlSchemes[selectedScheme].name + " Bindings");
+		EditorGUILayout.BeginVertical("Box");
+		{
+			foreach (var action in m_ActionMapEditCopy.actions)
+			{
+				DrawActionRow(action, selectedScheme);
+			}
+			if (m_ActionMapEditCopy.actions.Count == 0)
+				EditorGUILayout.GetControlRect();
+		}
+		EditorGUILayout.EndVertical();
+		
+		// Action remove and add buttons
+		EditorGUILayout.BeginHorizontal();
+		{
+			GUILayout.Space(15 * EditorGUI.indentLevel);
+
+			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+				RemoveAction();
+			
+			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+				AddAction();
+			
+			GUILayout.FlexibleSpace();
+		}
+		EditorGUILayout.EndHorizontal();
 	}
 
 	void AddAction()
@@ -335,17 +410,15 @@ public class ActionMapEditor : Editor
 	void DrawActionRow(InputAction action, int selectedScheme)
 	{
 		int actionIndex = m_ActionMapEditCopy.actions.IndexOf(action);
-		ControlBinding binding = m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex];
 		
 		int sourceCount = 0;
-		int buttonAxisSourceCount = 0;
-		if (binding != null)
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 		{
-			sourceCount += binding.sources.Count;
-			buttonAxisSourceCount += binding.buttonAxisSources.Count;
+			ControlBinding schemeBinding = m_ActionMapEditCopy.controlSchemes[i].bindings[actionIndex];
+			int count = schemeBinding.sources.Count + schemeBinding.buttonAxisSources.Count;
+			sourceCount = Mathf.Max(sourceCount, count);
 		}
-		int totalSourceCount = sourceCount + buttonAxisSourceCount;
-		int lines = Mathf.Max(1, totalSourceCount);
+		int lines = Mathf.Max(1, sourceCount);
 		
 		float height = EditorGUIUtility.singleLineHeight * lines + EditorGUIUtility.standardVerticalSpacing * (lines - 1) + 8;
 		Rect totalRect = GUILayoutUtility.GetRect(1, height);
@@ -366,7 +439,8 @@ public class ActionMapEditor : Editor
 		EditorGUI.LabelField(rect, action.controlData.name);
 		
 		// Show binding fields
-		
+
+		ControlBinding binding = m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex];
 		if (binding != null)
 		{
 			rect = baseRect;
@@ -418,7 +492,7 @@ public class ActionMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		if (source.negative.deviceType == source.positive.deviceType)
+		if (source.negative.deviceType.value == source.positive.deviceType.value)
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
 					InputDeviceUtility.GetDeviceName(source.negative),
@@ -715,12 +789,13 @@ public class {0} : ActionMapInput {{
 		
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
-		
-		string[] deviceNames = InputDeviceUtility.GetDeviceNames();
+
+		List<System.Type> types = m_ActionMapEditCopy.controlSchemes[selectedScheme].deviceTypes.ToList();
+		string[] deviceNames = types.Select(e => e == null ? string.Empty : e.Name).ToArray();
 		EditorGUI.BeginChangeCheck();
-		int deviceIndex = EditorGUI.Popup(rect, InputDeviceUtility.GetDeviceIndex(source.deviceType), deviceNames);
+		int deviceIndex = EditorGUI.Popup(rect, types.IndexOf(source.deviceType), deviceNames);
 		if (EditorGUI.EndChangeCheck())
-			source.deviceType = InputDeviceUtility.GetDeviceType(deviceIndex);
+			source.deviceType = types[deviceIndex];
 		
 		rect.x += rect.width + 4;
 		

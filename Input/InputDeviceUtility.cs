@@ -30,7 +30,7 @@ namespace UnityEngine.InputNew
 		
 		public static string GetDeviceName(InputControlDescriptor source)
 		{
-			return source.deviceType == null ? "No-Device" : source.deviceType.Name;
+			return source.deviceType == null || source.deviceType.value == null ? "No-Device" : source.deviceType.Name;
 		}
 		
 		public static string GetDeviceControlName(InputControlDescriptor source)
