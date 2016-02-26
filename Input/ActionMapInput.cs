@@ -305,6 +305,8 @@ namespace UnityEngine.InputNew
 			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
 		}
 
+		////REVIEW: the descriptor may come from anywhere; method assumes we get passed some state we actually own
+		////REVIEW: this mutates the state of the current instance but also mutates the shared ActionMap; that's bad
 		public bool BindControl(InputControlDescriptor descriptor, InputControl control, bool restrictToExistingDevices)
 		{
 			bool existingDevice = false;
@@ -327,12 +329,22 @@ namespace UnityEngine.InputNew
 			
 			descriptor.controlIndex = control.index;
 			descriptor.deviceType = control.provider.GetType();
+
+			m_ControlScheme.customized = true;
 			
 			RefreshBindings();
 			
 			return true;
 		}
 
+
+		public void RevertCustomizations()
+		{
+		    ////FIXME: doesn't properly reset control scheme
+			m_ActionMap.RevertCustomizations();
+			RefreshBindings();
+		}
+	
 		private void RefreshBindings()
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.

@@ -8,6 +8,14 @@ namespace UnityEngine.InputNew
 	{
 		public int controlIndex;
 		public SerializableType deviceType;
+
+		public virtual InputControlDescriptor Clone()
+		{
+			var clone = (InputControlDescriptor) Activator.CreateInstance(GetType());
+			clone.controlIndex = controlIndex;
+			clone.deviceType = new SerializableType(deviceType);
+			return clone;
+		}
 		
 		public override string ToString()
 		{
