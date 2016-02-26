@@ -1,12 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace UnityEngine.InputNew
 {
 	[CreateAssetMenu()]
+#if UNITY_EDITOR
+	[InitializeOnLoad]
+#endif
 	public class ActionMap : ScriptableObject
 	{
 		[FormerlySerializedAs("entries")]
@@ -16,7 +24,61 @@ namespace UnityEngine.InputNew
 		
 		[SerializeField]
 		private List<ControlScheme> m_ControlSchemes = new List<ControlScheme>();
-		public List<ControlScheme> controlSchemes { get { return m_ControlSchemes; } set { m_ControlSchemes = value; } }
+		private List<ControlScheme> m_ControlSchemeCopies; // In players or playmode we always hand out copies and retain the originals.
+		public List<ControlScheme> controlSchemes
+		{
+			get
+			{
+#if UNITY_EDITOR
+				if (!s_IsInPlayMode)
+				{
+					return m_ControlSchemes; // ActionMapEditor modifies this directly.
+				}
+#endif
+				if (m_ControlSchemeCopies == null || m_ControlSchemeCopies.Count == 0)
+				{
+					m_ControlSchemeCopies = m_ControlSchemes.Select(x => x.Clone()).ToList();
+#if UNITY_EDITOR
+					s_ActionMapsToCleanUpAfterPlayMode.Add(this);
+#endif
+				}
+				return m_ControlSchemeCopies;
+			}
+
+			set
+			{
+				m_ControlSchemes = value;
+				m_ControlSchemeCopies = null;
+			}
+		}
+
+		// In the editor, throw away all customizations when exiting playmode.
+#if UNITY_EDITOR
+		private static List<ActionMap> s_ActionMapsToCleanUpAfterPlayMode = new List<ActionMap>();
+		private static bool s_IsInPlayMode;
+		static ActionMap()
+		{
+			HandlePlayModeCustomizations();
+			EditorApplication.playmodeStateChanged += HandlePlayModeCustomizations;
+		}
+		private static void HandlePlayModeCustomizations()
+		{
+			if (EditorApplication.isPlayingOrWillChangePlaymode)
+			{
+				s_IsInPlayMode = true;
+			}
+			else if (!EditorApplication.isPlaying)
+			{
+				s_IsInPlayMode = false;
+				// Throw away all the copies of ControlSchemes we made in play mode.
+				foreach (var actionMap in s_ActionMapsToCleanUpAfterPlayMode)
+				{
+					actionMap.m_ControlSchemeCopies = null;
+				}
+				s_ActionMapsToCleanUpAfterPlayMode.Clear();
+			}
+		}
+#endif
 
 		public Type mapType
 		{
@@ -64,6 +126,58 @@ namespace UnityEngine.InputNew
 					throw new Exception("Failed to create type from string \"" + typeString + "\".");
 
 				return t;
+			}
+		}
+
+		public string GetCustomizations()
+		{
+			var customizedControlSchemes = m_ControlSchemeCopies.Where(x => x.customized).ToList();
+			return JsonUtility.ToJson(customizedControlSchemes);
+		}
+
+		public void RevertCustomizations()
+		{
+			m_ControlSchemeCopies = null;
+		}
+
+		public void RevertCustomizations(ControlScheme controlScheme)
+		{
+			if (m_ControlSchemeCopies != null)
+			{
+				for (var i = 0; i < m_ControlSchemeCopies.Count; ++i)
+				{
+					if (m_ControlSchemeCopies[i] == controlScheme)
+					{
+						m_ControlSchemeCopies[i] = m_ControlSchemes[i].Clone();
+						break;
+					}
+				}
+			}
+		}
+
+		public void RestoreCustomizations(string customizations)
+		{
+			var customizedControlSchemes = JsonUtility.FromJson<List<ControlScheme>>(customizations);
+			foreach (var customizedScheme in customizedControlSchemes)
+			{
+				// See if it replaces an existing scheme.
+				var replacesExisting = false;
+				for (var i = 0; i < controlSchemes.Count; ++i)
+				{
+					if (String.Compare(controlSchemes[i].name, customizedScheme.name, CultureInfo.InvariantCulture, CompareOptions.IgnoreCase) == 0)
+					{
+						// Yes, so get rid of current scheme.
+						controlSchemes[i] = customizedScheme;
+						replacesExisting = true;
+						break;
+					}
+				}
+
+				if (!replacesExisting)
+				{
+					// No, so add as new scheme.
+					controlSchemes.Add(customizedScheme);
+				}
 			}
 		}
 	}

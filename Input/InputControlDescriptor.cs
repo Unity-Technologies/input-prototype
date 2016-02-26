@@ -31,6 +31,15 @@ namespace UnityEngine.InputNew
 		private string m_DeviceTypeName;
 
 		private Type m_CachedDeviceType;
+
+		public virtual InputControlDescriptor Clone()
+		{
+			var clone = (InputControlDescriptor) Activator.CreateInstance(GetType());
+			clone.controlIndex = controlIndex;
+			clone.m_DeviceTypeName = m_DeviceTypeName;
+			clone.m_CachedDeviceType = m_CachedDeviceType;
+			return clone;
+		}
 		
 		public override string ToString()
 		{

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UnityEngine.InputNew
@@ -15,6 +16,19 @@ namespace UnityEngine.InputNew
 		public bool snap = true;
 		public bool primaryIsButtonAxis = false;
 		
+		public virtual ControlBinding Clone()
+		{
+			var clone = (ControlBinding) Activator.CreateInstance(GetType());
+			clone.sources = sources.Select(x => x.Clone()).ToList();
+			clone.deadZone = deadZone;
+			clone.buttonAxisSources = buttonAxisSources.Select(x => x.Clone()).ToList();
+			clone.gravity = gravity;
+			clone.sensitivity = sensitivity;
+			clone.snap = snap;
+			clone.primaryIsButtonAxis = primaryIsButtonAxis;
+			return clone;
+		}
+
 		public void ExtractDeviceTypesAndControlIndices(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
 		{
 			foreach (var control in sources)

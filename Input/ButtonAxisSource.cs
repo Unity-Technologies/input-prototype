@@ -10,6 +10,18 @@ namespace UnityEngine.InputNew
 		public InputControlDescriptor negative;
 		public InputControlDescriptor positive;
 
+		public ButtonAxisSource()
+		{
+		}
+
+		public virtual ButtonAxisSource Clone()
+		{
+			var clone = (ButtonAxisSource) Activator.CreateInstance(GetType());
+			clone.negative = negative.Clone();
+			clone.positive = positive.Clone();
+			return clone;
+		}
+
 		public ButtonAxisSource(InputControlDescriptor negative, InputControlDescriptor positive)
 		{
 			this.negative = negative;

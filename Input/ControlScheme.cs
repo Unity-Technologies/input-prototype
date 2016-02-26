@@ -20,11 +20,25 @@ namespace UnityEngine.InputNew
 		[SerializeField]
 		private List<ControlBinding> m_Bindings = new List<ControlBinding> ();
 		public List<ControlBinding> bindings { get { return m_Bindings; } set { m_Bindings = value; } }
+
+		public bool customized { get; internal set; }
+
+		public ControlScheme()
+		{
+		}
 		
 		public ControlScheme(string name, ActionMap actionMap)
 		{
 			m_Name = name;
+		}
 			m_ActionMap = actionMap;
+		public virtual ControlScheme Clone()
+		{
+			var clone = (ControlScheme) Activator.CreateInstance(GetType());
+			clone.m_Name = m_Name;
+			clone.m_Bindings = m_Bindings.Select(x => x.Clone()).ToList();
+			// Don't clone customized flag.
+			return clone;
 		}
 		
 		public IEnumerable<Type> GetUsedDeviceTypes()
