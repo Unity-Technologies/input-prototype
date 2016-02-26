@@ -302,6 +302,14 @@ public class ActionMapEditor : Editor
 			GUILayout.FlexibleSpace();
 		}
 		EditorGUILayout.EndHorizontal();
+
+		// Pad this area with spacing so all control schemes use same heights,
+		// and the actions table below doesn't move when switching control scheme.
+		int maxDevices = 0;
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+			maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].serializableDeviceTypes.Count);
+		int extraLines = maxDevices - scheme.serializableDeviceTypes.Count;
+		EditorGUILayout.GetControlRect(true, extraLines * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing));
 	}
 
 	void AddDevice()
