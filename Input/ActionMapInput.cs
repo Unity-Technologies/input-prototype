@@ -51,6 +51,13 @@ namespace UnityEngine.InputNew
 		protected ActionMapInput(ActionMap actionMap)
 		{
 			m_ActionMap = actionMap;
+
+			// Create list of controls from ActionMap.
+			////REVIEW: doesn't handle compounds
+			var controls = new List<InputControlData>();
+			foreach (var entry in actionMap.actions)
+				controls.Add(entry.controlData);
+			SetControls(controls);
 		}
 
 		public bool TryInitializeControlScheme(InputDevice inputDevice)
@@ -139,13 +146,6 @@ namespace UnityEngine.InputNew
 			foreach (var device in devices)
 				deviceStates.Add(new InputState(device));
 			m_DeviceStates = deviceStates;
-
-			// Create list of controls from ActionMap.
-			////REVIEW: doesn't handle compounds
-			var controls = new List<InputControlData>();
-			foreach (var entry in actionMap.actions)
-				controls.Add(entry.controlData);
-			SetControls(controls);
 
 			Reset();
 
