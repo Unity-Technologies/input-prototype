@@ -60,10 +60,19 @@ namespace UnityEngine.InputNew
 
 		public T GetActions<T>() where T : ActionMapInput
 		{
-			// If already contains actionMap if this type, return that.
+			// If already contains ActionMapInput if this type, return that.
 			for (int i = 0; i < maps.Count; i++)
 				if (maps[i].GetType() == typeof(T))
 					return (T)maps[i];
+			return null;
+		}
+
+		public ActionMapInput GetActions(ActionMap actionMap)
+		{
+			// If already contains ActionMapInput based on this ActionMap, return that.
+			for (int i = 0; i < maps.Count; i++)
+				if (maps[i].actionMap == actionMap)
+					return maps[i];
 			return null;
 		}
 
