@@ -30,12 +30,14 @@ namespace UnityEngine.InputNew
 		public ControlScheme(string name, ActionMap actionMap)
 		{
 			m_Name = name;
-		}
 			m_ActionMap = actionMap;
+		}
+
 		public virtual ControlScheme Clone()
 		{
 			var clone = (ControlScheme) Activator.CreateInstance(GetType());
 			clone.m_Name = m_Name;
+			clone.m_ActionMap = m_ActionMap;
 			clone.m_Bindings = m_Bindings.Select(x => x.Clone()).ToList();
 			// Don't clone customized flag.
 			return clone;
