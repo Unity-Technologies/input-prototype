@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 		public string name { get { return m_Name; } set { m_Name = value; } }
 
 		[SerializeField]
-		private List<SerializableType> m_SerializableDeviceTypes;
+		private List<SerializableType> m_SerializableDeviceTypes = new List<SerializableType>();
 		public List<SerializableType> serializableDeviceTypes { get { return m_SerializableDeviceTypes; } set { m_SerializableDeviceTypes = value; } }
 		public IEnumerable<Type> deviceTypes { get { return m_SerializableDeviceTypes.Select(e => e.value); } }
 
@@ -42,6 +42,7 @@ namespace UnityEngine.InputNew
 		{
 			var clone = (ControlScheme) Activator.CreateInstance(GetType());
 			clone.m_Name = m_Name;
+			clone.m_SerializableDeviceTypes = m_SerializableDeviceTypes.Select(x => new SerializableType(x)).ToList();
 			clone.m_ActionMap = m_ActionMap;
 			clone.m_Bindings = m_Bindings.Select(x => x.Clone()).ToList();
 			// Don't clone customized flag.
