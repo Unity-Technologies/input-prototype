@@ -28,12 +28,6 @@ namespace UnityEngine.InputNew
 				RequestAssign();
 		}
 
-		void Update()
-		{
-			if (autoSinglePlayerAssign)
-				RequestAssign();
-		}
-
 		void RequestAssign()
 		{
 			if (status == DeviceAssignmentStatus.Enabled)

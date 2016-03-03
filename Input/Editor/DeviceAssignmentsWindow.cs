@@ -132,6 +132,8 @@ namespace UnityEngine.InputNew
 			for (int i = 0; i < player.maps.Count; i++)
 			{
 				ActionMapInput map = player.maps[i];
+				GUI.color = new Color(1, 1, 1, map.active ? 1 : 0.5f);
+
 				GUI.Label(rect, map.GetType().Name);
 				rect.y += EditorGUIUtility.singleLineHeight;
 				GUI.Label(rect, "(" + (map.controlScheme == null ? "None" : map.controlScheme.name) + ")");

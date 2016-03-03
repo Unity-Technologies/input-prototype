@@ -38,6 +38,9 @@ namespace UnityEngine.InputNew
 			set {
 				m_Active = value;
 				Reset(value);
+
+				if (PlayerHandle.onChange != null)
+					PlayerHandle.onChange.Invoke();
 			}
 		}
 
