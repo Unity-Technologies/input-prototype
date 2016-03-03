@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 			Enabled,
 		}
 
-		public List<ActionMap> actionMaps = new List<ActionMap>();
+		public List<ActionMapSlot> actionMaps = new List<ActionMapSlot>();
 		// Should this player handle request assignment of an input device as soon as the component awakes?
 		public bool autoSinglePlayerAssign;
 
@@ -41,11 +41,11 @@ namespace UnityEngine.InputNew
 			
 			handle = InputSystem.GetNewPlayerHandle();
 			handle.global = true;
-			foreach (ActionMap actionMap in actionMaps)
+			foreach (ActionMapSlot actionMapSlot in actionMaps)
 			{
-				ActionMapInput actionMapInput = ActionMapInput.Create(actionMap);
+				ActionMapInput actionMapInput = ActionMapInput.Create(actionMapSlot.actionMap);
 				actionMapInput.TryInitializeControlSchemeGlobal();
-				actionMapInput.active = true;
+				actionMapInput.active = actionMapSlot.active;
 				handle.maps.Add(actionMapInput);
 			}
 			status = DeviceAssignmentStatus.Enabled;

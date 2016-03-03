@@ -27,7 +27,7 @@ namespace UnityEngine.InputNew
 		private ControlScheme m_ControlScheme;
 		public ControlScheme controlScheme { get { return m_ControlScheme; } }
 
-		private List<InputState> m_DeviceStates;
+		private List<InputState> m_DeviceStates = new List<InputState>();
 		private List<InputState> deviceStates { get { return m_DeviceStates; } }
 
 		bool m_Active;
@@ -359,5 +359,12 @@ namespace UnityEngine.InputNew
 			
 			// TODO remove device states that are no longer used by any bindings?
 		}
+	}
+
+	[Serializable]
+	public class ActionMapSlot
+	{
+		public ActionMap actionMap;
+		public bool active;
 	}
 }

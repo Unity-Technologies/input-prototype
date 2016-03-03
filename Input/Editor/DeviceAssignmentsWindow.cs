@@ -134,7 +134,7 @@ namespace UnityEngine.InputNew
 				ActionMapInput map = player.maps[i];
 				GUI.Label(rect, map.GetType().Name);
 				rect.y += EditorGUIUtility.singleLineHeight;
-				GUI.Label(rect, "(" + map.controlScheme.name + ")");
+				GUI.Label(rect, "(" + (map.controlScheme == null ? "None" : map.controlScheme.name) + ")");
 				rect.y += EditorGUIUtility.singleLineHeight;
 
 				EditorGUI.indentLevel++;
