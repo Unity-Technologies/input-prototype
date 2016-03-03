@@ -16,7 +16,7 @@ namespace UnityEngine.InputNew
 		[SerializeField]
 		private List<SerializableType> m_SerializableDeviceTypes = new List<SerializableType>();
 		public List<SerializableType> serializableDeviceTypes { get { return m_SerializableDeviceTypes; } set { m_SerializableDeviceTypes = value; } }
-		public IEnumerable<Type> deviceTypes { get { return m_SerializableDeviceTypes.Select(e => e.value); } }
+		public IEnumerable<Type> deviceTypes { get { return m_SerializableDeviceTypes.Select(e => (Type)e); } }
 
 		[SerializeField]
 		private ActionMap m_ActionMap;

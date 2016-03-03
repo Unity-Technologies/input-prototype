@@ -282,7 +282,7 @@ public class ActionMapEditor : Editor
 			int deviceIndex = EditorGUI.Popup(
 				rect,
 				"Device Type",
-				InputDeviceUtility.GetDeviceIndex(scheme.serializableDeviceTypes[i].value),
+				InputDeviceUtility.GetDeviceIndex(scheme.serializableDeviceTypes[i]),
 				deviceNames);
 			if (EditorGUI.EndChangeCheck())
 				scheme.serializableDeviceTypes[i].value = InputDeviceUtility.GetDeviceType(deviceIndex);
@@ -500,7 +500,7 @@ public class ActionMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		if (source.negative.deviceType.value == source.positive.deviceType.value)
+		if ((System.Type)(source.negative.deviceType) == (System.Type)(source.positive.deviceType))
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
 					InputDeviceUtility.GetDeviceName(source.negative),

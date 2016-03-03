@@ -41,7 +41,7 @@ namespace UnityEngine.InputNew
 
 		public static implicit operator Type(SerializableType t)
 		{
-			return t.value;
+			return (t == null) ? null : t.value;
 		}
 
 		public static implicit operator SerializableType(Type t)

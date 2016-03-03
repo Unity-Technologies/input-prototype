@@ -25,10 +25,10 @@ namespace UnityEngine.InputNew
 		public void ExtractDeviceTypeAndControlIndex(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
 		{
 			List<int> entries;
-			if (!controlIndicesPerDeviceType.TryGetValue(deviceType.value, out entries))
+			if (!controlIndicesPerDeviceType.TryGetValue(deviceType, out entries))
 			{
 				entries = new List<int>();
-				controlIndicesPerDeviceType[deviceType.value] = entries;
+				controlIndicesPerDeviceType[deviceType] = entries;
 			}
 			
 			entries.Add(controlIndex);
