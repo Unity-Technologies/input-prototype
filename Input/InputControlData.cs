@@ -10,5 +10,6 @@ namespace UnityEngine.InputNew
 		public int[] componentControlIndices;
 		public InputControlType controlType;
 		public string name;
+		public float defaultValue;
 	}
 }

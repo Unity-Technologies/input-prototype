@@ -103,8 +103,7 @@ namespace UnityEngine.InputNew
 				}
 				else
 				{
-					m_CurrentStates[i] = 0;
-					m_PreviousStates[i] = 0;
+					ResetStateForControl(i);
 				}
 			}
 		}
@@ -112,10 +111,14 @@ namespace UnityEngine.InputNew
 		public void Reset()
 		{
 			for (int i = 0; i < m_CurrentStates.Length; i++)
-			{
-				m_CurrentStates[i] = 0;
-				m_PreviousStates[i] = 0;
-			}
+				ResetStateForControl(i);
+		}
+
+		public void ResetStateForControl(int controlIndex)
+		{
+			float defaultValue = controlProvider.GetControlData(controlIndex).defaultValue;
+			m_CurrentStates[controlIndex] = defaultValue;
+			m_PreviousStates[controlIndex] = defaultValue;
 		}
 
 		#endregion
