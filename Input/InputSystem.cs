@@ -65,7 +65,7 @@ namespace UnityEngine.InputNew
 				beginFrame = s_Devices.BeginFrameEvent
 			};
 			s_EventTree.children.Add(state);
-			
+
 			consumerStack = new InputEventTree
 			{
 				name = "Consumers",
@@ -73,13 +73,20 @@ namespace UnityEngine.InputNew
 			};
 			s_EventTree.children.Add(consumerStack);
 
-			// Global consumer stack should come last.
-			globalConsumerStack = new InputEventTree
+			// Global consumer stack should come first in stack so it's processed last.
+			globalPlayers = new InputEventTree
 			{
-				name = "Global Consumers",
+				name = "Global Players",
 				isStack = true
 			};
-			s_EventTree.children.Add(globalConsumerStack);
+			consumerStack.children.Add(globalPlayers);
+
+			assignedPlayers = new InputEventTree
+			{
+				name = "Assigned Players",
+				isStack = true
+			};
+			consumerStack.children.Add(assignedPlayers);
 
 			simulateMouseWithTouches = true;
 		}
@@ -216,8 +223,9 @@ namespace UnityEngine.InputNew
 			get { return s_EventTree; }
 		}
 
-		public static IInputConsumer globalConsumerStack { get; private set; }
 		public static IInputConsumer consumerStack { get; private set; }
+		public static IInputConsumer globalPlayers { get; private set; }
+		public static IInputConsumer assignedPlayers { get; private set; }
 		public static IInputConsumer rewriterStack { get; private set; }
 
 		public static bool listeningForBinding

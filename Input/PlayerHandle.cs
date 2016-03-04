@@ -16,6 +16,14 @@ namespace UnityEngine.InputNew
 		public delegate void ChangeEvent();
 		public static ChangeEvent onChange;
 
+		IInputConsumer currentInputConsumer
+		{
+			get
+			{
+				return m_Global ? InputSystem.globalPlayers : InputSystem.assignedPlayers;
+			}
+		}
+
 		internal PlayerHandle(int index)
 		{
 			this.index = index;
@@ -27,8 +35,24 @@ namespace UnityEngine.InputNew
 				beginFrame = BeginFrameEvent,
 				endFrame = EndFrameEvent
 			};
-			InputSystem.consumerStack.children.Add(treeNode);
+			currentInputConsumer.children.Add(treeNode);
 
+			if (onChange != null)
+				onChange.Invoke();
+		}
+
+		public void Destroy()
+		{
+			foreach (var map in maps)
+				map.active = false;
+
+			for (int i = assignments.Count - 1; i >= 0; i--)
+				assignments[i].Unassign();
+			
+			currentInputConsumer.children.Remove(treeNode);
+			treeNode = null;
+
+			InputSystem.RemovePlayerHandle(this);
 			if (onChange != null)
 				onChange.Invoke();
 		}
@@ -41,17 +65,10 @@ namespace UnityEngine.InputNew
 				if (value == m_Global)
 					return;
 
+				// Note: value of m_Global changes what currentInputConsumer is.
+				currentInputConsumer.children.Remove(treeNode);
 				m_Global = value;
-				if (value)
-				{
-					InputSystem.consumerStack.children.Remove(treeNode);
-					InputSystem.globalConsumerStack.children.Add(treeNode);
-				}
-				else
-				{
-					InputSystem.globalConsumerStack.children.Remove(treeNode);
-					InputSystem.consumerStack.children.Add(treeNode);
-				}
+				currentInputConsumer.children.Add(treeNode);
 
 				if (onChange != null)
 					onChange.Invoke();
@@ -74,22 +91,6 @@ namespace UnityEngine.InputNew
 				if (maps[i].actionMap == actionMap)
 					return maps[i];
 			return null;
-		}
-
-		public void Destroy()
-		{
-			foreach (var map in maps)
-				map.active = false;
-
-			for (int i = assignments.Count - 1; i >= 0; i--)
-				assignments[i].Unassign();
-			
-			InputSystem.consumerStack.children.Remove(treeNode);
-			treeNode = null;
-
-			InputSystem.RemovePlayerHandle(this);
-			if (onChange != null)
-				onChange.Invoke();
 		}
 
 		public bool AssignDevice(InputDevice device, bool assign)
