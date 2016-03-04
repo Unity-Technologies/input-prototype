@@ -128,8 +128,11 @@ namespace UnityEngine.InputNew
 
 			for (int i = 0; i < maps.Count; i++)
 			{
-				if (maps[i].active && maps[i].ProcessEvent(inputEvent))
-					return true;
+				if (maps[i].active)
+				{
+					if (maps[i].ProcessEvent(inputEvent) || maps[i].blockSubsequent)
+						return true;
+				}
 			}
 
 			return false;

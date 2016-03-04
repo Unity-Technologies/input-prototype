@@ -44,6 +44,8 @@ namespace UnityEngine.InputNew
 			}
 		}
 
+		public bool blockSubsequent { get; set; }
+
 		public static ActionMapInput Create(ActionMap actionMap)
 		{
 			ActionMapInput map =
@@ -149,6 +151,7 @@ namespace UnityEngine.InputNew
 			foreach (var device in devices)
 				deviceStates.Add(new InputState(device));
 			m_DeviceStates = deviceStates;
+			RefreshBindings();
 
 			Reset();
 
@@ -354,13 +357,15 @@ namespace UnityEngine.InputNew
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
 			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
 			
-			foreach (var deviceType in perDeviceTypeUsedControlIndices.Keys)
+			foreach (var deviceType in controlScheme.deviceTypes)
 			{
 				InputState state = GetDeviceStateForDeviceType(deviceType);
-				state.SetUsedControls(perDeviceTypeUsedControlIndices[deviceType]);
+				List<int> indices;
+				if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType, out indices))
+					state.SetUsedControls(indices);
+				else
+					state.SetAllControlsEnabled(false);
 			}
-			
-			// TODO remove device states that are no longer used by any bindings?
 		}
 	}
 
@@ -369,5 +374,6 @@ namespace UnityEngine.InputNew
 	{
 		public ActionMap actionMap;
 		public bool active;
+		public bool blockSubsequent;
 	}
 }

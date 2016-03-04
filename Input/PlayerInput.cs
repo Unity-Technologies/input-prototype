@@ -40,6 +40,7 @@ namespace UnityEngine.InputNew
 				ActionMapInput actionMapInput = ActionMapInput.Create(actionMapSlot.actionMap);
 				actionMapInput.TryInitializeControlSchemeGlobal();
 				actionMapInput.active = actionMapSlot.active;
+				actionMapInput.blockSubsequent = actionMapSlot.blockSubsequent;
 				handle.maps.Add(actionMapInput);
 			}
 			status = DeviceAssignmentStatus.Enabled;
