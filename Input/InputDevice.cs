@@ -31,14 +31,20 @@ namespace UnityEngine.InputNew
 		
 		public override sealed bool ProcessEvent(InputEvent inputEvent)
 		{
-			ProcessEventIntoState(inputEvent, state);
+			// If event was used, set time, but never consume event.
+			// Devices don't consume events.
+			if (ProcessEventIntoState(inputEvent, state))
+				lastEventTime = inputEvent.time;
 			return false;
 		}
 
 		public virtual bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
-			lastEventTime = inputEvent.time;
-			return false;
+			GenericControlEvent controlEvent = inputEvent as GenericControlEvent;
+			if (controlEvent == null)
+				return false;
+
+			return intoState.SetCurrentValue(controlEvent.controlIndex, controlEvent.value);
 		}
 
 		public virtual bool RemapEvent(InputEvent inputEvent)
