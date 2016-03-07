@@ -20,7 +20,7 @@ namespace UnityEngine.InputNew
 		{
 			if (autoAssignGlobal)
 			{
-				handle = InputSystem.GetNewPlayerHandle();
+				handle = PlayerHandleManager.GetNewPlayerHandle();
 				handle.global = true;
 				foreach (ActionMapSlot actionMapSlot in actionMaps)
 				{

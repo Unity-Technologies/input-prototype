@@ -135,27 +135,6 @@ namespace UnityEngine.InputNew
 			s_BindingListeners.Add(listener);
 		}
 
-		public static PlayerHandle GetNewPlayerHandle()
-		{
-			PlayerHandle handle = new PlayerHandle(s_NextPlayerIndex);
-			s_Players[handle.index] = handle;
-			s_NextPlayerIndex++;
-			return handle;
-		}
-
-		// Gets existing handle for index if available.
-		public static PlayerHandle GetPlayerHandle(int index)
-		{
-			PlayerHandle player = null;
-			s_Players.TryGetValue(index, out player);
-			return player;
-		}
-
-		internal static void RemovePlayerHandle(PlayerHandle handle)
-		{
-			s_Players.Remove(handle.index);
-		}
-
 		#endregion
 
 		#region Non-Public Methods
@@ -283,8 +262,6 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		public static IEnumerable<PlayerHandle> players { get { return s_Players.Values; } }
-
 		#endregion
 
 		#region Fields
@@ -296,9 +273,6 @@ namespace UnityEngine.InputNew
 		static bool s_SimulateMouseWithTouches;
 		static InputEventTree s_SimulateMouseWithTouchesProcess;
 		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
-
-		static Dictionary<int, PlayerHandle> s_Players = new Dictionary<int, PlayerHandle>();
-		static int s_NextPlayerIndex = 0;
 
 		#endregion
 	}

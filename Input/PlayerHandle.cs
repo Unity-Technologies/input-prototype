@@ -52,7 +52,7 @@ namespace UnityEngine.InputNew
 			currentInputConsumer.children.Remove(treeNode);
 			treeNode = null;
 
-			InputSystem.RemovePlayerHandle(this);
+			PlayerHandleManager.RemovePlayerHandle(this);
 			if (onChange != null)
 				onChange.Invoke();
 		}

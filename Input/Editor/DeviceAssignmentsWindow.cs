@@ -39,7 +39,7 @@ namespace UnityEngine.InputNew
 		void OnGUI()
 		{
 			var devices = InputSystem.leastToMostRecentlyUsedDevices;
-			var players = InputSystem.players;
+			var players = PlayerHandleManager.players;
 
 			s_MaxAssignedDevices = 0;
 			foreach (var player in players)
