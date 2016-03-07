@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace UnityEngine.InputNew
 {
@@ -16,7 +17,8 @@ namespace UnityEngine.InputNew
 
 		public List<ActionMapSlot> actionMaps = new List<ActionMapSlot>();
 		// Should this player handle request assignment of an input device as soon as the component awakes?
-		public bool autoSinglePlayerAssign;
+		[FormerlySerializedAs("autoSinglePlayerAssign")]
+		public bool autoAssignGlobal;
 
 		public DeviceAssignmentStatus status { get; private set; }
 		public PlayerHandle handle { get; set; }
@@ -24,7 +26,7 @@ namespace UnityEngine.InputNew
 
 		void Awake()
 		{
-			if (autoSinglePlayerAssign)
+			if (autoAssignGlobal)
 				RequestAssign();
 		}
 
