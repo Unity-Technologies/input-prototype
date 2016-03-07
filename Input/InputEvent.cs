@@ -59,6 +59,11 @@ namespace UnityEngine.InputNew
 
 				return m_CachedDevice;
 			}
+			set
+			{
+				deviceIndex = InputSystem.GetDeviceIndex(value);
+				deviceType = value.GetType();
+			}
 		}
 
 		#endregion

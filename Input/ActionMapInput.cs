@@ -36,6 +36,11 @@ namespace UnityEngine.InputNew
 				return m_Active;
 			}
 			set {
+				if (m_Active == value)
+					return;
+
+				ResetControlsForCurrentReceivers();
+
 				m_Active = value;
 				Reset(value);
 
@@ -75,7 +80,7 @@ namespace UnityEngine.InputNew
 
 		public bool TryInitializeControlSchemeGlobal()
 		{
-			// The reverse is needed!
+			// The Reverse() in the linq expression below is needed!
 			// Although we check for control scheme with latest time stamp in function below,
 			// we early out when we reach the first matching device of a given time,
 			// so it's important that the first found device is the latest used one.
@@ -85,6 +90,9 @@ namespace UnityEngine.InputNew
 
 		public bool TryInitializeControlSchemeForPlayer(PlayerHandle player)
 		{
+			if (player.global)
+				return TryInitializeControlSchemeGlobal();
+			
 			var devices = player.assignments.Select(e => e.device).ToList();
 			return Assign(devices);
 		}
@@ -153,10 +161,42 @@ namespace UnityEngine.InputNew
 			m_DeviceStates = deviceStates;
 			RefreshBindings();
 
+			ResetControlsForCurrentReceivers();
+
 			Reset();
 
 			if (PlayerHandle.onChange != null)
 				PlayerHandle.onChange.Invoke();
+		}
+
+		private void ResetControlsForCurrentReceivers()
+		{
+			// Set state to inactive temporarily, so subsequent ActionMaps receive the reset events.
+			bool oldActiveState = m_Active;
+			m_Active = false;
+
+			for (int i = 0; i < m_DeviceStates.Count; i++)
+			{
+				var state = m_DeviceStates[i];
+				for (int j = 0; j < state.count; j++)
+				{
+					if (blockSubsequent || state.IsControlEnabled(j))
+					{
+						GenericControlEvent evt = new GenericControlEvent()
+						{
+							device = state.controlProvider as InputDevice,
+							controlIndex = j,
+							value = state.controlProvider.GetControlData(j).defaultValue,
+							time = Time.time
+						};
+						// TODO: Revise off design of IInputConsumer that doesn't have method for invoking event.
+						var node = InputSystem.consumerStack as InputEventTree;
+						node.ProcessEvent(evt);
+					}
+				}
+			}
+
+			m_Active = oldActiveState;
 		}
 
 		public override bool ProcessEvent(InputEvent inputEvent)

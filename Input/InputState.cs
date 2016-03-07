@@ -152,7 +152,7 @@ namespace UnityEngine.InputNew
 
 		public InputControlProvider controlProvider { get; set; }
 
-		public int Count
+		public int count
 		{
 			get { return m_CurrentStates.Length; }
 		}
