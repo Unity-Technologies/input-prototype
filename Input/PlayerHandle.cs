@@ -131,12 +131,38 @@ namespace UnityEngine.InputNew
 			{
 				if (maps[i].active)
 				{
-					if (maps[i].ProcessEvent(inputEvent) || maps[i].blockSubsequent)
+					if (ProcessEventInMap(maps[i], inputEvent) || maps[i].blockSubsequent)
 						return true;
 				}
 			}
 
 			return false;
+		}
+
+		bool ProcessEventInMap(ActionMapInput map, InputEvent inputEvent)
+		{
+			if (map.ProcessEvent(inputEvent))
+				return true;
+
+			if (map.CurrentlyUsesDevice(inputEvent.device))
+				return false;
+
+			if (!map.TryInitializeWithDevices(GetApplicableDevices()))
+				return false;
+
+			// When changing control scheme, we do not want to init control scheme to device states
+			// like we normally want, so do a hard reset here, before processing the new event.
+			map.Reset(false);
+
+			return map.ProcessEvent(inputEvent);
+		}
+
+		public IEnumerable<InputDevice> GetApplicableDevices()
+		{
+			if (global)
+				return InputSystem.leastToMostRecentlyUsedDevices.Where(e => e.assignment == null);
+			else
+				return assignments.Select(e => e.device);
 		}
 
 		void BeginFrameEvent()

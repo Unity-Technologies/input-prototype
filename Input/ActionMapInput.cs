@@ -70,34 +70,7 @@ namespace UnityEngine.InputNew
 			SetControls(controls);
 		}
 
-		public bool TryInitializeControlScheme(InputDevice inputDevice)
-		{
-			if (inputDevice.assignment == null)
-				return TryInitializeControlSchemeGlobal();
-			else
-				return TryInitializeControlSchemeForPlayer(inputDevice.assignment.player);
-		}
-
-		public bool TryInitializeControlSchemeGlobal()
-		{
-			// The Reverse() in the linq expression below is needed!
-			// Although we check for control scheme with latest time stamp in function below,
-			// we early out when we reach the first matching device of a given time,
-			// so it's important that the first found device is the latest used one.
-			var devices = InputSystem.leastToMostRecentlyUsedDevices.Where(e => e.assignment == null).Reverse().ToList();
-			return Assign(devices);
-		}
-
-		public bool TryInitializeControlSchemeForPlayer(PlayerHandle player)
-		{
-			if (player.global)
-				return TryInitializeControlSchemeGlobal();
-			
-			var devices = player.assignments.Select(e => e.device).ToList();
-			return Assign(devices);
-		}
-
-		public bool Assign(List<InputDevice> availableDevices)
+		public bool TryInitializeWithDevices(IEnumerable<InputDevice> availableDevices)
 		{
 			int bestScheme = -1;
 			List<InputDevice> bestFoundDevices = null;
@@ -112,19 +85,22 @@ namespace UnityEngine.InputNew
 				bool matchesAll = true;
 				foreach (var type in types)
 				{
-					bool foundMatch = false;
+					InputDevice foundDevice = null;
+					float foundDeviceTime = -1;
 					foreach (var device in availableDevices)
 					{
-						if (type.IsInstanceOfType(device))
+						if (type.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime)
 						{
-							foundDevices.Add(device);
-							foundMatch = true;
-							timeForScheme = Mathf.Max(timeForScheme, device.lastEventTime);
-							break;
+							foundDevice = device;
+							foundDeviceTime = device.lastEventTime;
 						}
 					}
-					
-					if (!foundMatch)
+					if (foundDevice != null)
+					{
+						foundDevices.Add(foundDevice);
+						timeForScheme = Mathf.Max(timeForScheme, foundDeviceTime);
+					}
+					else
 					{
 						matchesAll = false;
 						break;
@@ -199,25 +175,15 @@ namespace UnityEngine.InputNew
 			m_Active = oldActiveState;
 		}
 
-		public override bool ProcessEvent(InputEvent inputEvent)
+		public bool CurrentlyUsesDevice(InputDevice device)
 		{
-			if (ProcessEventForScheme(inputEvent))
-				return true;
-
-			if (deviceStates.Any(e => e.controlProvider == inputEvent.device))
-				return false;
-
-			if (!TryInitializeControlScheme(inputEvent.device))
-				return false;
-
-			// When changing control scheme, we do not want to init control scheme to device states
-			// like we normally want, so do a hard reset here, before processing the new event.
-			Reset(false);
-
-			return ProcessEventForScheme(inputEvent);
+			foreach (var deviceState in deviceStates)
+				if (deviceState.controlProvider == device)
+					return true;
+			return false;
 		}
 
-		private bool ProcessEventForScheme(InputEvent inputEvent)
+		public override bool ProcessEvent/*ForScheme*/(InputEvent inputEvent)
 		{
 			var consumed = false;
 			
@@ -413,7 +379,7 @@ namespace UnityEngine.InputNew
 	public class ActionMapSlot
 	{
 		public ActionMap actionMap;
-		public bool active;
+		public bool active = true;
 		public bool blockSubsequent;
 	}
 }

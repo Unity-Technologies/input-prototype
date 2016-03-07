@@ -25,7 +25,7 @@ namespace UnityEngine.InputNew
 				foreach (ActionMapSlot actionMapSlot in actionMaps)
 				{
 					ActionMapInput actionMapInput = ActionMapInput.Create(actionMapSlot.actionMap);
-					actionMapInput.TryInitializeControlSchemeGlobal();
+					actionMapInput.TryInitializeWithDevices(handle.GetApplicableDevices());
 					actionMapInput.active = actionMapSlot.active;
 					actionMapInput.blockSubsequent = actionMapSlot.blockSubsequent;
 					handle.maps.Add(actionMapInput);
