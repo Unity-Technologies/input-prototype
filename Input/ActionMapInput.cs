@@ -44,12 +44,15 @@ namespace UnityEngine.InputNew
 				m_Active = value;
 				Reset(value);
 
-				if (PlayerHandle.onChange != null)
-					PlayerHandle.onChange.Invoke();
+				if (onStatusChange != null)
+					onStatusChange.Invoke();
 			}
 		}
 
 		public bool blockSubsequent { get; set; }
+
+		public delegate void ChangeEvent();
+		public static ChangeEvent onStatusChange;
 
 		public static ActionMapInput Create(ActionMap actionMap)
 		{
@@ -141,8 +144,8 @@ namespace UnityEngine.InputNew
 
 			Reset();
 
-			if (PlayerHandle.onChange != null)
-				PlayerHandle.onChange.Invoke();
+			if (onStatusChange != null)
+				onStatusChange.Invoke();
 		}
 
 		private void ResetControlsForCurrentReceivers()
