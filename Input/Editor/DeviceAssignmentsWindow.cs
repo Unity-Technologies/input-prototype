@@ -14,6 +14,15 @@ namespace UnityEngine.InputNew
 
 		Vector2 scrollPos;
 
+		static class Styles {
+			public static GUIStyle boxStyle;
+			static Styles()
+			{
+				boxStyle = new GUIStyle("box");
+				boxStyle.normal.textColor = EditorStyles.label.normal.textColor;
+			}
+		}
+
 		[MenuItem ("Window/Players")]
 		static void Init()
 		{
@@ -80,7 +89,7 @@ namespace UnityEngine.InputNew
 			{
 				if (device.assignment != null)
 					continue;
-				GUILayout.Label(device.ToString(), "box", GUILayout.Width(kElementWidth));
+				GUILayout.Label(device.ToString(), Styles.boxStyle, GUILayout.Width(kElementWidth));
 			}
 			EditorGUILayout.EndHorizontal();
 		}
@@ -117,7 +126,7 @@ namespace UnityEngine.InputNew
 		{
 			int lines = 2 + s_MaxAssignedDevices + s_MaxMaps * (2 + s_MaxMapDevices);
 			Rect rect = GUILayoutUtility.GetRect(kElementWidth, EditorGUIUtility.singleLineHeight * lines + 3, "box", GUILayout.ExpandWidth(false));
-			GUI.Box(rect, "Player " + player.index);
+			GUI.Box(rect, "Player " + player.index, Styles.boxStyle);
 			rect.height = EditorGUIUtility.singleLineHeight;
 			Rect origRect = rect;
 
@@ -137,7 +146,12 @@ namespace UnityEngine.InputNew
 				ActionMapInput map = player.maps[i];
 
 				Color oldColor = GUI.color;
-				GUI.color = new Color(1, 1, 1, map.active ? 1 : 0.5f);
+				if (!map.active)
+				{
+					Color color = GUI.color;
+					color.a *= 0.5f;
+					GUI.color = color;
+				}
 
 				GUI.Label(rect, map.GetType().Name);
 				rect.y += EditorGUIUtility.singleLineHeight;
