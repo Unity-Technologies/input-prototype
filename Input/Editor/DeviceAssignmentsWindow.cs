@@ -14,12 +14,13 @@ namespace UnityEngine.InputNew
 
 		Vector2 scrollPos;
 
-		[MenuItem ("Window/Device Assignments")]
+		[MenuItem ("Window/Players")]
 		static void Init()
 		{
 			// Get existing open window or if none, make a new one:
 			DeviceAssignmentsWindow window = (DeviceAssignmentsWindow)EditorWindow.GetWindow (typeof (DeviceAssignmentsWindow));
 			window.Show();
+			window.titleContent = new GUIContent("Players");
 		}
 
 		void OnEnable()
@@ -134,6 +135,8 @@ namespace UnityEngine.InputNew
 			for (int i = 0; i < player.maps.Count; i++)
 			{
 				ActionMapInput map = player.maps[i];
+
+				Color oldColor = GUI.color;
 				GUI.color = new Color(1, 1, 1, map.active ? 1 : 0.5f);
 
 				GUI.Label(rect, map.GetType().Name);
@@ -149,6 +152,8 @@ namespace UnityEngine.InputNew
 					rect.y += EditorGUIUtility.singleLineHeight;
 				}
 				EditorGUI.indentLevel--;
+
+				GUI.color = oldColor;
 			}
 		}
 	}
