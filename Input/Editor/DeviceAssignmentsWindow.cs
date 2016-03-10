@@ -11,17 +11,37 @@ namespace UnityEngine.InputNew
 		static int s_MaxAssignedDevices;
 		static int s_MaxMapDevices;
 		static int s_MaxMaps;
-		const int kDeviceElementWidth = 160;
+		const int kDeviceElementWidth = 150;
 		const int kPlayerElementWidth = kDeviceElementWidth * 2 + 4;
 
 		Vector2 scrollPos;
+		Dictionary<InputDevice, Rect> devicePositionTargets = new Dictionary<InputDevice, Rect>();
+		Dictionary<InputDevice, Rect> devicePositions = new Dictionary<InputDevice, Rect>();
 
 		static class Styles {
-			public static GUIStyle boxStyle;
+			public static GUIStyle deviceStyle;
+			public static GUIStyle playerStyle;
+			public static GUIStyle mapStyle;
+			public static GUIStyle nodeLabel;
 			static Styles()
 			{
-				boxStyle = new GUIStyle("box");
-				boxStyle.normal.textColor = EditorStyles.label.normal.textColor;
+				deviceStyle = new GUIStyle("flow node 3");
+				deviceStyle.margin = new RectOffset(4,4,4,4);
+				deviceStyle.padding = new RectOffset(4,4,4,4);
+				deviceStyle.contentOffset = Vector2.zero;
+				deviceStyle.alignment = TextAnchor.MiddleCenter;
+				deviceStyle.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
+
+				playerStyle = new GUIStyle("flow node 2");
+				playerStyle.margin = new RectOffset(4,4,4,4);
+				playerStyle.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
+
+				mapStyle = new GUIStyle("flow node 4");
+				mapStyle.margin = new RectOffset(4,4,4,4);
+				mapStyle.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
+
+				nodeLabel = new GUIStyle(EditorStyles.label);
+				nodeLabel.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
 			}
 		}
 
@@ -74,6 +94,37 @@ namespace UnityEngine.InputNew
 				ShowPlayerHandles(devices, players);
 			}
 			EditorGUILayout.EndScrollView();
+
+			DrawDevices(devices);
+		}
+
+		void DrawDevices(List<InputDevice> devices)
+		{
+			bool repaint = false;
+			foreach (var device in devices)
+			{
+				Rect rect = new Rect();
+				if (Event.current.type == EventType.Repaint)
+				{
+					Rect target = devicePositionTargets[device];
+					if (devicePositions.TryGetValue(device, out rect))
+					{
+						devicePositions[device] = rect = new Rect(
+							Vector2.Lerp(rect.position, target.position, 0.1f),
+							Vector2.Lerp(rect.size, target.size, 0.1f)
+						);
+					}
+					else
+					{
+						devicePositions[device] = rect = target;
+					}
+					if (rect != target)
+						repaint = true;
+				}
+				GUI.Label(rect, device.ToString(), Styles.deviceStyle);
+			}
+			if (repaint)
+				Repaint();
 		}
 
 		void ShowUnassignedDevices(IEnumerable<InputDevice> devices)
@@ -86,7 +137,9 @@ namespace UnityEngine.InputNew
 			{
 				if (device.assignment != null)
 					continue;
-				GUILayout.Label(device.ToString(), Styles.boxStyle, GUILayout.Width(kDeviceElementWidth));
+				Rect rect = GUILayoutUtility.GetRect(new GUIContent(device.ToString()), Styles.deviceStyle, GUILayout.Width(kDeviceElementWidth));
+				if (Event.current.type == EventType.Repaint)
+					devicePositionTargets[device] = rect;
 			}
 			EditorGUILayout.EndHorizontal();
 		}
@@ -123,80 +176,62 @@ namespace UnityEngine.InputNew
 
 		void DrawPlayerHandle(PlayerHandle player)
 		{
-			EditorGUIUtility.labelWidth = 180;
+			EditorGUIUtility.labelWidth = 160;
 
-			int fixedLines = 3;
-			int lines = fixedLines + s_MaxAssignedDevices + s_MaxMaps * 3;
-			Rect rect = GUILayoutUtility.GetRect(kPlayerElementWidth, EditorGUIUtility.singleLineHeight * lines + 3, "box", GUILayout.ExpandWidth(false));
-			GUI.Box(rect, "Player " + player.index + (player.global ? " (Global)" : ""), Styles.boxStyle);
-			rect.height = EditorGUIUtility.singleLineHeight;
-			Rect origRect = rect;
-
-			rect.y += EditorGUIUtility.singleLineHeight;
-
-			EditorGUI.LabelField(rect, "Assigned Devices");
-			EditorGUI.indentLevel++;
-			rect.y += EditorGUIUtility.singleLineHeight;
-			if (player.assignments.Count == 0)
-				EditorGUI.LabelField(rect, "None");
-			for (int i = 0; i < player.assignments.Count; i++)
+			GUIContent playerContent = new GUIContent("Player " + player.index + (player.global ? " (Global)" : ""));
+			GUILayout.BeginVertical(playerContent, Styles.playerStyle, GUILayout.Width(kPlayerElementWidth));
 			{
-				EditorGUI.LabelField(rect, player.assignments[i].device.ToString());
-				rect.y += EditorGUIUtility.singleLineHeight;
-			}
-			EditorGUI.indentLevel--;
-
-			rect = origRect;
-			rect.y += EditorGUIUtility.singleLineHeight * (fixedLines - 1 + s_MaxAssignedDevices);
-
-			EditorGUI.LabelField(rect, "Action Map Inputs");
-			rect.y += EditorGUIUtility.singleLineHeight;
-			EditorGUI.indentLevel++;
-
-			for (int i = 0; i < player.maps.Count; i++)
-			{
-				ActionMapInput map = player.maps[i];
-
-				Color oldColor = GUI.color;
-				if (!map.active)
+				EditorGUILayout.LabelField("Assigned Devices", Styles.nodeLabel);
+				for (int i = 0; i < s_MaxAssignedDevices; i++)
 				{
-					Color color = GUI.color;
-					color.a *= 0.5f;
-					GUI.color = color;
+					Rect deviceRect = GUILayoutUtility.GetRect(GUIContent.none, Styles.deviceStyle, GUILayout.Width(kDeviceElementWidth));
+					if (i >= player.assignments.Count)
+						continue;
+					if (Event.current.type == EventType.Repaint)
+						devicePositionTargets[player.assignments[i].device] = deviceRect;
 				}
 
-				EditorGUI.LabelField(rect, map.GetType().Name);
-				rect.y += EditorGUIUtility.singleLineHeight;
+				EditorGUILayout.LabelField("Action Map Inputs", Styles.nodeLabel);
+				for (int i = 0; i < player.maps.Count; i++)
+					DrawActionMapInput(player.maps[i]);
+			}
+			EditorGUILayout.EndVertical();
+		}
 
-				EditorGUI.indentLevel++;
+		void DrawActionMapInput(ActionMapInput map)
+		{
+			EditorGUI.BeginDisabledGroup(!map.active);
+			GUIContent mapContent = new GUIContent(map.actionMap.name);
+			GUILayout.BeginVertical(mapContent, Styles.mapStyle);
+			{
+				LabelField("Block Subsequent", map.blockSubsequent.ToString());
 
 				string schemeString = "-";
-				if (map.active)
-				{
-					if (map.controlScheme != null)
-						schemeString = map.controlScheme.name;
-					else
-						schemeString = "None";
-				}
-				EditorGUI.LabelField(rect, "Current Control Scheme", schemeString);
-				rect.y += EditorGUIUtility.singleLineHeight;
+				if (map.active && map.controlScheme != null)
+					schemeString = map.controlScheme.name;
+				LabelField("Current Control Scheme", schemeString);
 
-				string devicesString = "-";
+				string devicesString = "";
 				if (map.active)
-				{
 					devicesString = string.Join(", ", map.GetCurrentlyUsedDevices().Select(e => e.ToString()).ToArray());
-					if (devicesString == "")
-						devicesString = "None";
-				}
-				EditorGUI.LabelField(rect, "Currently Used Devices", devicesString);
-				rect.y += EditorGUIUtility.singleLineHeight;
-
-				EditorGUI.indentLevel--;
-
-				GUI.color = oldColor;
+				if (string.IsNullOrEmpty(devicesString))
+					devicesString = "-";
+				LabelField("Currently Used Devices", devicesString);
 			}
+			EditorGUILayout.EndVertical();
+			EditorGUI.EndDisabledGroup();
+		}
 
-			EditorGUI.indentLevel--;
+		void LabelField(string label1, string label2)
+		{
+			Rect rect = EditorGUILayout.GetControlRect();
+			Rect rect1 = rect;
+			Rect rect2 = rect;
+			rect2.xMin += EditorGUIUtility.labelWidth;
+
+			rect1.xMax = rect2.xMin - 2;
+			GUI.Label(rect1, label1, Styles.nodeLabel);
+			GUI.Label(rect2, label2, Styles.nodeLabel);
 		}
 	}
 }
