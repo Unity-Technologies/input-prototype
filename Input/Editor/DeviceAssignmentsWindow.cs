@@ -93,9 +93,8 @@ namespace UnityEngine.InputNew
 
 				ShowPlayerHandles(devices, players);
 			}
-			EditorGUILayout.EndScrollView();
-
 			DrawDevices(devices);
+			EditorGUILayout.EndScrollView();
 		}
 
 		void DrawDevices(List<InputDevice> devices)
