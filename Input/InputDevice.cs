@@ -13,13 +13,13 @@ namespace UnityEngine.InputNew
 		{
 			SetControls(controls);
 			this.deviceName = deviceName;
-			deviceIndex = InputSystem.GetDevicesOfType(GetType()).Count;
+			deviceIndex = InputSystem.GetNewDeviceIndex(this);
 		}
 
 		protected InputDevice()
 		{
 			this.deviceName = "Generic Input Device";
-			deviceIndex = InputSystem.GetDevicesOfType(GetType()).Count;
+			deviceIndex = InputSystem.GetNewDeviceIndex(this);
 		}
 
 		#endregion

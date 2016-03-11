@@ -160,7 +160,7 @@ namespace UnityEngine.InputNew
 		public IEnumerable<InputDevice> GetApplicableDevices()
 		{
 			if (global)
-				return InputSystem.leastToMostRecentlyUsedDevices.Where(e => e.assignment == null);
+				return InputSystem.devices.Where(e => e.assignment == null);
 			else
 				return assignments.Select(e => e.device);
 		}

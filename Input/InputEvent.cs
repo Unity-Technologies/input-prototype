@@ -61,7 +61,7 @@ namespace UnityEngine.InputNew
 			}
 			set
 			{
-				deviceIndex = InputSystem.GetDeviceIndex(value);
+				deviceIndex = value.deviceIndex;
 				deviceType = value.GetType();
 			}
 		}

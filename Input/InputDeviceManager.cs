@@ -66,14 +66,14 @@ namespace UnityEngine.InputNew
 
 		public InputDevice GetMostRecentlyUsedDevice(Type deviceType)
 		{
-			for (var i = m_LeastToMostRecentlyUsedDevices.Count - 1; i >= 0; -- i)
+			InputDevice mostRecentDevice = null;
+			for (var i = m_Devices.Count - 1; i >= 0; -- i)
 			{
-				var device = m_LeastToMostRecentlyUsedDevices[i];
-				if (deviceType.IsInstanceOfType(device))
-					return device;
+				var device = m_Devices[i];
+				if (deviceType.IsInstanceOfType(device) && (mostRecentDevice == null || device.lastEventTime > mostRecentDevice.lastEventTime))
+					mostRecentDevice = device;
 			}
-
-			return null;
+			return mostRecentDevice;
 		}
 
 		public TDevice GetMostRecentlyUsedDevice<TDevice>()
@@ -82,37 +82,23 @@ namespace UnityEngine.InputNew
 			return (TDevice)GetMostRecentlyUsedDevice(typeof(TDevice));
 		}
 
-		public List<InputDevice> GetDevicesOfType(Type deviceType)
+		internal int GetNewDeviceIndex(InputDevice device)
 		{
-			if (!typeof(InputDevice).IsAssignableFrom(deviceType))
-				throw new System.Exception("deviceType must be derived from type InputDevice.");
-			
-			List<InputDevice> list;
-			if (!m_Devices.TryGetValue(deviceType, out list))
-			{
-				list = new List<InputDevice>();
-				m_Devices[deviceType] = list;
-			}
-			return list;
+			Type t = device.GetType();
+			int count = 0;
+			for (int i = 0; i < devices.Count; i++)
+				if (devices[i].GetType() == t)
+					count++;
+			return count;
 		}
 
 		public InputDevice LookupDevice(Type deviceType, int deviceIndex)
 		{
 			List<InputDevice> list;
-			if (!m_Devices.TryGetValue(deviceType, out list)
-				|| deviceIndex >= list.Count)
+			if (!m_DevicesByType.TryGetValue(deviceType, out list) || deviceIndex >= list.Count)
 				return null;
 
 			return list[deviceIndex];
-		}
-
-		public int GetDeviceIndex(InputDevice device)
-		{
-			List<InputDevice> list;
-			if (!m_Devices.TryGetValue(device.GetType(), out list))
-				return -1;
-
-			return list.IndexOf(device);
 		}
 
 		////REVIEW: an alternative to these two methods is to hook every single device into the event tree independently; may be better
@@ -125,10 +111,6 @@ namespace UnityEngine.InputNew
 			// Ignore event on device if device is absent or disconnected.
 			if (device == null || !device.connected)
 				return false;
-
-			// Update most-recently-used status.
-			m_LeastToMostRecentlyUsedDevices.Remove(device);
-			m_LeastToMostRecentlyUsedDevices.Add(device);
 
 			//fire event
 
@@ -206,15 +188,16 @@ namespace UnityEngine.InputNew
 		void RegisterDeviceInternal(Type deviceType, InputDevice device)
 		{
 			List<InputDevice> list;
-			if (!m_Devices.TryGetValue(deviceType, out list))
+			if (!m_DevicesByType.TryGetValue(deviceType, out list))
 			{
 				list = new List<InputDevice>();
-				m_Devices[deviceType] = list;
+				m_DevicesByType[deviceType] = list;
 			}
 
 			list.Add(device);
-			m_LeastToMostRecentlyUsedDevices.Remove(device);
-			m_LeastToMostRecentlyUsedDevices.Add(device);
+			// Called recorsively for base types so remove first to make sure it's only added once.
+			m_Devices.Remove(device);
+			m_Devices.Add(device);
 
 			var baseType = deviceType.BaseType;
 			if (baseType != typeof(InputDevice))
@@ -241,32 +224,18 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Properties
-
-		public IEnumerable<InputDevice> devices
-		{
-			get
-			{
-				foreach (var list in m_Devices.Values)
-				{
-					foreach (var device in list)
-					{
-						yield return device;
-					}
-				}
-			}
-		}
 		
-		public List<InputDevice> leastToMostRecentlyUsedDevices
+		public List<InputDevice> devices
 		{
-			get { return m_LeastToMostRecentlyUsedDevices; }
+			get { return m_Devices; }
 		}
 
 		#endregion
 
 		#region Fields
 
-		readonly Dictionary<Type, List<InputDevice>> m_Devices = new Dictionary<Type, List<InputDevice>>();
-		readonly List<InputDevice> m_LeastToMostRecentlyUsedDevices = new List<InputDevice>();
+		readonly Dictionary<Type, List<InputDevice>> m_DevicesByType = new Dictionary<Type, List<InputDevice>>();
+		readonly List<InputDevice> m_Devices = new List<InputDevice>();
 		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
 		readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
 

@@ -70,7 +70,7 @@ namespace UnityEngine.InputNew
 		
 		void OnGUI()
 		{
-			var devices = InputSystem.leastToMostRecentlyUsedDevices;
+			var devices = InputSystem.devices;
 			var players = PlayerHandleManager.players;
 
 			s_MaxAssignedDevices = 1;

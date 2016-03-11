@@ -105,11 +105,6 @@ namespace UnityEngine.InputNew
 			return s_Devices.LookupDevice(deviceType, deviceIndex);
 		}
 
-		public static int GetDeviceIndex(InputDevice device)
-		{
-			return s_Devices.GetDeviceIndex(device);
-		}
-
 		public static void QueueEvent(InputEvent inputEvent)
 		{
 			s_EventQueue.Queue(inputEvent);
@@ -212,7 +207,7 @@ namespace UnityEngine.InputNew
 			get { return s_BindingListeners.Count > 0; }
 		}
 
-		public static IEnumerable<InputDevice> devices
+		public static List<InputDevice> devices
 		{
 			get { return s_Devices.devices; }
 		}
@@ -223,14 +218,9 @@ namespace UnityEngine.InputNew
 			return s_Devices.GetMostRecentlyUsedDevice<TDevice>();
 		}
 
-		public static List<InputDevice> GetDevicesOfType(Type deviceType)
+		internal static int GetNewDeviceIndex(InputDevice device)
 		{
-			return s_Devices.GetDevicesOfType(deviceType);
-		}
-		
-		public static List<InputDevice> leastToMostRecentlyUsedDevices
-		{
-			get { return s_Devices.leastToMostRecentlyUsedDevices; }
+			return s_Devices.GetNewDeviceIndex(device);
 		}
 
 		public static bool simulateMouseWithTouches
