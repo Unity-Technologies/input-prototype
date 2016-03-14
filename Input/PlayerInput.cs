@@ -10,7 +10,7 @@ namespace UnityEngine.InputNew
 	{
 		// Should this player handle request assignment of an input device as soon as the component awakes?
 		[FormerlySerializedAs("autoSinglePlayerAssign")]
-		public bool autoAssignGlobal;
+		public bool autoAssignGlobal = true;
 
 		public List<ActionMapSlot> actionMaps = new List<ActionMapSlot>();
 
