@@ -12,8 +12,9 @@ namespace UnityEngine.InputNew
 		static int s_MaxMapDevices;
 		static int s_MaxMaps;
 		const int kDeviceElementWidth = 150;
-		const int kPlayerElementWidth = kDeviceElementWidth * 2 + 4;
+		static int s_PlayerElementWidth = kDeviceElementWidth * 2 + 4;
 
+		bool showMaps = true;
 		Vector2 scrollPos;
 		Dictionary<InputDevice, Rect> devicePositionTargets = new Dictionary<InputDevice, Rect>();
 		Dictionary<InputDevice, Rect> devicePositions = new Dictionary<InputDevice, Rect>();
@@ -70,6 +71,16 @@ namespace UnityEngine.InputNew
 		
 		void OnGUI()
 		{
+			EditorGUILayout.BeginHorizontal("toolbar");
+			showMaps = GUILayout.Toggle(showMaps, "Show Maps", "toolbarbutton");
+			GUILayout.FlexibleSpace();
+			EditorGUILayout.EndHorizontal();
+
+			if (showMaps)
+				s_PlayerElementWidth = kDeviceElementWidth * 2 + 4;
+			else
+				s_PlayerElementWidth = kDeviceElementWidth;
+
 			var devices = InputSystem.devices;
 			var players = PlayerHandleManager.players;
 
@@ -177,10 +188,10 @@ namespace UnityEngine.InputNew
 		{
 			EditorGUIUtility.labelWidth = 160;
 
-			GUIContent playerContent = new GUIContent("Player " + player.index + (player.global ? " (Global)" : ""));
-			GUILayout.BeginVertical(playerContent, Styles.playerStyle, GUILayout.Width(kPlayerElementWidth));
+			GUIContent playerContent = new GUIContent("Player " + player.index);
+			GUILayout.BeginVertical(playerContent, Styles.playerStyle, GUILayout.Width(s_PlayerElementWidth));
 			{
-				EditorGUILayout.LabelField("Assigned Devices", Styles.nodeLabel);
+				GUILayout.Label("Assigned Devices", Styles.nodeLabel);
 				for (int i = 0; i < s_MaxAssignedDevices; i++)
 				{
 					Rect deviceRect = GUILayoutUtility.GetRect(GUIContent.none, Styles.deviceStyle, GUILayout.Width(kDeviceElementWidth));
@@ -190,11 +201,19 @@ namespace UnityEngine.InputNew
 						devicePositionTargets[player.assignments[i].device] = deviceRect;
 				}
 
-				EditorGUILayout.LabelField("Action Map Inputs", Styles.nodeLabel);
-				for (int i = 0; i < player.maps.Count; i++)
-					DrawActionMapInput(player.maps[i]);
+				if (showMaps)
+				{
+					GUILayout.Label("Action Map Inputs", Styles.nodeLabel);
+					for (int i = 0; i < player.maps.Count; i++)
+						DrawActionMapInput(player.maps[i]);
+				}
 			}
 			EditorGUILayout.EndVertical();
+			if (player.global)
+			{
+				Rect rect = GUILayoutUtility.GetLastRect();
+				GUI.Label(rect, "(Global)");
+			}
 		}
 
 		void DrawActionMapInput(ActionMapInput map)
