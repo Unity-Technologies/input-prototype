@@ -18,7 +18,6 @@ namespace UnityEngine.InputNew
 			go.hideFlags = HideFlags.HideAndDontSave;
 
 			go.AddComponent<InputManager>();
-			go.AddComponent<InputManager>();
 			go.AddComponent<InputManagerEndFrame>();
 			go.AddComponent<JoystickInputToEvents>();
 			go.AddComponent<MouseInputToEvents>();
