@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public abstract class InputControlProvider : IInputControlProvider
+	public abstract class InputControlProvider
 	{
 		public List<InputControlData> controlDataList { get { return m_ControlDataList; } }
 		public InputState state { get { return m_State; } }

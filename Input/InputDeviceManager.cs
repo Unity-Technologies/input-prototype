@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	class InputDeviceManager
+	class InputDeviceManager : IInputConsumer
 	{
 		#region Inner Types
 
@@ -118,6 +118,17 @@ namespace UnityEngine.InputNew
 			return device.ProcessEvent(inputEvent);
 		}
 
+		public void BeginFrame()
+		{
+			foreach (var device in devices)
+				device.state.BeginFrame();
+		}
+
+		public void EndFrame()
+		{
+
+		}
+
 		public bool RemapEvent(InputEvent inputEvent)
 		{
 			// Look up device.
@@ -213,12 +224,6 @@ namespace UnityEngine.InputNew
 			var handler = deviceConnectedDisconnected;
 			if (handler != null)
 				handler(device, connected);
-		}
-
-		internal void BeginFrameEvent()
-		{
-			foreach (var device in devices)
-				device.state.BeginFrame();
 		}
 
 		#endregion

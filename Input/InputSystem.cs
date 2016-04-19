@@ -41,51 +41,24 @@ namespace UnityEngine.InputNew
 			s_Devices.InitAfterProfiles();
 
 			// Set up event tree.
-			s_EventTree = new InputEventTree { name = "Root" };
+			s_EventTree = new InputConsumerNode();
 
-			var remap = new InputEventTree
-			{
-				name = "Remap",
-				processInput = s_Devices.RemapEvent
-			};
-			s_EventTree.children.Add(remap);
+			s_EventTree.children.Add(new InputConsumerCallback { processEvent = s_Devices.RemapEvent });
 
-			rewriterStack = new InputEventTree
-			{
-				name = "Rewriters",
-				isStack = true
-			};
-			s_EventTree.children.Add(rewriterStack);
+			rewriters = new InputConsumerNode();
+			s_EventTree.children.Add(rewriters);
 
-			var state = new InputEventTree
-			{
-				name = "State",
-				processInput = s_Devices.ProcessEvent,
-				beginFrame = s_Devices.BeginFrameEvent
-			};
-			s_EventTree.children.Add(state);
+			s_EventTree.children.Add(s_Devices);
 
-			consumerStack = new InputEventTree
-			{
-				name = "Consumers",
-				isStack = true
-			};
-			s_EventTree.children.Add(consumerStack);
+			consumers = new InputConsumerNode();
+			s_EventTree.children.Add(consumers);
 
-			// Global consumer stack should come first in stack so it's processed last.
-			globalPlayers = new InputEventTree
-			{
-				name = "Global Players",
-				isStack = true
-			};
-			consumerStack.children.Add(globalPlayers);
+			assignedPlayers = new InputConsumerNode();
+			consumers.children.Add(assignedPlayers);
 
-			assignedPlayers = new InputEventTree
-			{
-				name = "Assigned Players",
-				isStack = true
-			};
-			consumerStack.children.Add(assignedPlayers);
+			// Global consumers should be processed last.
+			globalPlayers = new InputConsumerNode();
+			consumers.children.Add(globalPlayers);
 
 			simulateMouseWithTouches = true;
 		}
@@ -196,10 +169,10 @@ namespace UnityEngine.InputNew
 			get { return s_EventTree; }
 		}
 
-		public static IInputConsumer consumerStack { get; private set; }
-		public static IInputConsumer globalPlayers { get; private set; }
-		public static IInputConsumer assignedPlayers { get; private set; }
-		public static IInputConsumer rewriterStack { get; private set; }
+		public static InputConsumerNode consumers { get; private set; }
+		public static InputConsumerNode globalPlayers { get; private set; }
+		public static InputConsumerNode assignedPlayers { get; private set; }
+		public static InputConsumerNode rewriters { get; private set; }
 
 		public static bool listeningForBinding
 		{
@@ -233,18 +206,17 @@ namespace UnityEngine.InputNew
 				if (value)
 				{
 					if (s_SimulateMouseWithTouchesProcess == null)
-						s_SimulateMouseWithTouchesProcess = new InputEventTree
+						s_SimulateMouseWithTouchesProcess = new InputConsumerCallback
 						{
-							name = "SimulateMouseWithTouches"
-							, processInput = SendSimulatedMouseEvents
+							processEvent = SendSimulatedMouseEvents
 						};
 
-					rewriterStack.children.Add(s_SimulateMouseWithTouchesProcess);
+					rewriters.children.Add(s_SimulateMouseWithTouchesProcess);
 				}
 				else
 				{
 					if (s_SimulateMouseWithTouchesProcess != null)
-						rewriterStack.children.Remove(s_SimulateMouseWithTouchesProcess);
+						rewriters.children.Remove(s_SimulateMouseWithTouchesProcess);
 				}
 
 				s_SimulateMouseWithTouches = value;
@@ -258,9 +230,9 @@ namespace UnityEngine.InputNew
 		static InputDeviceManager s_Devices;
 		static InputEventQueue s_EventQueue;
 		static InputEventPool s_EventPool;
-		static InputEventTree s_EventTree;
+		static InputConsumerNode s_EventTree;
 		static bool s_SimulateMouseWithTouches;
-		static InputEventTree s_SimulateMouseWithTouchesProcess;
+		static IInputConsumer s_SimulateMouseWithTouchesProcess;
 		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
 
 		#endregion
