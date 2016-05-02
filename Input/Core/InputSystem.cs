@@ -126,13 +126,6 @@ namespace UnityEngine.InputNew
 			s_EventTree.EndFrame();
 		}
 
-		internal static void QueueNativeEvents(List<NativeInputEvent> nativeEvents)
-		{
-			////TODO
-
-			nativeEvents.Clear();
-		}
-
 		private static bool SendSimulatedMouseEvents(InputEvent inputEvent)
 		{
 			////FIXME: should take actual touchdevice in inputEvent into account
