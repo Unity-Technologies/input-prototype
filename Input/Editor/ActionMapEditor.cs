@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEditor;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -16,17 +17,6 @@ public class ActionMapEditor : Editor
 		public static GUIContent iconToolbarPlus =	EditorGUIUtility.IconContent("Toolbar Plus", "Add to list");
 		public static GUIContent iconToolbarMinus =	EditorGUIUtility.IconContent("Toolbar Minus", "Remove from list");
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
-		public static Dictionary<InputControlType, string[]> controlTypeSubLabels;
-
-		static Styles()
-		{
-			controlTypeSubLabels = new Dictionary<InputControlType, string[]>();
-			controlTypeSubLabels[InputControlType.Vector2] = new string[] { "X", "Y" };
-			controlTypeSubLabels[InputControlType.Vector3] = new string[] { "X", "Y", "Z" };
-			controlTypeSubLabels[InputControlType.Vector4] = new string[] { "X", "Y", "Z", "W" };
-			controlTypeSubLabels[InputControlType.Quaternion] = new string[] { "X", "Y", "Z", "W" };
-
-		}
 	}
 	
 	ActionMap m_ActionMapEditCopy;
@@ -40,6 +30,7 @@ public class ActionMapEditor : Editor
 	Dictionary<string, string> m_PropertyErrors = new Dictionary<string, string>();
 	InputControlDescriptor m_SelectedSource = null;
 	ButtonAxisSource m_SelectedButtonAxisSource = null;
+	Dictionary<Type, string[]> s_ControlTypeSourceNameArrays = new Dictionary<Type, string[]>();
 	bool m_Modified = false;
 	
 	int selectedScheme
@@ -264,8 +255,6 @@ public class ActionMapEditor : Editor
 		if (EditorGUI.EndChangeCheck())
 			scheme.name = schemeName;
 
-		string[] deviceNames = InputDeviceUtility.GetDeviceNames();
-
 		for (int i = 0; i < scheme.serializableDeviceTypes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
@@ -279,13 +268,9 @@ public class ActionMapEditor : Editor
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 
 			EditorGUI.BeginChangeCheck();
-			int deviceIndex = EditorGUI.Popup(
-				rect,
-				"Device Type",
-				InputDeviceUtility.GetDeviceIndex(scheme.serializableDeviceTypes[i]),
-				deviceNames);
+			Type t = TypeGUI.TypeField(rect, new GUIContent("Device Type"), typeof(InputDevice), scheme.serializableDeviceTypes[i]);
 			if (EditorGUI.EndChangeCheck())
-				scheme.serializableDeviceTypes[i].value = InputDeviceUtility.GetDeviceType(deviceIndex);
+				scheme.serializableDeviceTypes[i].value = t;
 		}
 
 		// Device remove and add buttons
@@ -500,7 +485,7 @@ public class ActionMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		if ((System.Type)(source.negative.deviceType) == (System.Type)(source.positive.deviceType))
+		if ((Type)(source.negative.deviceType) == (Type)(source.positive.deviceType))
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
 					InputDeviceUtility.GetDeviceName(source.negative),
@@ -533,25 +518,8 @@ public class {0} : ActionMapInput {{
 		
 		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 		{
-			InputControlType controlType = m_ActionMapEditCopy.actions[i].controlData.controlType;
-			string typeStr = string.Empty;
-			switch(controlType)
-			{
-			case InputControlType.Button:
-				typeStr = "ButtonInputControl";
-				break;
-			case InputControlType.AbsoluteAxis:
-			case InputControlType.RelativeAxis:
-				typeStr = "AxisInputControl";
-				break;
-			case InputControlType.Vector2:
-				typeStr = "Vector2InputControl";
-				break;
-			case InputControlType.Vector3:
-				typeStr = "Vector3InputControl";
-				break;
-			}
-
+			Type controlType = m_ActionMapEditCopy.actions[i].controlData.controlType;
+			string typeStr = controlType.Name;
 			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);
 		}
 		
@@ -607,6 +575,18 @@ public class {0} : ActionMapInput {{
 		return output;
 	}
 	
+	string[] GetSourceControlNames(Type controlType)
+	{
+		string[] names = null;
+		if (controlType != null && !s_ControlTypeSourceNameArrays.TryGetValue(controlType, out names))
+		{
+			InputControl control = (InputControl)Activator.CreateInstance(controlType, 0, null);
+			names = control.sourceControlNames;
+			s_ControlTypeSourceNameArrays[controlType] = names;
+		}
+		return names;
+	}
+
 	void DrawActionGUI()
 	{
 		EditorGUI.BeginChangeCheck();
@@ -619,9 +599,10 @@ public class {0} : ActionMapInput {{
 			selectedAction.name = name;
 			RefreshPropertyNames();
 		}
-		
+
 		EditorGUI.BeginChangeCheck();
-		var type = (InputControlType)EditorGUILayout.EnumPopup("Type", selectedAction.controlData.controlType);
+		Rect rect = EditorGUILayout.GetControlRect();
+		Type type = TypeGUI.TypeField(rect, new GUIContent("Control Type"), typeof(InputControl), selectedAction.controlData.controlType);
 		if (EditorGUI.EndChangeCheck())
 		{
 			InputControlData data = selectedAction.controlData;
@@ -631,9 +612,10 @@ public class {0} : ActionMapInput {{
 		
 		EditorGUILayout.Space();
 
-		if (Styles.controlTypeSubLabels.ContainsKey(selectedAction.controlData.controlType))
+		string[] sourceControlNames = GetSourceControlNames(selectedAction.controlData.controlType);
+		if (sourceControlNames != null)
 		{
-			DrawCompositeControl(selectedAction);
+			DrawCompositeControl(selectedAction, sourceControlNames);
 		}
 		else
 		{
@@ -645,9 +627,8 @@ public class {0} : ActionMapInput {{
 		}
 	}
 
-	void DrawCompositeControl(InputAction action)
+	void DrawCompositeControl(InputAction action, string[] subLabels)
 	{
-		string[] subLabels = Styles.controlTypeSubLabels[action.controlData.controlType];
 		if (action.controlData.componentControlIndices == null ||
 			action.controlData.componentControlIndices.Length != subLabels.Length)
 		{
@@ -798,7 +779,7 @@ public class {0} : ActionMapInput {{
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
 
-		List<System.Type> types = m_ActionMapEditCopy.controlSchemes[selectedScheme].deviceTypes.ToList();
+		List<Type> types = m_ActionMapEditCopy.controlSchemes[selectedScheme].deviceTypes.ToList();
 		string[] deviceNames = types.Select(e => e == null ? string.Empty : e.Name).ToArray();
 		EditorGUI.BeginChangeCheck();
 		int deviceIndex = EditorGUI.Popup(rect, types.IndexOf(source.deviceType), deviceNames);
@@ -814,5 +795,79 @@ public class {0} : ActionMapInput {{
 			source.controlIndex = controlIndex;
 		
 		EditorGUI.indentLevel = indentLevel;
+	}
+
+	public class TypeGUI {
+		static Dictionary<Type, Type[]> s_AllBasesDeviceTypes = new Dictionary<Type, Type[]>();
+		static Dictionary<Type, string[]> s_AllBasesDeviceNames = new Dictionary<Type, string[]>();
+		static Dictionary<Type, Dictionary<Type, int>> s_AllBasesIndicesOfDevices = new Dictionary<Type, Dictionary<Type, int>>();
+
+		public static Type TypeField(Rect position, GUIContent label, Type baseType, Type value)
+		{
+			Type[] deviceTypes = null;
+			string[] deviceNames = null;
+			Dictionary<Type, int> indicesOfDevices = null;
+			InitDevices(baseType, ref deviceTypes, ref deviceNames, ref indicesOfDevices);
+
+			EditorGUI.BeginChangeCheck();
+			int deviceIndex = EditorGUI.Popup(
+				position,
+				label.text,
+				GetDeviceIndex(value, indicesOfDevices),
+				deviceNames);
+			if (EditorGUI.EndChangeCheck())
+				return deviceTypes[deviceIndex];
+			return value;
+		}
+		
+		static void InitDevices(Type baseType, ref Type[] deviceTypes, ref string[] deviceNames, ref Dictionary<Type, int> indicesOfDevices)
+		{
+			if (deviceTypes != null)
+				return;
+
+			if (!s_AllBasesDeviceTypes.ContainsKey(baseType)) {
+				deviceTypes = (
+					from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+					from assemblyType in domainAssembly.GetExportedTypes()
+					where assemblyType.IsSubclassOf(baseType)
+					select assemblyType
+				).OrderBy(e => GetInheritancePath(e, baseType)).ToArray();
+				
+				deviceNames = deviceTypes.Select(e => string.Empty.PadLeft(GetInheritanceDepth(e, baseType) * 3) + e.Name).ToArray();
+				
+				indicesOfDevices = new Dictionary<Type, int>();
+				for (int i = 0; i < deviceTypes.Length; i++)
+					indicesOfDevices[deviceTypes[i]] = i;
+
+				s_AllBasesDeviceTypes[baseType] = deviceTypes;
+				s_AllBasesDeviceNames[baseType] = deviceNames;
+				s_AllBasesIndicesOfDevices[baseType] = indicesOfDevices;
+			}
+			else
+			{
+				deviceTypes = s_AllBasesDeviceTypes[baseType];
+				deviceNames = s_AllBasesDeviceNames[baseType];
+				indicesOfDevices = s_AllBasesIndicesOfDevices[baseType];
+			}
+		}
+		
+		static int GetDeviceIndex(Type type, Dictionary<Type, int> indicesOfDevices)
+		{
+			return (type == null ? -1 : indicesOfDevices[type]);
+		}
+		
+		static string GetInheritancePath(Type type, Type baseType)
+		{
+			if (type.BaseType == baseType)
+				return type.Name;
+			return GetInheritancePath(type.BaseType, baseType) + "/" + type.Name;
+		}
+		
+		static int GetInheritanceDepth(Type type, Type baseType)
+		{
+			if (type.BaseType == baseType)
+				return 0;
+			return GetInheritanceDepth(type.BaseType, baseType) + 1;
+		}
 	}
 }

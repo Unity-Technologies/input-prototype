@@ -8,7 +8,7 @@ namespace UnityEngine.InputNew
 	public struct InputControlData
 	{
 		public int[] componentControlIndices;
-		public InputControlType controlType;
+		public SerializableType controlType;
 		public string name;
 		public float defaultValue;
 	}

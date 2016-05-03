@@ -20,22 +20,11 @@ namespace UnityEngine.InputNew
 			m_Controls = new List<InputControl>(controlCount);
 			for (int i = 0; i < controlCount; i++)
 			{
-				switch(controls[i].controlType)
-				{
-				case InputControlType.Button:
-					m_Controls.Add(new ButtonInputControl(i, m_State));
-					break;
-				case InputControlType.AbsoluteAxis:
-				case InputControlType.RelativeAxis:
-					m_Controls.Add(new AxisInputControl(i, m_State));
-					break;
-				case InputControlType.Vector2:
-					m_Controls.Add(new Vector2InputControl(i, m_State));
-					break;
-				case InputControlType.Vector3:
-					m_Controls.Add(new Vector3InputControl(i, m_State));
-					break;
-				}
+				Type type = controls[i].controlType;
+				if (type == null)
+					type = typeof(InputControl);
+				InputControl control = (InputControl)Activator.CreateInstance(type, i, m_State);
+				m_Controls.Add(control);
 			}
 		}
 

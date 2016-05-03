@@ -85,12 +85,12 @@ namespace UnityEngine.InputNew
 			controls.Add(new InputControlData
 			{
 				  name = prefix + "PositionX"
-				, controlType = InputControlType.AbsoluteAxis
+				, controlType = typeof(AxisInputControl)
 			});
 			controls.Add(new InputControlData
 			{
 				  name = prefix + "PositionY"
-				, controlType = InputControlType.AbsoluteAxis
+				, controlType = typeof(AxisInputControl)
 			});
 
 			var deltaIndex = controls.Count;
@@ -102,12 +102,12 @@ namespace UnityEngine.InputNew
 			controls.Add(new InputControlData
 			{
 				  name = prefix + "DeltaX"
-				, controlType = InputControlType.AbsoluteAxis
+				, controlType = typeof(AxisInputControl)
 			});
 			controls.Add(new InputControlData
 			{
 				  name = prefix + "DeltaY"
-				, controlType = InputControlType.AbsoluteAxis
+				, controlType = typeof(AxisInputControl)
 			});
 		}
 
