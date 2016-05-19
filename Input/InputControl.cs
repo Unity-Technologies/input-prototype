@@ -144,4 +144,25 @@ namespace UnityEngine.InputNew
 			}
 		}
 	}
+
+	[Serializable]
+	public class QuaternionAction : ActionSlot<QuaternionInputControl> { }
+	public class QuaternionInputControl : InputControl
+	{
+		public QuaternionInputControl(int index, InputState state) : base(index, state) { }
+
+		public Quaternion quaternion
+		{
+			get
+			{
+				var controlData = m_State.controlProvider.GetControlData(m_Index);
+				return new Quaternion(
+					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[2]),
+					m_State.GetCurrentValue(controlData.componentControlIndices[3])
+				);
+			}
+		}
+	}
 }

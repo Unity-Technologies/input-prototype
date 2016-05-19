@@ -14,7 +14,7 @@ namespace Assets.Utilities
 			else
 			{
 				var newArray = new T[newSize];
-				Array.Copy(array, newArray, newSize);
+				Array.Copy(array, newArray, array.Length);
 				array = newArray;
 			}
 		}

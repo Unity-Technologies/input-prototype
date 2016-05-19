@@ -23,12 +23,14 @@ namespace UnityEngine.InputNew
 			go.AddComponent<MouseInputToEvents>();
 			go.AddComponent<KeyboardInputToEvents>();
 			go.AddComponent<TouchInputToEvents>();
+			go.AddComponent<VRInputToEvents>();
 			go.AddComponent<ExecuteAllEvents>();
 
 			InputDeviceProfile[] profiles = new InputDeviceProfile[]
 			{
 				new Xbox360MacProfile(),
-				new Xbox360WinProfile()
+				new Xbox360WinProfile(),
+				new OpenVRProfile(), 
 			};
 			s_EventQueue = new InputEventQueue();
 			s_EventPool = new InputEventPool();

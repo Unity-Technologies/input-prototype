@@ -46,6 +46,22 @@ namespace UnityEngine.InputNew
 
 			var virtualJoystickDevice = new VirtualJoystick();
 			RegisterDevice(virtualJoystickDevice);
+
+			// TODO: do we want to expose HMDs like this?
+			var vrDeviceHMDLeftEye = new VRInputDevice();
+			RegisterDevice(vrDeviceHMDLeftEye);
+
+			var vrDeviceHMDRightEye = new VRInputDevice();
+			RegisterDevice(vrDeviceHMDRightEye);
+
+			var vrDeviceHMDCenterEye = new VRInputDevice();
+			RegisterDevice(vrDeviceHMDCenterEye);
+
+			var vrDeviceHMDController1 = new VRInputDevice();
+			RegisterDevice(vrDeviceHMDController1);
+
+			var vrDeviceHMDController2 = new VRInputDevice();
+			RegisterDevice(vrDeviceHMDController2);
 		}
 
 		#endregion
@@ -178,7 +194,10 @@ namespace UnityEngine.InputNew
 			
 			foreach (var platform in profile.supportedPlatforms)
 			{
-				if (m_Platform.Contains(platform.ToUpper()))
+				// VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).
+				var vrPlatform = (UnityEngine.VR.VRSettings.loadedDeviceName + " " + UnityEngine.VR.VRDevice.model).ToUpper();
+
+				if (m_Platform.Contains(platform.ToUpper()) || vrPlatform.Contains(platform.ToUpper()))
 					return true;
 			}
 			
@@ -237,6 +256,8 @@ namespace UnityEngine.InputNew
 		readonly Dictionary<Type, List<InputDevice>> m_DevicesByType = new Dictionary<Type, List<InputDevice>>();
 		readonly List<InputDevice> m_Devices = new List<InputDevice>();
 		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
+
+		// PJK: SystemInfo.deviceModel returns the name of my motherboard.  Is this useful?
 		readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
 
 		#endregion
