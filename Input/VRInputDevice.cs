@@ -18,7 +18,8 @@ namespace UnityEngine.InputNew
 			Trigger1,
 			Trigger2,
 
-			Analog5,
+            Analog0,
+            Analog5,
 			Analog6,
 			Analog7,
 			Analog8,
@@ -38,6 +39,8 @@ namespace UnityEngine.InputNew
 			Action2,
 			Action3,
 			Action4,
+
+		    LeftStickButton,
 
 			// Compound controls.
 
@@ -164,7 +167,7 @@ namespace UnityEngine.InputNew
 			var axisEvent = inputEvent as GenericControlEvent;
 			if (axisEvent != null)
 				consumed |= intoState.SetCurrentValue((int)VRControl.Analog0 + (int)axisEvent.controlIndex, axisEvent.value);
-
+            
 			var trackingEvent = inputEvent as VREvent;
 			if (trackingEvent != null)
 			{
