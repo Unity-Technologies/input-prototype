@@ -9,7 +9,8 @@ using UnityEngine.VR;
 public class VRInputToEvents
 	: MonoBehaviour
 {
-	public void Update()
+#if USE_NATIVE_INPUT
+    public void Update()
 	{
 		SendButtonEvents();
 		SendAxisEvents();
@@ -102,4 +103,5 @@ public class VRInputToEvents
 			InputSystem.QueueEvent(inputEvent);
 		}
 	}
+#endif
 }
