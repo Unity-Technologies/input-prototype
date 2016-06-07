@@ -36,21 +36,21 @@ public class ViveInputToEvents
             int a = 0;
             for (int axis = (int)EVRButtonId.k_EButton_Axis0; axis <= (int)EVRButtonId.k_EButton_Axis4; ++axis) {
                 Vector2 axisVec = SteamVR_Controller.Input(deviceIdx).GetAxis((EVRButtonId)axis);
-                for (XorY xy = XorY.X; (int) xy <= (int) XorY.Y; xy++)
+                for (XorY xy = XorY.X; (int) xy <= (int) XorY.Y; xy++, a++)
                 {
                     var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
                     inputEvent.deviceType = typeof(VRInputDevice);
                     inputEvent.deviceIndex = deviceIdx;
                     inputEvent.controlIndex = a;
                     inputEvent.value = xy == XorY.X ? axisVec.x : axisVec.y;
-                    
-                    if (Mathf.Approximately(m_LastAxisValues[deviceIdx, a], inputEvent.value))
+
+                    if (Mathf.Approximately(m_LastAxisValues[deviceIdx, a], inputEvent.value)) {
                         continue;
+                    }
                     m_LastAxisValues[deviceIdx, a] = inputEvent.value;
                     // Debug.Log("Axis event: " + inputEvent);
 
                     InputSystem.QueueEvent(inputEvent);
-                    a++;
                 }
             }
         }
