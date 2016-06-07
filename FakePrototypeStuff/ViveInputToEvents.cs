@@ -5,15 +5,18 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEngine.VR;
+using Valve.VR;
 
 public class ViveInputToEvents
 	: MonoBehaviour
 {
+    private enum Handedness { Left, Right }
+
     public void Update()
 	{
 		SendButtonEvents();
-		SendAxisEvents();
-		SendTrackingEvents();
+		//SendAxisEvents();
+		//SendTrackingEvents();
 	}
 
 	public const int controllerCount = 10;
@@ -47,44 +50,30 @@ public class ViveInputToEvents
 		}
 	}
 
-	private void SendButtonEvents()
-	{
-		for (int device = 0; device < controllerCount; ++device)
-		{
-			for (int btn = 0; btn < buttonCount; ++btn)
-			{
-                // TODO: Replace with the SteamVR equivalent
-                bool keyDown = false; // UnityEngine.VR.InputTracking.GetKeyDown(device, btn);
-                bool keyUp = false; // UnityEngine.VR.InputTracking.GetKeyUp(device, btn);
+    private void SendButtonEvents() {
+        for (Handedness hand = Handedness.Left; (int)hand <= (int)Handedness.Right; hand++) {
+            int b = 0;
+            foreach (EVRButtonId button in Enum.GetValues(typeof(EVRButtonId))) {
+                var deviceIdx = SteamVR_Controller.GetDeviceIndex(hand == Handedness.Left ? SteamVR_Controller.DeviceRelation.Leftmost : SteamVR_Controller.DeviceRelation.Rightmost);
+                bool keyDown = SteamVR_Controller.Input(deviceIdx).GetPressDown(button);
+                bool keyUp = SteamVR_Controller.Input(deviceIdx).GetPressUp(button);
 
-				if (keyDown || keyUp)
-				{
-					var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
-					inputEvent.deviceType = typeof(VRInputDevice);
-					inputEvent.deviceIndex = device;
-					inputEvent.controlIndex = axisCount + btn;
-					inputEvent.value = keyDown ? 1.0f : 0.0f;
+                if (keyDown || keyUp) {
+                    var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
+                    inputEvent.deviceType = typeof(VRInputDevice);
+                    inputEvent.deviceIndex = deviceIdx;
+                    inputEvent.controlIndex = axisCount + ++b;
+                    inputEvent.value = keyDown ? 1.0f : 0.0f;
 
-					InputSystem.QueueEvent(inputEvent);
-				}
+                    Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
 
-				//bool keyDown = UnityEngine.VR.InputTracking.GetKeyDown(device, btn);
-				//bool keyUp = UnityEngine.VR.InputTracking.GetKeyUp(device, btn);
-				//if (keyDown || keyUp)
-				//{
-				//	var inputEvent = InputSystem.CreateEvent<KeyboardEvent>();
-				//	inputEvent.deviceType = typeof(VRInputDevice);
-				//	inputEvent.deviceIndex = device;
-				//	inputEvent.key = (UnityEngine.KeyCode)btn;
-				//	inputEvent.isDown = keyDown;
+                    InputSystem.QueueEvent(inputEvent);
+                }
+            }
+        }
+    }
 
-				//	InputSystem.QueueEvent(inputEvent);
-				//}
-			}
-		}
-	}
-
-	private void SendTrackingEvents()
+    private void SendTrackingEvents()
 	{
 		for (int device = 0; device < controllerCount; ++device)
 		{
