@@ -18,7 +18,7 @@ public class ViveInputToEvents
 		SendButtonEvents();
 		SendAxisEvents();
 		//SendTrackingEvents();
-	}
+    }
 
 	public const int controllerCount = 10;
 	public const int buttonCount = 64;
@@ -41,18 +41,18 @@ public class ViveInputToEvents
                     var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
                     inputEvent.deviceType = typeof(VRInputDevice);
                     inputEvent.deviceIndex = deviceIdx;
-                    inputEvent.controlIndex = a++;
+                    inputEvent.controlIndex = a;
                     inputEvent.value = xy == XorY.X ? axisVec.x : axisVec.y;
-
+                    
                     if (Mathf.Approximately(m_LastAxisValues[deviceIdx, a], inputEvent.value))
                         continue;
                     m_LastAxisValues[deviceIdx, a] = inputEvent.value;
-
-                    Debug.Log("Axis event: " + inputEvent);
+                    // Debug.Log("Axis event: " + inputEvent);
 
                     InputSystem.QueueEvent(inputEvent);
+                    a++;
                 }
-			}
+            }
         }
 	}
 
@@ -70,7 +70,7 @@ public class ViveInputToEvents
                     inputEvent.controlIndex = axisCount + (int)button;
                     inputEvent.value = keyDown ? 1.0f : 0.0f;
 
-                    Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
+                    // Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
 
                     InputSystem.QueueEvent(inputEvent);
                 }
