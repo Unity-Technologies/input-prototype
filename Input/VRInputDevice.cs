@@ -39,6 +39,7 @@ namespace UnityEngine.InputNew
 			Action2,
 			Action3,
 			Action4,
+            Action5,
 
 		    LeftStickButton,
 
@@ -101,7 +102,9 @@ namespace UnityEngine.InputNew
 			controls[(int)VRControl.Action2] = new InputControlData { name = "Action 2", controlType = InputControlType.Button };
 			controls[(int)VRControl.Action3] = new InputControlData { name = "Action 3", controlType = InputControlType.Button };
 			controls[(int)VRControl.Action4] = new InputControlData { name = "Action 4", controlType = InputControlType.Button };
-			controls[(int)VRControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
+            controls[(int)VRControl.Action5] = new InputControlData { name = "Action 5", controlType = InputControlType.Button };
+
+            controls[(int)VRControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
 			controls[(int)VRControl.Back] = new InputControlData { name = "Back", controlType = InputControlType.Button };
 			controls[(int)VRControl.LeftStickButton] = new InputControlData { name = "Left Stick Button", controlType = InputControlType.Button };
 
@@ -133,8 +136,9 @@ namespace UnityEngine.InputNew
 		public ButtonInputControl action2 { get { return (ButtonInputControl)this[(int)VRControl.Action2]; } }
 		public ButtonInputControl action3 { get { return (ButtonInputControl)this[(int)VRControl.Action3]; } }
 		public ButtonInputControl action4 { get { return (ButtonInputControl)this[(int)VRControl.Action4]; } }
+        public ButtonInputControl action5 { get { return (ButtonInputControl)this[(int)VRControl.Action5]; } }
 
-		public AxisInputControl trigger1 { get { return (AxisInputControl)this[(int)VRControl.Trigger1]; } }
+        public AxisInputControl trigger1 { get { return (AxisInputControl)this[(int)VRControl.Trigger1]; } }
 		public AxisInputControl trigger2 { get { return (AxisInputControl)this[(int)VRControl.Trigger2]; } }
 
 		public AxisInputControl localPositionX { get { return (AxisInputControl)this[(int)VRControl.LocalPositionX]; } }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine.InputNew;
 using System.Collections;
 using Assets.Utilities;
+using Valve.VR;
 
 namespace UnityEngine.InputNew
 {
@@ -15,13 +16,15 @@ namespace UnityEngine.InputNew
 
 		public override void Remap(InputEvent inputEvent)
 		{
-			Debug.Log("Remapping: " + inputEvent);
 
-			var axisEvent = inputEvent as GenericControlEvent;
-			if (axisEvent != null)
+			var controlEvent = inputEvent as GenericControlEvent;
+
+            if (controlEvent != null)
 			{
-				if (axisEvent.controlIndex == 2)
-					axisEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
+                Debug.Log("Remapping: " + inputEvent + " Control Index: " + controlEvent.controlIndex);
+
+                if (controlEvent.controlIndex == (int)EVRButtonId.k_EButton_SteamVR_Trigger)
+					controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
 			}
 
 		//throw new System.NotImplementedException();
