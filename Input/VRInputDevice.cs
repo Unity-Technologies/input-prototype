@@ -12,19 +12,20 @@ namespace UnityEngine.InputNew
 		public enum VRControl
 		{
 			// Standardized.
-			LeftStickX,
+			Analog0,
+
+			LeftStickX = Analog0,
 			LeftStickY,
 
 			Trigger1,
 			Trigger2,
 
-            Analog0,
-            Analog5,
+            Analog4,
+			Analog5,
 			Analog6,
 			Analog7,
 			Analog8,
 			Analog9,
-			Analog10,
 
 			LocalPositionX,
 			LocalPositionY,

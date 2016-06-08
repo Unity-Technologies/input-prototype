@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.InputNew;
-using UnityEngine.VR;
 using Valve.VR;
 
 public class ViveInputToEvents
