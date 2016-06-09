@@ -87,7 +87,7 @@ public class ViveInputToEvents
             if (keyDown || keyUp) {
                 var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
                 inputEvent.deviceType = typeof(VRInputDevice);
-                inputEvent.deviceIndex = inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
+                inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
                 inputEvent.controlIndex = axisCount + (int)button;
                 inputEvent.value = keyDown ? 1.0f : 0.0f;
 
@@ -101,7 +101,7 @@ public class ViveInputToEvents
     private void SendTrackingEvents(int deviceIdx, Handedness hand) {
         var inputEvent = InputSystem.CreateEvent<VREvent>();
         inputEvent.deviceType = typeof(VRInputDevice);
-        inputEvent.deviceIndex = inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
+        inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
         var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(deviceIdx).GetPose().mDeviceToAbsoluteTracking);
         inputEvent.localPosition = pose.pos;
         inputEvent.localRotation = pose.rot;

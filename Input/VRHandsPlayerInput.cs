@@ -17,7 +17,7 @@ namespace UnityEngine.InputNew {
         void Awake() {
             if (autoAssignGlobal) {
                 handle = PlayerHandleManager.GetNewPlayerHandle();
-                handle.global = true;
+                handle.global = false;
 
                 ActionMapInput leftHandActionMap = ActionMapInput.Create(leftHandActionMapSlot.actionMap);
                 List<InputDevice> leftInputDevice = new List<InputDevice>();
@@ -26,7 +26,6 @@ namespace UnityEngine.InputNew {
                 leftHandActionMap.active = true;
                 leftHandActionMap.blockSubsequent = false;
                 // TODO: Handle blocking, etc.
-                handle.maps.Add(leftHandActionMap);
 
                 ActionMapInput rightHandActionMap = ActionMapInput.Create(rightHandActionMapSlot.actionMap);
                 List<InputDevice> rightInputDevice = new List<InputDevice>();
@@ -34,6 +33,10 @@ namespace UnityEngine.InputNew {
                 rightHandActionMap.TryInitializeWithDevices(rightInputDevice);
                 rightHandActionMap.active = true;
                 // TODO: Handle blocking, etc.
+                handle.AssignDevice(leftInputDevice[0], true);
+                handle.AssignDevice(rightInputDevice[0], true);
+
+                handle.maps.Add(leftHandActionMap);
                 handle.maps.Add(rightHandActionMap);
 
                 /*foreach (ActionMapSlot actionMapSlot in actionMaps)
@@ -47,6 +50,13 @@ namespace UnityEngine.InputNew {
             }
         }
 
+        public ActionMapInput GetLeftActionMapInput()
+        {
+            return handle.maps[0];
+        }
+        public ActionMapInput GetRightActionMapInput() {
+            return handle.maps[1];
+        }
         public T GetActions<T>() where T : ActionMapInput {
             if (handle == null)
                 return null;

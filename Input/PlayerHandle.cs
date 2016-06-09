@@ -129,7 +129,7 @@ namespace UnityEngine.InputNew
 		    bool processed = false;
 			for (int i = 0; i < maps.Count; i++)
 			{
-				if (maps[i].active)
+				if (maps[i].active && (global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
 				{
 				    if (ProcessEventInMap(maps[i], inputEvent))
 				    {
