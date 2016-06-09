@@ -7,12 +7,14 @@ namespace UnityEngine.InputNew
 	{
 		[SerializeField]
 		private string m_TypeName;
+        [SerializeField]
+	    private int m_TagIndex = -1;
 
-		private Type m_CachedType;
-
-		public SerializableType(Type t)
+        private Type m_CachedType;
+	    
+        public SerializableType(Type t)
 		{
-			value = t;
+            value = t;
 		}
 
 		public Type value
@@ -29,7 +31,9 @@ namespace UnityEngine.InputNew
 			}
 			set
 			{
-				m_CachedType = value;
+			    if (m_CachedType != value)
+			        TagIndex = -1;
+				m_CachedType = value;               
 				if (m_CachedType == null)
 					m_TypeName = string.Empty;
 				else
@@ -38,15 +42,20 @@ namespace UnityEngine.InputNew
 		}
 
 		public string Name { get { return value.Name; } }
+        public int TagIndex
+        {
+            get { return m_TagIndex; }
+            set { m_TagIndex = value; }
+        }
 
-		public static implicit operator Type(SerializableType t)
-		{
-			return (t == null) ? null : t.value;
-		}
+        public static implicit operator Type(SerializableType t)
+        {
+            return (t == null) ? null : t.value;
+        }
 
-		public static implicit operator SerializableType(Type t)
-		{
-			return new SerializableType(t);
-		}
-	}
+        public static implicit operator SerializableType(Type t)
+        {
+            return new SerializableType(t);
+        }
+    }
 }

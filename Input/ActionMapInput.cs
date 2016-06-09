@@ -84,15 +84,17 @@ namespace UnityEngine.InputNew
 			{
 				float timeForScheme = -1;
 				foundDevices.Clear();
-				var types = actionMap.controlSchemes[scheme].deviceTypes;
+				var serializedTypes = actionMap.controlSchemes[scheme].serializableDeviceTypes;
 				bool matchesAll = true;
-				foreach (var type in types)
+				foreach (var serializedType in serializedTypes)
 				{
 					InputDevice foundDevice = null;
 					float foundDeviceTime = -1;
 					foreach (var device in availableDevices)
 					{
-						if (type.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime)
+						if (serializedType.value.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime
+                            && (serializedType.TagIndex == -1 || serializedType.TagIndex == device.TagIndex)
+                            )
 						{
 							foundDevice = device;
 							foundDeviceTime = device.lastEventTime;

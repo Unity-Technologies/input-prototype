@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputNew;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System;
 using System.Linq;
 
@@ -98,6 +99,17 @@ namespace UnityEngine.InputNew
 			InitDevices();
 			return s_DeviceTypes[index];
 		}
+
+	    public static string[] GetDeviceTags(Type type)
+	    {
+	        string[] tags = null;
+            PropertyInfo info = type.GetProperty("Tags", BindingFlags.Static | BindingFlags.Public);
+	        if (info != null)
+	        {
+                tags = (string[])info.GetValue(null, null);
+            }
+            return tags;
+	    }
 		
 		static string GetInheritancePath(Type type)
 		{

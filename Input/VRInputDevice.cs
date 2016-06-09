@@ -62,6 +62,15 @@ namespace UnityEngine.InputNew
 			//Options
 		}
 
+	    private static readonly string[] kTags = { "Left", "Right"};
+	    public static string[] Tags
+	    {
+	        get
+	        {
+	            return kTags;
+	        }
+	    }
+
 		public VRInputDevice()
 			: this("VRInputDevice", null) {}
 

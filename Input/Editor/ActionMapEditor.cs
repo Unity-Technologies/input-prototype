@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputNew;
 using UnityEditor;
@@ -7,6 +8,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Array = System.Array;
 
 [CustomEditor(typeof(ActionMap))]
 public class ActionMapEditor : Editor
@@ -255,64 +257,97 @@ public class ActionMapEditor : Editor
 			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 	}
 
-	void DrawControlSchemeGUI()
-	{
-		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+    void DrawControlSchemeGUI()
+    {
+        ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
 
-		EditorGUI.BeginChangeCheck();
-		string schemeName = EditorGUILayout.TextField("Control Scheme Name", scheme.name);
-		if (EditorGUI.EndChangeCheck())
-			scheme.name = schemeName;
+        EditorGUI.BeginChangeCheck();
+        string schemeName = EditorGUILayout.TextField("Control Scheme Name", scheme.name);
+        if (EditorGUI.EndChangeCheck())
+            scheme.name = schemeName;
 
-		string[] deviceNames = InputDeviceUtility.GetDeviceNames();
+        string[] deviceNames = InputDeviceUtility.GetDeviceNames();
 
-		for (int i = 0; i < scheme.serializableDeviceTypes.Count; i++)
-		{
-			Rect rect = EditorGUILayout.GetControlRect();
+        for (int i = 0; i < scheme.serializableDeviceTypes.Count; i++)
+        {
+            var serializedDeviceType = scheme.serializableDeviceTypes[i];
+            Rect rect = EditorGUILayout.GetControlRect();
+            if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+            {
+                m_SelectedDeviceIndex = i;
+                Repaint();
+            }
+            if (m_SelectedDeviceIndex == i)
+                GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
 
-			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-			{
-				m_SelectedDeviceIndex = i;
-				Repaint();
-			}
-			if (m_SelectedDeviceIndex == i)
-				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+            string[] tagNames = null;
+            Vector2 tagMaxSize = Vector2.zero;
+            if (serializedDeviceType.value != null)
+            {
+                tagNames = InputDeviceUtility.GetDeviceTags(serializedDeviceType.value);
+                if (tagNames != null)
+                {
+                    GUIContent content = new GUIContent();
+                    for (var j = 0; j < tagNames.Length; j++)
+                    {
+                        content.text = tagNames[j];
+                        Vector2 size = EditorStyles.popup.CalcSize(content);
+                        tagMaxSize = Vector2.Max(size, tagMaxSize);
+                    }
+                }               
+            }
 
-			EditorGUI.BeginChangeCheck();
-			int deviceIndex = EditorGUI.Popup(
-				rect,
-				"Device Type",
-				InputDeviceUtility.GetDeviceIndex(scheme.serializableDeviceTypes[i]),
-				deviceNames);
-			if (EditorGUI.EndChangeCheck())
-				scheme.serializableDeviceTypes[i].value = InputDeviceUtility.GetDeviceType(deviceIndex);
-		}
+            rect.width -= tagMaxSize.x; // Adjust width to leave room for tag
+            EditorGUI.BeginChangeCheck();
+            int deviceIndex = InputDeviceUtility.GetDeviceIndex(serializedDeviceType);
+            deviceIndex = EditorGUI.Popup(
+                rect,
+                "Device Type",
+                deviceIndex,
+                deviceNames);
+            if (EditorGUI.EndChangeCheck())
+                serializedDeviceType.value = InputDeviceUtility.GetDeviceType(deviceIndex);
 
-		// Device remove and add buttons
-		EditorGUILayout.BeginHorizontal();
-		{
-			GUILayout.Space(15 * EditorGUI.indentLevel);
+            if (tagNames != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                int tagIndex = serializedDeviceType.TagIndex;
+                rect.x += rect.width;
+                rect.width = tagMaxSize.x;
+                tagIndex = EditorGUI.Popup(
+                    rect,
+                    tagIndex,
+                    tagNames);
+                if (EditorGUI.EndChangeCheck())
+                    serializedDeviceType.TagIndex = tagIndex;
+            }
+        }
 
-			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
-				RemoveDevice();
-			
-			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
-				AddDevice();
-			
-			GUILayout.FlexibleSpace();
-		}
-		EditorGUILayout.EndHorizontal();
+        // Device remove and add buttons
+        EditorGUILayout.BeginHorizontal();
+        {
+            GUILayout.Space(15 * EditorGUI.indentLevel);
 
-		// Pad this area with spacing so all control schemes use same heights,
-		// and the actions table below doesn't move when switching control scheme.
-		int maxDevices = 0;
-		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
-			maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].serializableDeviceTypes.Count);
-		int extraLines = maxDevices - scheme.serializableDeviceTypes.Count;
-		EditorGUILayout.GetControlRect(true, extraLines * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing));
-	}
+            if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
+                RemoveDevice();
 
-	void AddDevice()
+            if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
+                AddDevice();
+
+            GUILayout.FlexibleSpace();
+        }
+        EditorGUILayout.EndHorizontal();
+
+        // Pad this area with spacing so all control schemes use same heights,
+        // and the actions table below doesn't move when switching control scheme.
+        int maxDevices = 0;
+        for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+            maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].serializableDeviceTypes.Count);
+        int extraLines = maxDevices - scheme.serializableDeviceTypes.Count;
+        EditorGUILayout.GetControlRect(true, extraLines * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing));
+    }
+
+    void AddDevice()
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
 		scheme.serializableDeviceTypes.Add(new SerializableType(null));
@@ -798,12 +833,22 @@ public class {0} : ActionMapInput {{
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
 
-		List<System.Type> types = m_ActionMapEditCopy.controlSchemes[selectedScheme].deviceTypes.ToList();
-		string[] deviceNames = types.Select(e => e == null ? string.Empty : e.Name).ToArray();
+		var serializedTypes = m_ActionMapEditCopy.controlSchemes[selectedScheme].serializableDeviceTypes;
+		string[] deviceNames = serializedTypes.Select(e =>
+		{
+		    if (e.value == null)
+                return string.Empty;
+
+		    if (e.TagIndex == -1)
+		        return e.Name;
+
+		    string[] tagNames = InputDeviceUtility.GetDeviceTags(e.value);
+		    return string.Format("{0}.{1}", e.Name, tagNames[e.TagIndex]);
+		}).ToArray();
 		EditorGUI.BeginChangeCheck();
-		int deviceIndex = EditorGUI.Popup(rect, types.IndexOf(source.deviceType), deviceNames);
+		int deviceIndex = EditorGUI.Popup(rect, serializedTypes.FindIndex(t => t.value == source.deviceType.value && t.TagIndex == source.deviceType.TagIndex), deviceNames);
 		if (EditorGUI.EndChangeCheck())
-			source.deviceType = types[deviceIndex];
+			source.deviceType = serializedTypes[deviceIndex];
 		
 		rect.x += rect.width + 4;
 		
