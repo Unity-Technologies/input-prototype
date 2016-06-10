@@ -59,7 +59,7 @@ namespace UnityEngine.InputNew
 
 		static ActionMap()
 		{
-			HandlePlayModeCustomizations();
+			EditorApplication.delayCall += HandlePlayModeCustomizations;
 			EditorApplication.playmodeStateChanged += HandlePlayModeCustomizations;
 		}
 
