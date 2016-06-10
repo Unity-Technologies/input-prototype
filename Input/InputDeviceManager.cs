@@ -59,9 +59,11 @@ namespace UnityEngine.InputNew
 
 			var vrDeviceHMDController1 = new VRInputDevice();
 			RegisterDevice(vrDeviceHMDController1);
+		    vrDeviceHMDController1.Hand = VRInputDevice.Handedness.Left;
 
 			var vrDeviceHMDController2 = new VRInputDevice();
 			RegisterDevice(vrDeviceHMDController2);
+		    vrDeviceHMDController2.Hand = VRInputDevice.Handedness.Right;
 		}
 
 		#endregion

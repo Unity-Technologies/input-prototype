@@ -9,32 +9,32 @@ using Valve.VR;
 
 public class ViveInputToEvents
     : MonoBehaviour {
-    private enum Handedness { Left, Right }
     private enum XorY { X, Y }
-    private int[] HandDeviceId = new int[] { -1, -1 };
+    private readonly int[] steamDeviceIndices = new int[] { -1, -1 };
 
     public void Update() {
-        for (Handedness hand = Handedness.Left; (int)hand <= (int)Handedness.Right; hand++) {
-            var deviceIdx = HandDeviceId[(int)hand];
+        for (VRInputDevice.Handedness hand = VRInputDevice.Handedness.Left; (int)hand <= (int)VRInputDevice.Handedness.Right; hand++) {
+            var steamDeviceIndex = steamDeviceIndices[(int)hand];
 
-            if (deviceIdx == -1) {
-                deviceIdx = SteamVR_Controller.GetDeviceIndex(hand == Handedness.Left
+            if (steamDeviceIndex == -1) 
+                {
+                steamDeviceIndex = SteamVR_Controller.GetDeviceIndex(hand == VRInputDevice.Handedness.Left
                      ? SteamVR_Controller.DeviceRelation.Leftmost
                      : SteamVR_Controller.DeviceRelation.Rightmost);
 
-                if (deviceIdx == -1)
+                if (steamDeviceIndex == -1)
                     continue;
 
-                if (hand == Handedness.Left)
+                if (hand == VRInputDevice.Handedness.Left)
                 {
-                    HandDeviceId[(int)hand] = deviceIdx;
-                    Debug.Log("Assigned Left " + deviceIdx);
+                    steamDeviceIndices[(int)hand] = steamDeviceIndex;
+                    Debug.Log("Assigned Left " + steamDeviceIndex);
 
                 }
-                else if(deviceIdx != HandDeviceId[(int)Handedness.Left]) // Do not assign device to right hand if it is same device as left hand
+                else if(steamDeviceIndex != steamDeviceIndices[(int)VRInputDevice.Handedness.Left]) // Do not assign device to right hand if it is same device as left hand
                 {
-                    HandDeviceId[(int)hand] = deviceIdx;
-                    Debug.Log("Assigned Right " + deviceIdx);        
+                    steamDeviceIndices[(int)hand] = steamDeviceIndex;
+                    Debug.Log("Assigned Right " + steamDeviceIndex);        
                 }
                 else
                 {
@@ -43,10 +43,10 @@ public class ViveInputToEvents
 
 
             }
-
-            SendButtonEvents(deviceIdx, hand);
-            SendAxisEvents(deviceIdx, hand);
-            SendTrackingEvents(deviceIdx, hand);
+            int deviceIndex = hand == VRInputDevice.Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
+            SendButtonEvents(steamDeviceIndex, deviceIndex);
+            SendAxisEvents(steamDeviceIndex, deviceIndex);
+            SendTrackingEvents(steamDeviceIndex, deviceIndex);
         }
     }
 
@@ -57,21 +57,21 @@ public class ViveInputToEvents
     private Vector3[] m_LastPositionValues = new Vector3[controllerCount];
     private Quaternion[] m_LastRotationValues = new Quaternion[controllerCount];
 
-    private void SendAxisEvents(int deviceIdx, Handedness hand) {
+    private void SendAxisEvents(int steamDeviceIndex, int deviceIndex) {
         int a = 0;
         for (int axis = (int)EVRButtonId.k_EButton_Axis0; axis <= (int)EVRButtonId.k_EButton_Axis4; ++axis) {
-            Vector2 axisVec = SteamVR_Controller.Input(deviceIdx).GetAxis((EVRButtonId)axis);
+            Vector2 axisVec = SteamVR_Controller.Input(steamDeviceIndex).GetAxis((EVRButtonId)axis);
             for (XorY xy = XorY.X; (int)xy <= (int)XorY.Y; xy++, a++) {
                 var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
                 inputEvent.deviceType = typeof(VRInputDevice);
-                inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
+                inputEvent.deviceIndex = deviceIndex;
                 inputEvent.controlIndex = a;
                 inputEvent.value = xy == XorY.X ? axisVec.x : axisVec.y;
 
-                if (Mathf.Approximately(m_LastAxisValues[deviceIdx, a], inputEvent.value)) {
+                if (Mathf.Approximately(m_LastAxisValues[steamDeviceIndex, a], inputEvent.value)) {
                     continue;
                 }
-                m_LastAxisValues[deviceIdx, a] = inputEvent.value;
+                m_LastAxisValues[steamDeviceIndex, a] = inputEvent.value;
                 // Debug.Log("Axis event: " + inputEvent);
 
                 InputSystem.QueueEvent(inputEvent);
@@ -79,39 +79,39 @@ public class ViveInputToEvents
         }
     }
 
-    private void SendButtonEvents(int deviceIdx, Handedness hand) {
+    private void SendButtonEvents(int steamDeviceIndex, int deviceIndex) {
         foreach (EVRButtonId button in Enum.GetValues(typeof(EVRButtonId))) {
-            bool keyDown = SteamVR_Controller.Input(deviceIdx).GetPressDown(button);
-            bool keyUp = SteamVR_Controller.Input(deviceIdx).GetPressUp(button);
+            bool keyDown = SteamVR_Controller.Input(steamDeviceIndex).GetPressDown(button);
+            bool keyUp = SteamVR_Controller.Input(steamDeviceIndex).GetPressUp(button);
 
             if (keyDown || keyUp) {
                 var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
                 inputEvent.deviceType = typeof(VRInputDevice);
-                inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
+                inputEvent.deviceIndex = deviceIndex; 
                 inputEvent.controlIndex = axisCount + (int)button;
                 inputEvent.value = keyDown ? 1.0f : 0.0f;
 
-                Debug.Log(string.Format("event: {0}; button: {1}; hand: {2}", inputEvent, button, hand));
+                Debug.Log(string.Format("event: {0}; button: {1}; hand: {2}", inputEvent, button, deviceIndex));
 
                 InputSystem.QueueEvent(inputEvent);
             }
         }
     }
 
-    private void SendTrackingEvents(int deviceIdx, Handedness hand) {
+    private void SendTrackingEvents(int steamDeviceIndex, int deviceIndex) {
         var inputEvent = InputSystem.CreateEvent<VREvent>();
         inputEvent.deviceType = typeof(VRInputDevice);
-        inputEvent.deviceIndex = hand == Handedness.Left ? 3 : 4; // TODO change 3 and 4 based on virtual devices defined in InputDeviceManager (using actual hardware available)
-        var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(deviceIdx).GetPose().mDeviceToAbsoluteTracking);
+        inputEvent.deviceIndex = deviceIndex;
+        var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(steamDeviceIndex).GetPose().mDeviceToAbsoluteTracking);
         inputEvent.localPosition = pose.pos;
         inputEvent.localRotation = pose.rot;
 
-        if (inputEvent.localPosition == m_LastPositionValues[deviceIdx] &&
-            inputEvent.localRotation == m_LastRotationValues[deviceIdx])
+        if (inputEvent.localPosition == m_LastPositionValues[steamDeviceIndex] &&
+            inputEvent.localRotation == m_LastRotationValues[steamDeviceIndex])
             return;
 
-        m_LastPositionValues[deviceIdx] = inputEvent.localPosition;
-        m_LastRotationValues[deviceIdx] = inputEvent.localRotation;
+        m_LastPositionValues[steamDeviceIndex] = inputEvent.localPosition;
+        m_LastRotationValues[steamDeviceIndex] = inputEvent.localRotation;
 
         InputSystem.QueueEvent(inputEvent);
     }

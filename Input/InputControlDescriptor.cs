@@ -13,7 +13,7 @@ namespace UnityEngine.InputNew
 		{
 			var clone = (InputControlDescriptor) Activator.CreateInstance(GetType());
 			clone.controlIndex = controlIndex;
-			clone.deviceType = new SerializableType(deviceType);
+			clone.deviceType = deviceType.Clone();
 			return clone;
 		}
 		

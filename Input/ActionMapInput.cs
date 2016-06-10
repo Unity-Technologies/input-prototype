@@ -244,14 +244,27 @@ namespace UnityEngine.InputNew
 			return list;
 		}
 
-		private InputState GetDeviceStateForDeviceType(Type deviceType)
+		private List<InputState> GetDeviceStatesForDeviceType(SerializableType deviceType)
 		{
+            var list = new List<InputState>();
+		    bool deviceTypeFound = false;
+
 			foreach (var deviceState in deviceStates)
 			{
-				if (deviceType.IsInstanceOfType(deviceState.controlProvider))
-					return deviceState;
+			    if (deviceType.value.IsInstanceOfType(deviceState.controlProvider))
+			        deviceTypeFound = true;
+			    else
+			        continue;
+                
+                // An action may care about input from a specific device or any device, so check the tag
+			    if (deviceType.TagIndex == -1 || deviceType.TagIndex == deviceState.controlProvider.TagIndex)
+			        list.Add(deviceState);
 			}
-			throw new ArgumentException("deviceType");
+            
+            if (!deviceTypeFound)
+			    throw new ArgumentException("deviceType");
+
+		    return list;
 		}
 
 		public void BeginFrame()
@@ -275,18 +288,18 @@ namespace UnityEngine.InputNew
 				var controlValue = 0.0f;
 				foreach (var source in binding.sources)
 				{
-					var value = GetSourceValue(source);
-					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
-						controlValue = value;
-				}
+					var sourceValue = GetSourceValue(source);
+				    if (Mathf.Abs(sourceValue) > Mathf.Abs(controlValue))
+                        controlValue = sourceValue;
+                }
 				
 				foreach (var axis in binding.buttonAxisSources)
 				{
 					var negativeValue = GetSourceValue(axis.negative);
 					var positiveValue = GetSourceValue(axis.positive);
-					var value = positiveValue - negativeValue;
-					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
-						controlValue = value;
+				    var value = positiveValue - negativeValue;
+                    if (Mathf.Abs(value) > Mathf.Abs(controlValue))
+                        controlValue = value;
 				}
 				
 				state.SetCurrentValue(entryIndex, controlValue);
@@ -295,8 +308,16 @@ namespace UnityEngine.InputNew
 
 		private float GetSourceValue(InputControlDescriptor source)
 		{
-			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
-			return deviceState.GetCurrentValue(source.controlIndex);
+		    float controlValue = 0f;
+			var states = GetDeviceStatesForDeviceType(source.deviceType);
+		    foreach (var s in states)
+		    {
+                float sourceValue = s.GetCurrentValue(source.controlIndex);
+		        if (Mathf.Abs(sourceValue) > Mathf.Abs(controlValue))
+		            controlValue = sourceValue;
+		    }
+		        
+		    return controlValue;
 		}
 
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
@@ -318,8 +339,16 @@ namespace UnityEngine.InputNew
 
 		private string GetSourceName(InputControlDescriptor source)
 		{
-			var deviceState = GetDeviceStateForDeviceType(source.deviceType);
-			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
+			var states = GetDeviceStatesForDeviceType(source.deviceType);
+            // FIXME: Not sure what to do with returning a source name where we might have multiple device states that could satisfy that
+		    foreach (var s in states)
+		    {
+                string name = s.controlProvider.GetControlData(source.controlIndex).name;
+		        if (!string.IsNullOrEmpty(name))
+		            return name;
+		    }
+
+		    return null;
 		}
 
 		////REVIEW: the descriptor may come from anywhere; method assumes we get passed some state we actually own
@@ -368,14 +397,17 @@ namespace UnityEngine.InputNew
 			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
 			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
 			
-			foreach (var deviceType in controlScheme.deviceTypes)
+			foreach (var deviceType in controlScheme.serializableDeviceTypes)
 			{
-				InputState state = GetDeviceStateForDeviceType(deviceType);
-				List<int> indices;
-				if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType, out indices))
-					state.SetUsedControls(indices);
-				else
-					state.SetAllControlsEnabled(false);
+				var states = GetDeviceStatesForDeviceType(deviceType);
+			    foreach (var s in states)
+			    {
+                    List<int> indices;
+                    if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType, out indices))
+                        s.SetUsedControls(indices);
+                    else
+                        s.SetAllControlsEnabled(false);
+                }				
 			}
 		}
 	}

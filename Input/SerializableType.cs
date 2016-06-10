@@ -12,10 +12,24 @@ namespace UnityEngine.InputNew
 
         private Type m_CachedType;
 	    
-        public SerializableType(Type t)
-		{
+	    public SerializableType(Type t)     
+        {
             value = t;
-		}
+        }
+
+        private SerializableType()
+        {
+        }
+
+        public SerializableType Clone()
+	    {
+	        var clone = new SerializableType();
+	        clone.m_TypeName = m_TypeName;
+	        clone.m_TagIndex = m_TagIndex;
+	        clone.m_CachedType = m_CachedType;
+
+	        return clone;
+	    }
 
 		public Type value
 		{

@@ -845,8 +845,12 @@ public class {0} : ActionMapInput {{
 		    string[] tagNames = InputDeviceUtility.GetDeviceTags(e.value);
 		    return string.Format("{0}.{1}", e.Name, tagNames[e.TagIndex]);
 		}).ToArray();
+
 		EditorGUI.BeginChangeCheck();
-		int deviceIndex = EditorGUI.Popup(rect, serializedTypes.FindIndex(t => t.value == source.deviceType.value && t.TagIndex == source.deviceType.TagIndex), deviceNames);
+		int deviceIndex = EditorGUI.Popup(rect, serializedTypes.FindIndex(t =>
+		{
+		    return source != null && source.deviceType != null && t.value == source.deviceType.value && t.TagIndex == source.deviceType.TagIndex;
+		}), deviceNames);
 		if (EditorGUI.EndChangeCheck())
 			source.deviceType = serializedTypes[deviceIndex];
 		

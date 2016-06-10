@@ -71,7 +71,26 @@ namespace UnityEngine.InputNew
 	        }
 	    }
 
-		public VRInputDevice()
+	    public enum Handedness { Left, Right }
+
+	    private Handedness? hand = null;
+	    public Handedness? Hand
+	    {
+            get { return hand; }
+            set { hand = value; }
+	    }
+
+	    public override int TagIndex
+	    {
+	        get
+	        {
+	            if (hand.HasValue)
+	                return (int) hand.Value;	          
+	            return -1;
+	        }	        
+	    }
+
+	    public VRInputDevice()
 			: this("VRInputDevice", null) {}
 
 		public VRInputDevice(string deviceName, List<InputControlData> additionalControls)
@@ -173,6 +192,7 @@ namespace UnityEngine.InputNew
 
 		public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
+
 			if (base.ProcessEventIntoState(inputEvent, intoState))
 				return true;
 
