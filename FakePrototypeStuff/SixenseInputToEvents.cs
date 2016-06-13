@@ -9,6 +9,7 @@ public class SixenseInputToEvents : MonoBehaviour
 {    
     public const uint kControllerCount = SixenseInput.MAX_CONTROLLERS;
 	public const int kAxisCount = (int)VRInputDevice.VRControl.Analog9 + 1;
+	public const int kDeviceOffset = 3; // magic number for device location in InputDeviceManager.cs
     private readonly float [,] m_LastAxisValues = new float[kControllerCount, kAxisCount];
 	private readonly Vector3[] m_LastPositionValues = new Vector3[kControllerCount];
 	private readonly Quaternion[] m_LastRotationValues = new Quaternion[kControllerCount];
@@ -26,12 +27,13 @@ public class SixenseInputToEvents : MonoBehaviour
 
         for (var i = 0; i < SixenseInput.MAX_CONTROLLERS; i++)
         {
-            if (SixenseInput.Controllers[i] == null)
+            if (SixenseInput.Controllers[i] == null || !SixenseInput.Controllers[i].Enabled)
                 continue;
 
-            SendButtonEvents(i);
-            SendAxisEvents(i);
-            SendTrackingEvents(i);
+	        int deviceIndex = kDeviceOffset + (SixenseInput.Controllers[i].Hand == SixenseHands.LEFT ? 0 : 1);
+            SendButtonEvents(i, deviceIndex);
+            SendAxisEvents(i, deviceIndex);
+            SendTrackingEvents(i, deviceIndex);
         }
     }
 
@@ -54,7 +56,7 @@ public class SixenseInputToEvents : MonoBehaviour
         return 0f;
     }
 
-	private void SendAxisEvents(int deviceIndex)
+	private void SendAxisEvents(int sixenseDeviceIndex, int deviceIndex)
 	{        
         for (var axis = 0; axis < kAxisCount; ++axis)
         {
@@ -62,12 +64,12 @@ public class SixenseInputToEvents : MonoBehaviour
             inputEvent.deviceType = typeof(VRInputDevice);
             inputEvent.deviceIndex = deviceIndex;
             inputEvent.controlIndex = axis;
-            inputEvent.value = GetAxis(deviceIndex, (VRInputDevice.VRControl)axis);
+            inputEvent.value = GetAxis(sixenseDeviceIndex, (VRInputDevice.VRControl)axis);
 
-			if (Mathf.Approximately(m_LastAxisValues[deviceIndex, axis], inputEvent.value))
+			if (Mathf.Approximately(m_LastAxisValues[sixenseDeviceIndex, axis], inputEvent.value))
 				continue;
 
-			m_LastAxisValues[deviceIndex, axis] = inputEvent.value;
+			m_LastAxisValues[sixenseDeviceIndex, axis] = inputEvent.value;
             // Debug.Log("Axis event: " + inputEvent);
 
             InputSystem.QueueEvent(inputEvent);            
@@ -104,9 +106,9 @@ public class SixenseInputToEvents : MonoBehaviour
 		return -1;
 	}
 
-    private void SendButtonEvents(int deviceIndex)
+    private void SendButtonEvents(int sixenseDeviceIndex, int deviceIndex)
     {
-        var controller = SixenseInput.Controllers[deviceIndex];
+        var controller = SixenseInput.Controllers[sixenseDeviceIndex];
         foreach (SixenseButtons button in Enum.GetValues(typeof(SixenseButtons)))
         {
             bool keyDown = controller.GetButtonDown(button);
@@ -122,8 +124,7 @@ public class SixenseInputToEvents : MonoBehaviour
 		            inputEvent.deviceIndex = deviceIndex;
 		            inputEvent.controlIndex = buttonIndex;
 		            inputEvent.value = keyDown ? 1.0f : 0.0f;
-
-		            // Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
+					// Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
 
 		            InputSystem.QueueEvent(inputEvent);
 	            }
@@ -131,9 +132,9 @@ public class SixenseInputToEvents : MonoBehaviour
         }
     }
 
-    private void SendTrackingEvents(int deviceIndex)
+    private void SendTrackingEvents(int sixenseDeviceIndex, int deviceIndex)
 	{
-        var controller = SixenseInput.Controllers[deviceIndex];
+        var controller = SixenseInput.Controllers[sixenseDeviceIndex];
 
         var inputEvent = InputSystem.CreateEvent<VREvent>();
 		inputEvent.deviceType = typeof (VRInputDevice);
@@ -141,12 +142,12 @@ public class SixenseInputToEvents : MonoBehaviour
         inputEvent.localPosition = controller.Position;
         inputEvent.localRotation = controller.Rotation;
 
-		if (inputEvent.localPosition == m_LastPositionValues[deviceIndex] &&
-			inputEvent.localRotation == m_LastRotationValues[deviceIndex])
+		if (inputEvent.localPosition == m_LastPositionValues[sixenseDeviceIndex] &&
+			inputEvent.localRotation == m_LastRotationValues[sixenseDeviceIndex])
 			return;
 
-		m_LastPositionValues[deviceIndex] = inputEvent.localPosition;
-		m_LastRotationValues[deviceIndex] = inputEvent.localRotation;
+		m_LastPositionValues[sixenseDeviceIndex] = inputEvent.localPosition;
+		m_LastRotationValues[sixenseDeviceIndex] = inputEvent.localRotation;
 
 		InputSystem.QueueEvent(inputEvent);
 	}
