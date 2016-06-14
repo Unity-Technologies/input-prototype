@@ -585,6 +585,9 @@ public class {0} : ActionMapInput {{
 			case InputControlType.Vector3:
 				typeStr = "Vector3InputControl";
 				break;
+			case InputControlType.Quaternion:
+				typeStr = "QuaternionInputControl";
+				break;
 			}
 
 			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);

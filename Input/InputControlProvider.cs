@@ -41,6 +41,9 @@ namespace UnityEngine.InputNew
 				case InputControlType.Vector3:
 					m_Controls.Add(new Vector3InputControl(i, m_State));
 					break;
+				case InputControlType.Quaternion:
+					m_Controls.Add(new QuaternionInputControl(i, m_State));
+					break;
 				}
 			}
 		}
