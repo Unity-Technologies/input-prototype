@@ -10,7 +10,10 @@ public class SixenseInputToEvents : MonoBehaviour
     public const uint kControllerCount = SixenseInput.MAX_CONTROLLERS;
 	public const int kAxisCount = (int)VRInputDevice.VRControl.Analog9 + 1;
 	public const int kDeviceOffset = 3; // magic number for device location in InputDeviceManager.cs
-    private readonly float [,] m_LastAxisValues = new float[kControllerCount, kAxisCount];
+
+	private const float kHydraUnits = 0.001f; // input is in mm
+
+	private readonly float [,] m_LastAxisValues = new float[kControllerCount, kAxisCount];
 	private readonly Vector3[] m_LastPositionValues = new Vector3[kControllerCount];
 	private readonly Quaternion[] m_LastRotationValues = new Quaternion[kControllerCount];
 
@@ -21,23 +24,23 @@ public class SixenseInputToEvents : MonoBehaviour
 	}
 
 	private void Update()
-    {
-        if (!SixenseInput.IsBaseConnected(0))
-            return;
+	{
+		if (!SixenseInput.IsBaseConnected(0))
+			return;
 
-        for (var i = 0; i < SixenseInput.MAX_CONTROLLERS; i++)
-        {
-            if (SixenseInput.Controllers[i] == null || !SixenseInput.Controllers[i].Enabled)
-                continue;
+		for (var i = 0; i < SixenseInput.MAX_CONTROLLERS; i++)
+		{
+			if (SixenseInput.Controllers[i] == null || !SixenseInput.Controllers[i].Enabled)
+				continue;
 
-	        int deviceIndex = kDeviceOffset + (SixenseInput.Controllers[i].Hand == SixenseHands.LEFT ? 0 : 1);
-            SendButtonEvents(i, deviceIndex);
-            SendAxisEvents(i, deviceIndex);
-            SendTrackingEvents(i, deviceIndex);
-        }
-    }
+			int deviceIndex = kDeviceOffset + (SixenseInput.Controllers[i].Hand == SixenseHands.LEFT ? 0 : 1);
+			SendButtonEvents(i, deviceIndex);
+			SendAxisEvents(i, deviceIndex);
+			SendTrackingEvents(i, deviceIndex);
+		}
+	}
 
-    private float GetAxis(int deviceIndex, VRInputDevice.VRControl axis)
+	private float GetAxis(int deviceIndex, VRInputDevice.VRControl axis)
     {
         var controller = SixenseInput.Controllers[deviceIndex];
         if (controller != null)
@@ -139,7 +142,7 @@ public class SixenseInputToEvents : MonoBehaviour
         var inputEvent = InputSystem.CreateEvent<VREvent>();
 		inputEvent.deviceType = typeof (VRInputDevice);
 		inputEvent.deviceIndex = deviceIndex;
-        inputEvent.localPosition = controller.Position;
+        inputEvent.localPosition = controller.Position * kHydraUnits;
         inputEvent.localRotation = controller.Rotation;
 
 		if (inputEvent.localPosition == m_LastPositionValues[sixenseDeviceIndex] &&
