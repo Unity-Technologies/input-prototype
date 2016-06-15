@@ -126,23 +126,17 @@ namespace UnityEngine.InputNew
 		{
 		    if (!global && (inputEvent.device.assignment == null || inputEvent.device.assignment.player != this))
 		        return false;
-		    bool processed = false;
 			for (int i = 0; i < maps.Count; i++)
 			{
 				if (maps[i].active && (global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
 				{
-				    if (ProcessEventInMap(maps[i], inputEvent))
-				    {
-				        processed = true;
-                        if (maps[i].blockSubsequent)
-                            return true;
+				    if (ProcessEventInMap(maps[i], inputEvent) || maps[i].blockSubsequent) { 
+                        return true;
                     }
-
-                   
 				}
 			}
 
-			return processed;
+			return false;
 		}
 
 		bool ProcessEventInMap(ActionMapInput map, InputEvent inputEvent)

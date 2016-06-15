@@ -73,7 +73,6 @@ public class SixenseInputToEvents : MonoBehaviour
 				continue;
 
 			m_LastAxisValues[sixenseDeviceIndex, axis] = inputEvent.value;
-            // Debug.Log("Axis event: " + inputEvent);
 
             InputSystem.QueueEvent(inputEvent);            
         }
@@ -127,7 +126,6 @@ public class SixenseInputToEvents : MonoBehaviour
 		            inputEvent.deviceIndex = deviceIndex;
 		            inputEvent.controlIndex = buttonIndex;
 		            inputEvent.value = keyDown ? 1.0f : 0.0f;
-					// Debug.Log(string.Format("event: {0}; button: {1}", inputEvent, button));
 
 		            InputSystem.QueueEvent(inputEvent);
 	            }
