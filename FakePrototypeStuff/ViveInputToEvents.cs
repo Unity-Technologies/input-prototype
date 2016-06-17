@@ -9,8 +9,13 @@ using Valve.VR;
 
 public class ViveInputToEvents
     : MonoBehaviour {
+    public int[] SteamDevice
+    {
+        get { return steamDeviceIndices; }
+    }
     private enum XorY { X, Y }
     private readonly int[] steamDeviceIndices = new int[] { -1, -1 };
+
 
     public void Update() {
         for (VRInputDevice.Handedness hand = VRInputDevice.Handedness.Left; (int)hand <= (int)VRInputDevice.Handedness.Right; hand++) {
@@ -28,13 +33,13 @@ public class ViveInputToEvents
                 if (hand == VRInputDevice.Handedness.Left)
                 {
                     steamDeviceIndices[(int)hand] = steamDeviceIndex;
-                    Debug.Log("Assigned Left " + steamDeviceIndex);
+                    //Debug.Log("Assigned Left " + steamDeviceIndex);
 
                 }
                 else if(steamDeviceIndex != steamDeviceIndices[(int)VRInputDevice.Handedness.Left]) // Do not assign device to right hand if it is same device as left hand
                 {
                     steamDeviceIndices[(int)hand] = steamDeviceIndex;
-                    Debug.Log("Assigned Right " + steamDeviceIndex);        
+                    //Debug.Log("Assigned Right " + steamDeviceIndex);        
                 }
                 else
                 {
@@ -69,7 +74,7 @@ public class ViveInputToEvents
                 inputEvent.value = xy == XorY.X ? axisVec.x : axisVec.y;
 
                 if (Mathf.Approximately(m_LastAxisValues[steamDeviceIndex, a], inputEvent.value)) {
-                    continue;
+                    //continue;
                 }
                 m_LastAxisValues[steamDeviceIndex, a] = inputEvent.value;
                 // Debug.Log("Axis event: " + inputEvent);
@@ -91,7 +96,7 @@ public class ViveInputToEvents
                 inputEvent.controlIndex = axisCount + (int)button;
                 inputEvent.value = keyDown ? 1.0f : 0.0f;
 
-                Debug.Log(string.Format("event: {0}; button: {1}; hand: {2}", inputEvent, button, deviceIndex));
+                //Debug.Log(string.Format("event: {0}; button: {1}; hand: {2}", inputEvent, button, deviceIndex));
 
                 InputSystem.QueueEvent(inputEvent);
             }
