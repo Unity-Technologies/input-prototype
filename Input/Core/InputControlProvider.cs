@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public abstract class InputControlProvider : IInputControlProvider
+	public abstract class InputControlProvider
 	{
 		public List<InputControlData> controlDataList { get { return m_ControlDataList; } }
 		public InputState state { get { return m_State; } }
@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
             get { return -1; } // -1 tag means unset or "Any"
         }
 
-        private List<InputControlData> m_ControlDataList;
+		private List<InputControlData> m_ControlDataList;
 		private List<InputControl> m_Controls;
 		private InputState m_State;
 
@@ -26,25 +26,11 @@ namespace UnityEngine.InputNew
 			m_Controls = new List<InputControl>(controlCount);
 			for (int i = 0; i < controlCount; i++)
 			{
-				switch(controls[i].controlType)
-				{
-				case InputControlType.Button:
-					m_Controls.Add(new ButtonInputControl(i, m_State));
-					break;
-				case InputControlType.AbsoluteAxis:
-				case InputControlType.RelativeAxis:
-					m_Controls.Add(new AxisInputControl(i, m_State));
-					break;
-				case InputControlType.Vector2:
-					m_Controls.Add(new Vector2InputControl(i, m_State));
-					break;
-				case InputControlType.Vector3:
-					m_Controls.Add(new Vector3InputControl(i, m_State));
-					break;
-				case InputControlType.Quaternion:
-					m_Controls.Add(new QuaternionInputControl(i, m_State));
-					break;
-				}
+				Type type = controls[i].controlType;
+				if (type == null)
+					type = typeof(InputControl);
+				InputControl control = (InputControl)Activator.CreateInstance(type, i, m_State);
+				m_Controls.Add(control);
 			}
 		}
 

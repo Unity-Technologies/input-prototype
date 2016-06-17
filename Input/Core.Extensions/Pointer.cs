@@ -23,39 +23,39 @@ namespace UnityEngine.InputNew
 			controls.Add(item: new InputControlData
 			{
 				name = "Position"
-					, controlType = InputControlType.Vector3
+					, controlType = typeof(Vector3InputControl)
 					, componentControlIndices = new[] { (int)PointerControl.PositionX, (int)PointerControl.PositionY, (int)PointerControl.PositionZ }
 			});
 			
-			controls.Add(new InputControlData { name = "Position X", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "Position Y", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "Position Z", controlType = InputControlType.AbsoluteAxis });
+			controls.Add(new InputControlData { name = "Position X", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Position Y", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Position Z", controlType = typeof(AxisInputControl) });
 			
 			controls.Add(item: new InputControlData
 			{
 				name = "Delta"
-					, controlType = InputControlType.Vector3
+					, controlType = typeof(Vector3InputControl)
 					, componentControlIndices = new[] { (int)PointerControl.DeltaX, (int)PointerControl.DeltaY, (int)PointerControl.DeltaZ }
 			});
 			
-			controls.Add(new InputControlData { name = "Delta X", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Delta Y", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Delta Z", controlType = InputControlType.RelativeAxis });
+			controls.Add(new InputControlData { name = "Delta X", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Delta Y", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Delta Z", controlType = typeof(AxisInputControl) });
 			controls.Add(item: new InputControlData
 			{
 				name = "Locked Delta"
-					, controlType = InputControlType.Vector3
+					, controlType = typeof(Vector3InputControl)
 					, componentControlIndices = new[] { (int)PointerControl.LockedDeltaX, (int)PointerControl.LockedDeltaY, (int)PointerControl.LockedDeltaZ }
 			});
-			controls.Add(new InputControlData { name = "Locked Delta X", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Locked Delta Y", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Locked Delta Z", controlType = InputControlType.RelativeAxis });
-			controls.Add(new InputControlData { name = "Pressure", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "Tilt", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "Rotation", controlType = InputControlType.AbsoluteAxis });
-			controls.Add(new InputControlData { name = "Left Button", controlType = InputControlType.Button });
-			controls.Add(new InputControlData { name = "Right Button", controlType = InputControlType.Button });
-			controls.Add(new InputControlData { name = "Middle Button", controlType = InputControlType.Button });
+			controls.Add(new InputControlData { name = "Locked Delta X", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Locked Delta Y", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Locked Delta Z", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Pressure", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Tilt", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Rotation", controlType = typeof(AxisInputControl) });
+			controls.Add(new InputControlData { name = "Left Button", controlType = typeof(ButtonInputControl) });
+			controls.Add(new InputControlData { name = "Right Button", controlType = typeof(ButtonInputControl) });
+			controls.Add(new InputControlData { name = "Middle Button", controlType = typeof(ButtonInputControl) });
 
 			if (additionalControls != null)
 				controls.AddRange(additionalControls);
