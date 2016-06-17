@@ -103,53 +103,47 @@ namespace UnityEngine.InputNew
 			controls[(int)VRControl.LeftStick] = new InputControlData
 			{
 				name = "Left Stick"
-				,
-				controlType = InputControlType.Vector2
-				,
-				componentControlIndices = new[] { (int)VRControl.LeftStickX, (int)VRControl.LeftStickY }
+				, controlType = typeof(Vector2InputControl)
+				, componentControlIndices = new[] { (int)VRControl.LeftStickX, (int)VRControl.LeftStickY }
 			};
 			controls[(int)VRControl.LocalPosition] = new InputControlData
 			{
 				name = "Local Position"
-				,
-				controlType = InputControlType.Vector3
-				,
-				componentControlIndices = new[] { (int)VRControl.LocalPositionX, (int)VRControl.LocalPositionY, (int)VRControl.LocalPositionZ }
+				, controlType = typeof(Vector3InputControl)
+				, componentControlIndices = new[] { (int)VRControl.LocalPositionX, (int)VRControl.LocalPositionY, (int)VRControl.LocalPositionZ }
 			};
 			controls[(int)VRControl.LocalRotation] = new InputControlData
 			{
 				name = "Local Rotation"
-				,
-				controlType = InputControlType.Quaternion
-				,
-				componentControlIndices = new[] { (int)VRControl.LocalRotationX, (int)VRControl.LocalRotationY, (int)VRControl.LocalRotationZ, (int)VRControl.LocalRotationW }
+				, controlType = typeof(QuaternionInputControl)
+				, componentControlIndices = new[] { (int)VRControl.LocalRotationX, (int)VRControl.LocalRotationY, (int)VRControl.LocalRotationZ, (int)VRControl.LocalRotationW }
 			};
 			////TODO: dpad (more complicated as the source is buttons which need to be translated into a vector)
 
 			// Buttons.
-			controls[(int)VRControl.Action1] = new InputControlData { name = "Action 1", controlType = InputControlType.Button };
-			controls[(int)VRControl.Action2] = new InputControlData { name = "Action 2", controlType = InputControlType.Button };
-			controls[(int)VRControl.Action3] = new InputControlData { name = "Action 3", controlType = InputControlType.Button };
-			controls[(int)VRControl.Action4] = new InputControlData { name = "Action 4", controlType = InputControlType.Button };
-            controls[(int)VRControl.Action5] = new InputControlData { name = "Action 5", controlType = InputControlType.Button };
+			controls[(int)VRControl.Action1] = new InputControlData { name = "Action 1", controlType = typeof(ButtonInputControl) };
+			controls[(int)VRControl.Action2] = new InputControlData { name = "Action 2", controlType = typeof(ButtonInputControl) };
+			controls[(int)VRControl.Action3] = new InputControlData { name = "Action 3", controlType = typeof(ButtonInputControl) };
+			controls[(int)VRControl.Action4] = new InputControlData { name = "Action 4", controlType = typeof(ButtonInputControl) };
+            controls[(int)VRControl.Action5] = new InputControlData { name = "Action 5", controlType = typeof(ButtonInputControl) };
 
-            controls[(int)VRControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
-			controls[(int)VRControl.Back] = new InputControlData { name = "Back", controlType = InputControlType.Button };
-			controls[(int)VRControl.LeftStickButton] = new InputControlData { name = "Left Stick Button", controlType = InputControlType.Button };
+            controls[(int)VRControl.Start] = new InputControlData { name = "Start", controlType = typeof(ButtonInputControl) };
+			controls[(int)VRControl.Back] = new InputControlData { name = "Back", controlType = typeof(ButtonInputControl) };
+			controls[(int)VRControl.LeftStickButton] = new InputControlData { name = "Left Stick Button", controlType = typeof(ButtonInputControl) };
 
 			// Axes.
-			controls[(int)VRControl.LeftStickX] = new InputControlData { name = "Left Stick X", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LeftStickY] = new InputControlData { name = "Left Stick Y", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalPositionX] = new InputControlData { name = "Local Position X", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalPositionY] = new InputControlData { name = "Local Position Y", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalPositionZ] = new InputControlData { name = "Local Position Z", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalRotationX] = new InputControlData { name = "Local Rotation X", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalRotationY] = new InputControlData { name = "Local Rotation Y", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalRotationZ] = new InputControlData { name = "Local Rotation Z", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.LocalRotationW] = new InputControlData { name = "Local Rotation W", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)VRControl.LeftStickX] = new InputControlData { name = "Left Stick X", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LeftStickY] = new InputControlData { name = "Left Stick Y", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalPositionX] = new InputControlData { name = "Local Position X", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalPositionY] = new InputControlData { name = "Local Position Y", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalPositionZ] = new InputControlData { name = "Local Position Z", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalRotationX] = new InputControlData { name = "Local Rotation X", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalRotationY] = new InputControlData { name = "Local Rotation Y", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalRotationZ] = new InputControlData { name = "Local Rotation Z", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.LocalRotationW] = new InputControlData { name = "Local Rotation W", controlType = typeof(AxisInputControl) };
 
-			controls[(int)VRControl.Trigger1] = new InputControlData() { name = "Trigger 1", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VRControl.Trigger2] = new InputControlData() { name = "Trigger 2", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)VRControl.Trigger1] = new InputControlData() { name = "Trigger 1", controlType = typeof(AxisInputControl) };
+			controls[(int)VRControl.Trigger2] = new InputControlData() { name = "Trigger 2", controlType = typeof(AxisInputControl) };
 
 			if (additionalControls != null)
 				controls.AddRange(additionalControls);

@@ -58,36 +58,36 @@ namespace UnityEngine.InputNew
 			controls[(int)VirtualJoystickControl.LeftStick] = new InputControlData
 			{
 				name = "Left Stick"
-				, controlType = InputControlType.Vector2
+				, controlType = typeof(Vector2InputControl)
 				, componentControlIndices = new[] { (int)VirtualJoystickControl.LeftStickX, (int)VirtualJoystickControl.LeftStickY }
 			};
 			controls[(int)VirtualJoystickControl.RightStick] = new InputControlData
 			{
 				name = "Right Stick"
-				, controlType = InputControlType.Vector2
+				, controlType = typeof(Vector2InputControl)
 				, componentControlIndices = new[] { (int)VirtualJoystickControl.RightStickX, (int)VirtualJoystickControl.RightStickY }
 			};
 			
 			// Axes.
-			controls[(int)VirtualJoystickControl.LeftStickX] = new InputControlData { name = "Left Stick X", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VirtualJoystickControl.LeftStickY] = new InputControlData { name = "Left Stick Y", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VirtualJoystickControl.RightStickX] = new InputControlData { name = "Right Stick X", controlType = InputControlType.AbsoluteAxis };
-			controls[(int)VirtualJoystickControl.RightStickY] = new InputControlData { name = "Right Stick Y", controlType = InputControlType.AbsoluteAxis };
+			controls[(int)VirtualJoystickControl.LeftStickX] = new InputControlData { name = "Left Stick X", controlType = typeof(AxisInputControl) };
+			controls[(int)VirtualJoystickControl.LeftStickY] = new InputControlData { name = "Left Stick Y", controlType = typeof(AxisInputControl) };
+			controls[(int)VirtualJoystickControl.RightStickX] = new InputControlData { name = "Right Stick X", controlType = typeof(AxisInputControl) };
+			controls[(int)VirtualJoystickControl.RightStickY] = new InputControlData { name = "Right Stick Y", controlType = typeof(AxisInputControl) };
 			
 			// Buttons.
-			controls[(int)VirtualJoystickControl.Action1] = new InputControlData { name = "Action 1", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Action2] = new InputControlData { name = "Action 2", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Action3] = new InputControlData { name = "Action 3", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Action4] = new InputControlData { name = "Action 4", controlType = InputControlType.Button };
+			controls[(int)VirtualJoystickControl.Action1] = new InputControlData { name = "Action 1", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Action2] = new InputControlData { name = "Action 2", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Action3] = new InputControlData { name = "Action 3", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Action4] = new InputControlData { name = "Action 4", controlType = typeof(ButtonInputControl) };
 			
-			controls[(int)VirtualJoystickControl.Back] = new InputControlData { name = "Back", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Start] = new InputControlData { name = "Start", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Select] = new InputControlData { name = "Select", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Pause] = new InputControlData { name = "Pause", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Menu] = new InputControlData { name = "Menu", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Share] = new InputControlData { name = "Share", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.View] = new InputControlData { name = "View", controlType = InputControlType.Button };
-			controls[(int)VirtualJoystickControl.Options] = new InputControlData { name = "Options", controlType = InputControlType.Button };
+			controls[(int)VirtualJoystickControl.Back] = new InputControlData { name = "Back", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Start] = new InputControlData { name = "Start", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Select] = new InputControlData { name = "Select", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Pause] = new InputControlData { name = "Pause", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Menu] = new InputControlData { name = "Menu", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Share] = new InputControlData { name = "Share", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.View] = new InputControlData { name = "View", controlType = typeof(ButtonInputControl) };
+			controls[(int)VirtualJoystickControl.Options] = new InputControlData { name = "Options", controlType = typeof(ButtonInputControl) };
 			
 			if (additionalControls != null)
 				controls.AddRange(additionalControls);

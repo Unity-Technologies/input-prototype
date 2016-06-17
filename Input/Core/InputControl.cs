@@ -9,7 +9,7 @@ namespace UnityEngine.InputNew
 		protected readonly int m_Index;
 		protected readonly InputState m_State;
 
-		internal InputControl(int index, InputState state)
+		public InputControl(int index, InputState state)
 		{
 			m_Index = index;
 			m_State = state;
@@ -39,11 +39,6 @@ namespace UnityEngine.InputNew
 		{
 			get { return data.name; }
 		}
-		
-		public InputControlType controlType
-		{
-			get { return data.controlType; }
-		}
 
 		public string GetPrimarySourceName(string buttonAxisFormattingString = "{0} & {1}")
 		{
@@ -54,6 +49,8 @@ namespace UnityEngine.InputNew
 		{
 			get { return m_State.GetCurrentValue(m_Index); }
 		}
+
+		public virtual string[] sourceControlNames { get { return null; } }
 	}
 
 	[Serializable]
@@ -123,6 +120,8 @@ namespace UnityEngine.InputNew
 				);
 			}
 		}
+
+		public override string[] sourceControlNames { get { return new string[] { "X", "Y" }; } }
 	}
 
 	[Serializable]
@@ -143,6 +142,8 @@ namespace UnityEngine.InputNew
 				);
 			}
 		}
+
+		public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z" }; } }
 	}
 
 	[Serializable]
@@ -164,5 +165,7 @@ namespace UnityEngine.InputNew
 				);
 			}
 		}
+
+		public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z", "W" }; } }
 	}
 }

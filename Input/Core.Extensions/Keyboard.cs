@@ -40,7 +40,7 @@ namespace UnityEngine.InputNew
 			controls[(int)key] = new InputControlData
 			{
 				name = key.ToString()
-				, controlType = InputControlType.Button
+				, controlType = typeof(ButtonInputControl)
 			};
 		}
 

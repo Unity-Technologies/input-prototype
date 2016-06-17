@@ -4,19 +4,18 @@ using System.Linq;
 
 namespace UnityEngine.InputNew
 {
-	public class PlayerHandle
+	public class PlayerHandle : IInputConsumer
 	{
 		public readonly int index;
 		public List<PlayerDeviceAssignment> assignments = new List<PlayerDeviceAssignment>();
 		public List<ActionMapInput> maps = new List<ActionMapInput>();
 
 		private bool m_Global = false;
-		private InputEventTree treeNode { get; set; }
 
 		public delegate void ChangeEvent();
 		public static ChangeEvent onChange;
 
-		IInputConsumer currentInputConsumer
+		InputConsumerNode currentInputConsumer
 		{
 			get
 			{
@@ -27,15 +26,7 @@ namespace UnityEngine.InputNew
 		internal PlayerHandle(int index)
 		{
 			this.index = index;
-
-			treeNode = new InputEventTree
-			{
-				name = "Player "+index,
-				processInput = ProcessEvent,
-				beginFrame = BeginFrameEvent,
-				endFrame = EndFrameEvent
-			};
-			currentInputConsumer.children.Add(treeNode);
+			currentInputConsumer.children.Add(this);
 
 			if (onChange != null)
 				onChange.Invoke();
@@ -49,8 +40,7 @@ namespace UnityEngine.InputNew
 			for (int i = assignments.Count - 1; i >= 0; i--)
 				assignments[i].Unassign();
 			
-			currentInputConsumer.children.Remove(treeNode);
-			treeNode = null;
+			currentInputConsumer.children.Remove(this);
 
 			PlayerHandleManager.RemovePlayerHandle(this);
 			if (onChange != null)
@@ -66,9 +56,9 @@ namespace UnityEngine.InputNew
 					return;
 
 				// Note: value of m_Global changes what currentInputConsumer is.
-				currentInputConsumer.children.Remove(treeNode);
+				currentInputConsumer.children.Remove(this);
 				m_Global = value;
-				currentInputConsumer.children.Add(treeNode);
+				currentInputConsumer.children.Add(this);
 
 				if (onChange != null)
 					onChange.Invoke();
@@ -122,7 +112,7 @@ namespace UnityEngine.InputNew
 			}
 		}
 
-		bool ProcessEvent(InputEvent inputEvent)
+		public bool ProcessEvent(InputEvent inputEvent)
 		{
 		    if (!global && (inputEvent.device.assignment == null || inputEvent.device.assignment.player != this))
 		        return false;
@@ -165,7 +155,7 @@ namespace UnityEngine.InputNew
 				return assignments.Select(e => e.device);
 		}
 
-		void BeginFrameEvent()
+		public void BeginFrame()
 		{
 			for (int i = 0; i < maps.Count; i++)
 			{
@@ -174,7 +164,7 @@ namespace UnityEngine.InputNew
 			}
 		}
 		
-		void EndFrameEvent()
+		public void EndFrame()
 		{
 			for (int i = 0; i < maps.Count; i++)
 			{

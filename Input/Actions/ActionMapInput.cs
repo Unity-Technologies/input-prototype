@@ -170,9 +170,7 @@ namespace UnityEngine.InputNew
 							value = state.controlProvider.GetControlData(j).defaultValue,
 							time = Time.time
 						};
-						// TODO: Revise off design of IInputConsumer that doesn't have method for invoking event.
-						var node = InputSystem.consumerStack as InputEventTree;
-						node.ProcessEvent(evt);
+						InputSystem.consumers.ProcessEvent(evt);
 					}
 				}
 			}
