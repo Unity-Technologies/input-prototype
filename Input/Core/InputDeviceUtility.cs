@@ -43,10 +43,6 @@ namespace UnityEngine.InputNew
                     deviceName = string.Format("{0}.{1}", source.deviceType.Name, tags[source.deviceType.TagIndex]);
                 }
             }
-		    else
-		    {
-			    Debug.Log(source);
-		    }
 
 		    return deviceName;
 		}
