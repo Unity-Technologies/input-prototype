@@ -293,15 +293,19 @@ public class ActionMapEditor : Editor
             if (tagNames != null)
             {
                 EditorGUI.BeginChangeCheck();
-                int tagIndex = serializedDeviceType.TagIndex;
+				// We want to have the ability to unset a tag after specifying one, so add an "Any" option
+	            var popupTags = new string[tagNames.Length + 1];
+				popupTags[0] = "Any";
+				tagNames.CopyTo(popupTags, 1);
+                int tagIndex = serializedDeviceType.TagIndex + 1;
                 rect.x += rect.width;
                 rect.width = tagMaxSize.x;
                 tagIndex = EditorGUI.Popup(
                     rect,
                     tagIndex,
-                    tagNames);
+                    popupTags);
                 if (EditorGUI.EndChangeCheck())
-                    serializedDeviceType.TagIndex = tagIndex;
+                    serializedDeviceType.TagIndex = tagIndex - 1;
             }
         }
 
