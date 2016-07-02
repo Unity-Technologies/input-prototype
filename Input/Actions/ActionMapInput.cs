@@ -73,7 +73,13 @@ namespace UnityEngine.InputNew
 			SetControls(controls);
 		}
 
-		public bool TryInitializeWithDevices(IEnumerable<InputDevice> availableDevices)
+        /// <summary>
+        /// Find the best scheme for the available devices and initialize the action map input
+        /// </summary>
+        /// <param name="availableDevices">Available devices in the system</param>
+        /// <param name="requiredDevice">Required device for scheme</param>
+        /// <returns></returns>
+		public bool TryInitializeWithDevices(IEnumerable<InputDevice> availableDevices, IEnumerable<InputDevice> requiredDevices = null)
 		{
 			int bestScheme = -1;
 			List<InputDevice> bestFoundDevices = null;
@@ -111,11 +117,25 @@ namespace UnityEngine.InputNew
 						break;
 					}
 				}
-				if (!matchesAll)
+
+                // Don't switch schemes in the case where we require a specific device for an event that is getting processed.
+                if (matchesAll && requiredDevices != null && requiredDevices.Any())
+                {
+                    foreach (var device in requiredDevices)
+                    {
+                        if (!foundDevices.Contains(device))
+                        {
+                            matchesAll = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!matchesAll)
 					continue;
 
-				// If we reach this point we know that control scheme both matches required and matches all.
-				if (timeForScheme > mostRecentTime)
+                // If we reach this point we know that control scheme both matches required and matches all.
+                if (timeForScheme > mostRecentTime)
 				{
 					bestScheme = scheme;
 					bestFoundDevices = new List<InputDevice>(foundDevices);

@@ -129,23 +129,25 @@ namespace UnityEngine.InputNew
 			return false;
 		}
 
-		bool ProcessEventInMap(ActionMapInput map, InputEvent inputEvent)
-		{
-			if (map.ProcessEvent(inputEvent))
-				return true;
+	    bool ProcessEventInMap(ActionMapInput map, InputEvent inputEvent)
+	    {
+	        if (map.ProcessEvent(inputEvent))
+	            return true;
 
-			if (map.CurrentlyUsesDevice(inputEvent.device))
-				return false;
+	        if (map.CurrentlyUsesDevice(inputEvent.device))
+	            return false;
 
-			if (!map.TryInitializeWithDevices(GetApplicableDevices()))
-				return false;
+            // If this event uses a different device than the current control scheme then try and initialize a control scheme that has that device.
+            // Otherwise, leave the current current control scheme state alone as a re-initialization of the same control scheme will cause a reset in the process.
+	        if (!map.TryInitializeWithDevices(GetApplicableDevices(), new List<InputDevice>() { inputEvent.device }))
+	            return false;
 
-			// When changing control scheme, we do not want to init control scheme to device states
-			// like we normally want, so do a hard reset here, before processing the new event.
-			map.Reset(false);
+            // When changing control scheme, we do not want to init control scheme to device states
+            // like we normally want, so do a hard reset here, before processing the new event.
+            map.Reset(false);
 
-			return map.ProcessEvent(inputEvent);
-		}
+            return map.ProcessEvent(inputEvent);
+        }
 
 		public IEnumerable<InputDevice> GetApplicableDevices()
 		{
