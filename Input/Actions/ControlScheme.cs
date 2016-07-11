@@ -14,8 +14,8 @@ namespace UnityEngine.InputNew
 		public string name { get { return m_Name; } set { m_Name = value; } }
 
 		[SerializeField]
-		private List<SerializableType> m_SerializableDeviceTypes = new List<SerializableType>();
-		public List<SerializableType> serializableDeviceTypes { get { return m_SerializableDeviceTypes; } set { m_SerializableDeviceTypes = value; } }
+		private List<SerializableDeviceType> m_SerializableDeviceTypes = new List<SerializableDeviceType>();
+		public List<SerializableDeviceType> serializableDeviceTypes { get { return m_SerializableDeviceTypes; } set { m_SerializableDeviceTypes = value; } }
 		
 		[SerializeField]
 		private ActionMap m_ActionMap;

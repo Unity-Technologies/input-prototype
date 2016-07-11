@@ -80,7 +80,7 @@ namespace UnityEngine.InputNew
             set { hand = value; }
 	    }
 
-	    public override int TagIndex
+	    public override int tagIndex
 	    {
 	        get
 	        {

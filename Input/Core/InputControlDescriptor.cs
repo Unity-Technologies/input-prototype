@@ -7,7 +7,7 @@ namespace UnityEngine.InputNew
 	public class InputControlDescriptor
 	{
 		public int controlIndex;
-		public SerializableType deviceType;
+		public SerializableDeviceType deviceType;
 
 		public virtual InputControlDescriptor Clone()
 		{
@@ -19,16 +19,16 @@ namespace UnityEngine.InputNew
 		
 		public override string ToString()
 		{
-			return string.Format( "(device:{0}, control:{1})", deviceType.Name, controlIndex );
+			return string.Format( "(device:{0}, control:{1})", deviceType.type.Name, controlIndex );
 		}
 		
 		public void ExtractDeviceTypeAndControlIndex(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
 		{
 			List<int> entries;
-			if (!controlIndicesPerDeviceType.TryGetValue(deviceType, out entries))
+			if (!controlIndicesPerDeviceType.TryGetValue(deviceType.type, out entries))
 			{
 				entries = new List<int>();
-				controlIndicesPerDeviceType[deviceType] = entries;
+				controlIndicesPerDeviceType[deviceType.type] = entries;
 			}
 			
 			entries.Add(controlIndex);

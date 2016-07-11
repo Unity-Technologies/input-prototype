@@ -31,25 +31,30 @@ namespace UnityEngine.InputNew
 		
 		public static string GetDeviceName(InputControlDescriptor source)
 		{
-		    string deviceName = "No-Device";
+			return (Type)source.deviceType.type == null ? "No-Device" : source.deviceType.type.Name;
+		}
 
-		    if ((Type) source.deviceType != null)
-            {
-                if (source.deviceType.TagIndex == -1)
-                    deviceName = source.deviceType.Name;
-                else
-                {
-                    string[] tags = GetDeviceTags(source.deviceType);
-                    deviceName = string.Format("{0}.{1}", source.deviceType.Name, tags[source.deviceType.TagIndex]);
-                }
-            }
+		public static string GetDeviceNameWithTag(InputControlDescriptor source)
+		{
+			string deviceName = "No-Device";
 
-		    return deviceName;
+			if ((Type)source.deviceType.type != null)
+			{
+				if (source.deviceType.tagIndex == -1)
+					deviceName = source.deviceType.type.Name;
+				else
+				{
+					string[] tags = GetDeviceTags(source.deviceType.type);
+					deviceName = string.Format("{0}.{1}", source.deviceType.type.Name, tags[source.deviceType.tagIndex]);
+				}
+			}
+
+			return deviceName;
 		}
 		
 		public static string GetDeviceControlName(InputControlDescriptor source)
 		{
-			string[] names = GetDeviceControlNames(source.deviceType);
+			string[] names = GetDeviceControlNames(source.deviceType.type);
 			if (source.controlIndex < 0 || source.controlIndex >= names.Length)
 				return "None";
 			return names[source.controlIndex];

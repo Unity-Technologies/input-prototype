@@ -14,7 +14,7 @@ namespace UnityEngine.InputNew
 			SetControls(controls);
 			this.deviceName = deviceName;
 			deviceIndex = InputSystem.GetNewDeviceIndex(this);
-	}	
+		}
 
 		protected InputDevice()
 		{
@@ -36,7 +36,7 @@ namespace UnityEngine.InputNew
 			if (ProcessEventIntoState(inputEvent, state))
 				lastEventTime = inputEvent.time;
 			return false;
-	}	
+		}
 
 		public virtual bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
 		{
@@ -76,6 +76,12 @@ namespace UnityEngine.InputNew
 		public InputDeviceProfile profile
 		{
 			get { return m_Profile; } set { m_Profile = value; SetNameOverrides(); }
+		}
+
+		// Some input providers need an identifier tag when there are multiple devices of the same type (e.g. left and right hands)
+		public virtual int tagIndex
+		{
+			get { return -1; } // -1 tag means unset or "Any"
 		}
 
 		public string deviceName { get; protected set; }

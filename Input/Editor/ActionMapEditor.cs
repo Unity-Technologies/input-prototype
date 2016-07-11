@@ -270,9 +270,9 @@ public class ActionMapEditor : Editor
 
             string[] tagNames = null;
             Vector2 tagMaxSize = Vector2.zero;
-            if (serializedDeviceType.value != null)
+            if (serializedDeviceType.type.value != null)
             {
-                tagNames = InputDeviceUtility.GetDeviceTags(serializedDeviceType.value);
+                tagNames = InputDeviceUtility.GetDeviceTags(serializedDeviceType.type.value);
                 if (tagNames != null)
                 {
                     GUIContent content = new GUIContent();
@@ -287,9 +287,9 @@ public class ActionMapEditor : Editor
 
             rect.width -= tagMaxSize.x; // Adjust width to leave room for tag
             EditorGUI.BeginChangeCheck();
-			Type t = TypeGUI.TypeField(rect, new GUIContent("Device Type"), typeof(InputDevice), serializedDeviceType);
+			Type t = TypeGUI.TypeField(rect, new GUIContent("Device Type"), typeof(InputDevice), serializedDeviceType.type);
 			if (EditorGUI.EndChangeCheck())
-				serializedDeviceType.value = t;
+				serializedDeviceType.type.value = t;
             if (tagNames != null)
             {
                 EditorGUI.BeginChangeCheck();
@@ -297,7 +297,7 @@ public class ActionMapEditor : Editor
 	            var popupTags = new string[tagNames.Length + 1];
 				popupTags[0] = "Any";
 				tagNames.CopyTo(popupTags, 1);
-                int tagIndex = serializedDeviceType.TagIndex + 1;
+                int tagIndex = serializedDeviceType.tagIndex + 1;
                 rect.x += rect.width;
                 rect.width = tagMaxSize.x;
                 tagIndex = EditorGUI.Popup(
@@ -305,7 +305,7 @@ public class ActionMapEditor : Editor
                     tagIndex,
                     popupTags);
                 if (EditorGUI.EndChangeCheck())
-                    serializedDeviceType.TagIndex = tagIndex - 1;
+                    serializedDeviceType.tagIndex = tagIndex - 1;
             }
         }
 
@@ -336,7 +336,7 @@ public class ActionMapEditor : Editor
     void AddDevice()
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
-		scheme.serializableDeviceTypes.Add(new SerializableType(null));
+		scheme.serializableDeviceTypes.Add(new SerializableDeviceType());
 	}
 
 	void RemoveDevice()
@@ -521,10 +521,10 @@ public class ActionMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		if ((Type)(source.negative.deviceType) == (Type)(source.positive.deviceType))
+		if ((Type)(source.negative.deviceType.type) == (Type)(source.positive.deviceType.type))
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
-					InputDeviceUtility.GetDeviceName(source.negative),
+					InputDeviceUtility.GetDeviceNameWithTag(source.negative),
 					InputDeviceUtility.GetDeviceControlName(source.negative),
 					InputDeviceUtility.GetDeviceControlName(source.positive)
 				)
@@ -535,7 +535,7 @@ public class ActionMapEditor : Editor
 	
 	string GetSourceString(InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceName(source), InputDeviceUtility.GetDeviceControlName(source));
+		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(source), InputDeviceUtility.GetDeviceControlName(source));
 	}
 	
 	void UpdateActionMapScript () {
@@ -818,27 +818,27 @@ public class {0} : ActionMapInput {{
 		var serializedTypes = m_ActionMapEditCopy.controlSchemes[selectedScheme].serializableDeviceTypes;
 		string[] deviceNames = serializedTypes.Select(e =>
 		{
-		    if (e.value == null)
+		    if (e.type.value == null)
                 return string.Empty;
 
-		    if (e.TagIndex == -1)
-		        return e.Name;
+		    if (e.tagIndex == -1)
+		        return e.type.Name;
 
-		    string[] tagNames = InputDeviceUtility.GetDeviceTags(e.value);
-		    return string.Format("{0}.{1}", e.Name, tagNames[e.TagIndex]);
+		    string[] tagNames = InputDeviceUtility.GetDeviceTags(e.type.value);
+		    return string.Format("{0}.{1}", e.type.Name, tagNames[e.tagIndex]);
 		}).ToArray();
 
 		EditorGUI.BeginChangeCheck();
 		int deviceIndex = EditorGUI.Popup(rect, serializedTypes.FindIndex(t =>
 		{
-		    return source != null && source.deviceType != null && t.value == source.deviceType.value && t.TagIndex == source.deviceType.TagIndex;
+		    return source != null && source.deviceType != null && t.type.value == source.deviceType.type.value && t.tagIndex == source.deviceType.tagIndex;
 		}), deviceNames);
 		if (EditorGUI.EndChangeCheck())
 			source.deviceType = serializedTypes[deviceIndex];
 		
 		rect.x += rect.width + 4;
 		
-		string[] controlNames = InputDeviceUtility.GetDeviceControlNames(source.deviceType);
+		string[] controlNames = InputDeviceUtility.GetDeviceControlNames(source.deviceType.type);
 		EditorGUI.BeginChangeCheck();
 		int controlIndex = EditorGUI.Popup(rect, source.controlIndex, controlNames);
 		if (EditorGUI.EndChangeCheck())

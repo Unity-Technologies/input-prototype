@@ -90,16 +90,16 @@ namespace UnityEngine.InputNew
 			{
 				float timeForScheme = -1;
 				foundDevices.Clear();
-				var serializedTypes = actionMap.controlSchemes[scheme].serializableDeviceTypes;
+				var serializableDeviceTypes = actionMap.controlSchemes[scheme].serializableDeviceTypes;
 				bool matchesAll = true;
-				foreach (var serializedType in serializedTypes)
+				foreach (var serializableType in serializableDeviceTypes)
 				{
 					InputDevice foundDevice = null;
 					float foundDeviceTime = -1;
 					foreach (var device in availableDevices)
 					{
-						if (serializedType.value.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime
-                            && (serializedType.TagIndex == -1 || serializedType.TagIndex == device.TagIndex)
+						if (serializableType.type.value.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime
+                            && (serializableType.tagIndex == -1 || serializableType.tagIndex == device.tagIndex)
                             )
 						{
 							foundDevice = device;
@@ -262,20 +262,21 @@ namespace UnityEngine.InputNew
 			return list;
 		}
 
-		private List<InputState> GetDeviceStatesForDeviceType(SerializableType deviceType)
+		private List<InputState> GetDeviceStatesForDeviceType(SerializableDeviceType deviceType)
 		{
             var list = new List<InputState>();
 		    bool deviceTypeFound = false;
 
 			foreach (var deviceState in deviceStates)
 			{
-			    if (deviceType.value.IsInstanceOfType(deviceState.controlProvider))
+			    if (deviceType.type.value.IsInstanceOfType(deviceState.controlProvider))
 			        deviceTypeFound = true;
 			    else
 			        continue;
                 
                 // An action may care about input from a specific device or any device, so check the tag
-			    if (deviceType.TagIndex == -1 || deviceType.TagIndex == deviceState.controlProvider.TagIndex)
+				var controlProvider = deviceState.controlProvider as InputDevice;
+			    if (controlProvider != null && (deviceType.tagIndex == -1 || deviceType.tagIndex == controlProvider.tagIndex))
 			        list.Add(deviceState);
 			}
             
@@ -392,7 +393,7 @@ namespace UnityEngine.InputNew
 			}
 			
 			descriptor.controlIndex = control.index;
-			descriptor.deviceType = control.provider.GetType();
+			descriptor.deviceType.type = control.provider.GetType();
 
 			m_ControlScheme.customized = true;
 			
@@ -421,7 +422,7 @@ namespace UnityEngine.InputNew
 			    foreach (var s in states)
 			    {
                     List<int> indices;
-                    if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType, out indices))
+                    if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType.type, out indices))
                         s.SetUsedControls(indices);
                     else
                         s.SetAllControlsEnabled(false);
