@@ -7,28 +7,28 @@ namespace UnityEngine.InputNew
 	public class InputControlDescriptor
 	{
 		public int controlIndex;
-		public SerializableDeviceType deviceType;
-
+		public int deviceKey;
+		
 		public virtual InputControlDescriptor Clone()
 		{
-			var clone = (InputControlDescriptor) Activator.CreateInstance(GetType());
+			var clone = (InputControlDescriptor)Activator.CreateInstance(GetType());
 			clone.controlIndex = controlIndex;
-			clone.deviceType = deviceType.Clone();
+			clone.deviceKey = deviceKey;
 			return clone;
 		}
 		
 		public override string ToString()
 		{
-			return string.Format( "(device:{0}, control:{1})", deviceType.type.Name, controlIndex );
+			return string.Format( "(device:{0}, control:{1})", deviceKey, controlIndex );
 		}
 		
-		public void ExtractDeviceTypeAndControlIndex(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		public void ExtractDeviceTypeAndControlIndex(Dictionary<int, List<int>> controlIndicesPerDeviceType)
 		{
 			List<int> entries;
-			if (!controlIndicesPerDeviceType.TryGetValue(deviceType.type, out entries))
+			if (!controlIndicesPerDeviceType.TryGetValue(deviceKey, out entries))
 			{
 				entries = new List<int>();
-				controlIndicesPerDeviceType[deviceType.type] = entries;
+				controlIndicesPerDeviceType[deviceKey] = entries;
 			}
 			
 			entries.Add(controlIndex);

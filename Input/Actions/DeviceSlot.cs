@@ -3,8 +3,22 @@
 namespace UnityEngine.InputNew
 {
 	[Serializable]
-	public class SerializableDeviceType
+	public class DeviceSlot
 	{
+		public static readonly int kInvalidKey = -1;
+
+		public int key
+		{
+			get
+			{
+				return m_Key;
+			}
+			set
+			{
+				m_Key = value;
+			}
+		}
+
 		public SerializableType type
 		{
 			get
@@ -30,14 +44,18 @@ namespace UnityEngine.InputNew
 		}
 
 		[SerializeField]
+		private int m_Key = kInvalidKey;
+
+		[SerializeField]
 		private SerializableType m_Type;
 
 		[SerializeField]
-		private int m_TagIndex;
+		private int m_TagIndex = -1;
 
-		public SerializableDeviceType Clone()
+		public DeviceSlot Clone()
 		{
-			var clone = new SerializableDeviceType();
+			var clone = new DeviceSlot();
+			clone.m_Key = m_Key;
 			clone.m_TagIndex = m_TagIndex;
 			clone.m_Type = m_Type;
 

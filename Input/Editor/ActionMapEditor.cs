@@ -124,6 +124,12 @@ public class ActionMapEditor : Editor
 		
 		m_Modified = false;
 	}
+
+	void SetActionMapDirty()
+	{
+		EditorUtility.SetDirty(m_ActionMapEditCopy);
+		m_Modified = true;
+	}
 	
 	void RefreshPropertyNames()
 	{
@@ -177,8 +183,7 @@ public class ActionMapEditor : Editor
 
 		if (EditorGUI.EndChangeCheck())
 		{
-			EditorUtility.SetDirty(m_ActionMapEditCopy);
-			m_Modified = true;
+			SetActionMapDirty();
 		}
 
 		ApplyRevertGUI();
@@ -256,10 +261,18 @@ public class ActionMapEditor : Editor
         if (EditorGUI.EndChangeCheck())
             scheme.name = schemeName;
 
-        for (int i = 0; i < scheme.serializableDeviceTypes.Count; i++)
+        for (int i = 0; i < scheme.deviceSlots.Count; i++)
         {
-            var serializedDeviceType = scheme.serializableDeviceTypes[i];
-            Rect rect = EditorGUILayout.GetControlRect();
+            var deviceSlot = scheme.deviceSlots[i];
+
+			// This will fix up any missing keys on older action maps
+	        if (deviceSlot.key == DeviceSlot.kInvalidKey)
+	        {
+		        deviceSlot.key = GetNextDeviceKey();
+				SetActionMapDirty();
+			}
+
+	        Rect rect = EditorGUILayout.GetControlRect();
             if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
             {
                 m_SelectedDeviceIndex = i;
@@ -270,9 +283,9 @@ public class ActionMapEditor : Editor
 
             string[] tagNames = null;
             Vector2 tagMaxSize = Vector2.zero;
-            if (serializedDeviceType.type.value != null)
+            if (deviceSlot.type != null && deviceSlot.type.value != null)
             {
-                tagNames = InputDeviceUtility.GetDeviceTags(serializedDeviceType.type.value);
+                tagNames = InputDeviceUtility.GetDeviceTags(deviceSlot.type.value);
                 if (tagNames != null)
                 {
                     GUIContent content = new GUIContent();
@@ -287,9 +300,9 @@ public class ActionMapEditor : Editor
 
             rect.width -= tagMaxSize.x; // Adjust width to leave room for tag
             EditorGUI.BeginChangeCheck();
-			Type t = TypeGUI.TypeField(rect, new GUIContent("Device Type"), typeof(InputDevice), serializedDeviceType.type);
+			Type t = TypeGUI.TypeField(rect, new GUIContent("Device Type"), typeof(InputDevice), deviceSlot.type);
 			if (EditorGUI.EndChangeCheck())
-				serializedDeviceType.type.value = t;
+				deviceSlot.type = t;
             if (tagNames != null)
             {
                 EditorGUI.BeginChangeCheck();
@@ -297,7 +310,7 @@ public class ActionMapEditor : Editor
 	            var popupTags = new string[tagNames.Length + 1];
 				popupTags[0] = "Any";
 				tagNames.CopyTo(popupTags, 1);
-                int tagIndex = serializedDeviceType.tagIndex + 1;
+                int tagIndex = deviceSlot.tagIndex + 1;
                 rect.x += rect.width;
                 rect.width = tagMaxSize.x;
                 tagIndex = EditorGUI.Popup(
@@ -305,7 +318,7 @@ public class ActionMapEditor : Editor
                     tagIndex,
                     popupTags);
                 if (EditorGUI.EndChangeCheck())
-                    serializedDeviceType.tagIndex = tagIndex - 1;
+                    deviceSlot.tagIndex = tagIndex - 1;
             }
         }
 
@@ -328,24 +341,43 @@ public class ActionMapEditor : Editor
         // and the actions table below doesn't move when switching control scheme.
         int maxDevices = 0;
         for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
-            maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].serializableDeviceTypes.Count);
-        int extraLines = maxDevices - scheme.serializableDeviceTypes.Count;
+            maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].deviceSlots.Count);
+        int extraLines = maxDevices - scheme.deviceSlots.Count;
         EditorGUILayout.GetControlRect(true, extraLines * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing));
     }
 
     void AddDevice()
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
-		scheme.serializableDeviceTypes.Add(new SerializableDeviceType());
+		var deviceSlot = new DeviceSlot()
+		{
+			key = GetNextDeviceKey()
+		};
+        scheme.deviceSlots.Add(deviceSlot);
 	}
 
 	void RemoveDevice()
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
-		if (m_SelectedDeviceIndex >= 0 && m_SelectedDeviceIndex < scheme.serializableDeviceTypes.Count)
+		if (m_SelectedDeviceIndex >= 0 && m_SelectedDeviceIndex < scheme.deviceSlots.Count)
 		{
-			scheme.serializableDeviceTypes.RemoveAt(m_SelectedDeviceIndex);
+			scheme.deviceSlots.RemoveAt(m_SelectedDeviceIndex);
 		}
+	}
+
+	int GetNextDeviceKey()
+	{
+		int key = 0;
+		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
+		{
+			var deviceSlots = m_ActionMapEditCopy.controlSchemes[i].deviceSlots;
+			for (int j = 0; j < deviceSlots.Count; j++)
+			{
+				key = Mathf.Max(deviceSlots[j].key, key);
+			}
+		}
+
+		return key + 1;
 	}
 
 	void DrawActionList()
@@ -521,12 +553,15 @@ public class ActionMapEditor : Editor
 	
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
-		if ((Type)(source.negative.deviceType.type) == (Type)(source.positive.deviceType.type))
+		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+		var negativeDeviceSlot = scheme.GetDeviceSlot(source.negative.deviceKey);
+		var positiveDeviceSlot = scheme.GetDeviceSlot(source.positive.deviceKey);
+		if ((Type)(negativeDeviceSlot.type) == (Type)(positiveDeviceSlot.type))
 			EditorGUI.LabelField(rect,
 				string.Format("{0} {1} & {2}",
-					InputDeviceUtility.GetDeviceNameWithTag(source.negative),
-					InputDeviceUtility.GetDeviceControlName(source.negative),
-					InputDeviceUtility.GetDeviceControlName(source.positive)
+					InputDeviceUtility.GetDeviceNameWithTag(negativeDeviceSlot),
+					InputDeviceUtility.GetDeviceControlName(negativeDeviceSlot, source.negative),
+					InputDeviceUtility.GetDeviceControlName(positiveDeviceSlot, source.positive)
 				)
 			);
 		else
@@ -535,7 +570,9 @@ public class ActionMapEditor : Editor
 	
 	string GetSourceString(InputControlDescriptor source)
 	{
-		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(source), InputDeviceUtility.GetDeviceControlName(source));
+		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+		var deviceSlot = scheme.GetDeviceSlot(source.deviceKey);
+		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(deviceSlot), InputDeviceUtility.GetDeviceControlName(deviceSlot, source));
 	}
 	
 	void UpdateActionMapScript () {
@@ -815,30 +852,32 @@ public class {0} : ActionMapInput {{
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
 
-		var serializedTypes = m_ActionMapEditCopy.controlSchemes[selectedScheme].serializableDeviceTypes;
-		string[] deviceNames = serializedTypes.Select(e =>
+		var scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
+        var deviceSlots = scheme.deviceSlots;
+		string[] deviceNames = deviceSlots.Select(slot =>
 		{
-		    if (e.type.value == null)
+		    if (slot.type == null)
                 return string.Empty;
 
-		    if (e.tagIndex == -1)
-		        return e.type.Name;
+		    if (slot.tagIndex == -1)
+		        return slot.type.Name;
 
-		    string[] tagNames = InputDeviceUtility.GetDeviceTags(e.type.value);
-		    return string.Format("{0}.{1}", e.type.Name, tagNames[e.tagIndex]);
+		    string[] tagNames = InputDeviceUtility.GetDeviceTags(slot.type);
+		    return string.Format("{0}.{1}", slot.type.Name, tagNames[slot.tagIndex]);
 		}).ToArray();
 
 		EditorGUI.BeginChangeCheck();
-		int deviceIndex = EditorGUI.Popup(rect, serializedTypes.FindIndex(t =>
+		int deviceIndex = EditorGUI.Popup(rect, deviceSlots.FindIndex(slot =>
 		{
-		    return source != null && source.deviceType != null && t.type.value == source.deviceType.type.value && t.tagIndex == source.deviceType.tagIndex;
+		    return source != null && source.deviceKey != DeviceSlot.kInvalidKey && slot.key == source.deviceKey;
 		}), deviceNames);
 		if (EditorGUI.EndChangeCheck())
-			source.deviceType = serializedTypes[deviceIndex];
+			source.deviceKey = deviceSlots[deviceIndex].key;
 		
 		rect.x += rect.width + 4;
-		
-		string[] controlNames = InputDeviceUtility.GetDeviceControlNames(source.deviceType.type);
+
+		var deviceSlot = scheme.GetDeviceSlot(source.deviceKey);
+		string[] controlNames = InputDeviceUtility.GetDeviceControlNames(deviceSlot != null ? deviceSlot.type : null);
 		EditorGUI.BeginChangeCheck();
 		int controlIndex = EditorGUI.Popup(rect, source.controlIndex, controlNames);
 		if (EditorGUI.EndChangeCheck())

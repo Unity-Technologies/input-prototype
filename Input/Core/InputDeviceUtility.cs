@@ -29,35 +29,39 @@ namespace UnityEngine.InputNew
 			return device;
 		}
 		
-		public static string GetDeviceName(InputControlDescriptor source)
+		public static string GetDeviceName(DeviceSlot deviceSlot)
 		{
-			return (Type)source.deviceType.type == null ? "No-Device" : source.deviceType.type.Name;
+			return (Type)deviceSlot.type == null ? "No-Device" : deviceSlot.type.Name;
 		}
 
-		public static string GetDeviceNameWithTag(InputControlDescriptor source)
+		public static string GetDeviceNameWithTag(DeviceSlot deviceSlot)
 		{
 			string deviceName = "No-Device";
 
-			if ((Type)source.deviceType.type != null)
+			if (deviceSlot != null && (Type)deviceSlot.type != null)
 			{
-				if (source.deviceType.tagIndex == -1)
-					deviceName = source.deviceType.type.Name;
+				if (deviceSlot.tagIndex == -1)
+					deviceName = deviceSlot.type.Name;
 				else
 				{
-					string[] tags = GetDeviceTags(source.deviceType.type);
-					deviceName = string.Format("{0}.{1}", source.deviceType.type.Name, tags[source.deviceType.tagIndex]);
+					string[] tags = GetDeviceTags(deviceSlot.type);
+					deviceName = string.Format("{0}.{1}", deviceSlot.type.Name, tags[deviceSlot.tagIndex]);
 				}
 			}
 
 			return deviceName;
 		}
 		
-		public static string GetDeviceControlName(InputControlDescriptor source)
+		public static string GetDeviceControlName(DeviceSlot deviceSlot, InputControlDescriptor source)
 		{
-			string[] names = GetDeviceControlNames(source.deviceType.type);
-			if (source.controlIndex < 0 || source.controlIndex >= names.Length)
-				return "None";
-			return names[source.controlIndex];
+			if (deviceSlot != null)
+			{
+				string[] names = GetDeviceControlNames(deviceSlot.type);
+				if (source.controlIndex >= 0 && source.controlIndex < names.Length)
+					return names[source.controlIndex];
+			}
+
+			return "None";
 		}
 		
 		static string GetDeviceControlName(System.Type type, int controlIndex)

@@ -14,8 +14,8 @@ namespace UnityEngine.InputNew
 		public string name { get { return m_Name; } set { m_Name = value; } }
 
 		[SerializeField]
-		private List<SerializableDeviceType> m_SerializableDeviceTypes = new List<SerializableDeviceType>();
-		public List<SerializableDeviceType> serializableDeviceTypes { get { return m_SerializableDeviceTypes; } set { m_SerializableDeviceTypes = value; } }
+		private List<DeviceSlot> m_DeviceSlots = new List<DeviceSlot>();
+		public List<DeviceSlot> deviceSlots { get { return m_DeviceSlots; } set { m_DeviceSlots = value; } }
 		
 		[SerializeField]
 		private ActionMap m_ActionMap;
@@ -41,14 +41,37 @@ namespace UnityEngine.InputNew
 		{
 			var clone = (ControlScheme) Activator.CreateInstance(GetType());
 			clone.m_Name = m_Name;
-			clone.m_SerializableDeviceTypes = m_SerializableDeviceTypes.Select(x => x.Clone()).ToList();            
+			clone.m_DeviceSlots = m_DeviceSlots.Select(x => x.Clone()).ToList();            
 			clone.m_ActionMap = m_ActionMap;
 			clone.m_Bindings = m_Bindings.Select(x => x.Clone()).ToList();
 			// Don't clone customized flag.
 			return clone;
 		}
 
-		public void ExtractDeviceTypesAndControlIndices (Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		public int GetDeviceKey(InputDevice device)
+		{
+			foreach (var deviceSlot in m_DeviceSlots)
+			{
+				if (device.GetType().IsInstanceOfType(deviceSlot.type.value) &&
+					(device.tagIndex == -1 || device.tagIndex == deviceSlot.tagIndex))
+					return deviceSlot.key;
+			}
+
+			return DeviceSlot.kInvalidKey;
+		}
+
+		public DeviceSlot GetDeviceSlot(int key)
+		{
+			foreach (var deviceSlot in m_DeviceSlots)
+			{
+				if (deviceSlot.key == key)
+					return deviceSlot;
+			}
+
+			return null;
+		}
+
+		public void ExtractDeviceTypesAndControlIndices (Dictionary<int, List<int>> controlIndicesPerDeviceType)
 		{
 			foreach (var binding in bindings)
 				binding.ExtractDeviceTypesAndControlIndices(controlIndicesPerDeviceType);
