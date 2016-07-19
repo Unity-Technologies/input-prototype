@@ -135,6 +135,20 @@ namespace UnityEngine.InputNew
 			}
 		}
 
+		[SerializeField]
+		private string m_CustomNamespace;
+		public string customNamespace
+		{
+			get
+			{
+				return m_CustomNamespace;
+			}
+			set
+			{
+				m_CustomNamespace = value;
+			}
+		}
+
 		public string GetCustomizations()
 		{
 			var customizedControlSchemes = m_ControlSchemeCopies.Where(x => x.customized).ToList();
