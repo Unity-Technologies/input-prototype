@@ -558,8 +558,9 @@ public class ActionMapEditor : Editor
 		var positiveDeviceSlot = scheme.GetDeviceSlot(source.positive.deviceKey);
 		if ((Type)(negativeDeviceSlot.type) == (Type)(positiveDeviceSlot.type))
 			EditorGUI.LabelField(rect,
-				string.Format("{0} {1} & {2}",
+				string.Format("{0} {1} {2} & {3}",
 					InputDeviceUtility.GetDeviceNameWithTag(negativeDeviceSlot),
+					GetDeviceInstanceString(scheme, negativeDeviceSlot),
 					InputDeviceUtility.GetDeviceControlName(negativeDeviceSlot, source.negative),
 					InputDeviceUtility.GetDeviceControlName(positiveDeviceSlot, source.positive)
 				)
@@ -567,12 +568,37 @@ public class ActionMapEditor : Editor
 		else
 			EditorGUI.LabelField(rect, string.Format("{0} & {1}", GetSourceString(source.negative), GetSourceString(source.positive)));
 	}
+
+	string GetDeviceInstanceString(ControlScheme scheme, DeviceSlot deviceSlot)
+	{
+		int instance = 0;
+		int totalInstances = 0;
+		if (deviceSlot != null)
+		{			
+			var deviceSlots = scheme.deviceSlots;		
+			for (int i = 0; i < deviceSlots.Count; i++)
+			{
+				var ds = deviceSlots[i];
+				if ((Type)deviceSlot.type == (Type)ds.type && deviceSlot.tagIndex == ds.tagIndex)
+				{
+					totalInstances++;
+					if (deviceSlot == ds)
+						instance = totalInstances;
+				}
+			}
+		}
+
+		if (totalInstances > 1)
+			return string.Format("#{0}", instance);
+		else
+			return string.Empty;
+	}
 	
 	string GetSourceString(InputControlDescriptor source)
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
 		var deviceSlot = scheme.GetDeviceSlot(source.deviceKey);
-		return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(deviceSlot), InputDeviceUtility.GetDeviceControlName(deviceSlot, source));
+		return string.Format("{0} {1} {2}", InputDeviceUtility.GetDeviceNameWithTag(deviceSlot), GetDeviceInstanceString(scheme, deviceSlot), InputDeviceUtility.GetDeviceControlName(deviceSlot, source));
 	}
 	
 	void UpdateActionMapScript () {
@@ -859,11 +885,7 @@ public class {0} : ActionMapInput {{
 		    if (slot.type == null)
                 return string.Empty;
 
-		    if (slot.tagIndex == -1)
-		        return slot.type.Name;
-
-		    string[] tagNames = InputDeviceUtility.GetDeviceTags(slot.type);
-		    return string.Format("{0}.{1}", slot.type.Name, tagNames[slot.tagIndex]);
+		    return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(slot), GetDeviceInstanceString(scheme, slot));
 		}).ToArray();
 
 		EditorGUI.BeginChangeCheck();
