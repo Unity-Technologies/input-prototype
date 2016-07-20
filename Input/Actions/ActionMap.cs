@@ -17,6 +17,8 @@ namespace UnityEngine.InputNew
 #endif
 	public class ActionMap : ScriptableObject
 	{
+		public static readonly string kDefaultNamespace = "UnityEngine.InputNew";
+
 		[FormerlySerializedAs("entries")]
 		[SerializeField]
 		private List<InputAction> m_Actions = new List<InputAction>();
@@ -116,8 +118,9 @@ namespace UnityEngine.InputNew
 			get
 			{
 				string typeString = string.Format(
-					"{0}, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
-					name);
+					"{0}.{1}, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+					string.IsNullOrEmpty(m_CustomNamespace) ? kDefaultNamespace : m_CustomNamespace,
+                    name);
 				Type t = null;
 				try
 				{

@@ -556,7 +556,7 @@ public class ActionMapEditor : Editor
 
 		string actionMapNamespace = m_ActionMapEditCopy.customNamespace;
 		if (string.IsNullOrEmpty(actionMapNamespace))
-			actionMapNamespace = "UnityEngine.InputNew";
+			actionMapNamespace = ActionMap.kDefaultNamespace;
 
 		str.AppendFormat(@"using UnityEngine;
 using UnityEngine.InputNew;
