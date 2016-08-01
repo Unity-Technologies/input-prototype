@@ -80,15 +80,15 @@ namespace UnityEngine.InputNew
             set { hand = value; }
 	    }
 
-	    public override int tagIndex
-	    {
-	        get
-	        {
-	            if (hand.HasValue)
-	                return (int) hand.Value;	          
-	            return -1;
-	        }	        
-	    }
+		public override int tagIndex
+		{
+			get
+			{
+				if (hand.HasValue)
+					return (int) hand.Value;
+				return -1;
+			}
+		}
 
 	    public VRInputDevice()
 			: this("VRInputDevice", null) {}

@@ -261,18 +261,18 @@ public class ActionMapEditor : Editor
         if (EditorGUI.EndChangeCheck())
             scheme.name = schemeName;
 
-        for (int i = 0; i < scheme.deviceSlots.Count; i++)
-        {
-            var deviceSlot = scheme.deviceSlots[i];
+		for (int i = 0; i < scheme.deviceSlots.Count; i++)
+		{
+			var deviceSlot = scheme.deviceSlots[i];
 
 			// This will fix up any missing keys on older action maps
-	        if (deviceSlot.key == DeviceSlot.kInvalidKey)
-	        {
-		        deviceSlot.key = GetNextDeviceKey();
+			if (deviceSlot.key == DeviceSlot.kInvalidKey)
+			{
+				deviceSlot.key = GetNextDeviceKey();
 				SetActionMapDirty();
 			}
 
-	        Rect rect = EditorGUILayout.GetControlRect();
+			Rect rect = EditorGUILayout.GetControlRect();
             if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
             {
                 m_SelectedDeviceIndex = i;
@@ -283,9 +283,9 @@ public class ActionMapEditor : Editor
 
             string[] tagNames = null;
             Vector2 tagMaxSize = Vector2.zero;
-            if (deviceSlot.type != null && deviceSlot.type.value != null)
-            {
-                tagNames = InputDeviceUtility.GetDeviceTags(deviceSlot.type.value);
+			if (deviceSlot.type != null && deviceSlot.type.value != null)
+			{
+				tagNames = InputDeviceUtility.GetDeviceTags(deviceSlot.type.value);
                 if (tagNames != null)
                 {
                     GUIContent content = new GUIContent();
@@ -310,7 +310,7 @@ public class ActionMapEditor : Editor
 	            var popupTags = new string[tagNames.Length + 1];
 				popupTags[0] = "Any";
 				tagNames.CopyTo(popupTags, 1);
-                int tagIndex = deviceSlot.tagIndex + 1;
+				int tagIndex = deviceSlot.tagIndex + 1;
                 rect.x += rect.width;
                 rect.width = tagMaxSize.x;
                 tagIndex = EditorGUI.Popup(
@@ -318,7 +318,7 @@ public class ActionMapEditor : Editor
                     tagIndex,
                     popupTags);
                 if (EditorGUI.EndChangeCheck())
-                    deviceSlot.tagIndex = tagIndex - 1;
+					deviceSlot.tagIndex = tagIndex - 1;
             }
         }
 
@@ -341,8 +341,8 @@ public class ActionMapEditor : Editor
         // and the actions table below doesn't move when switching control scheme.
         int maxDevices = 0;
         for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
-            maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].deviceSlots.Count);
-        int extraLines = maxDevices - scheme.deviceSlots.Count;
+			maxDevices = Mathf.Max(maxDevices, m_ActionMapEditCopy.controlSchemes[i].deviceSlots.Count);
+		int extraLines = maxDevices - scheme.deviceSlots.Count;
         EditorGUILayout.GetControlRect(true, extraLines * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing));
     }
 
@@ -353,7 +353,7 @@ public class ActionMapEditor : Editor
 		{
 			key = GetNextDeviceKey()
 		};
-        scheme.deviceSlots.Add(deviceSlot);
+		scheme.deviceSlots.Add(deviceSlot);
 	}
 
 	void RemoveDevice()
@@ -879,19 +879,19 @@ public class {0} : ActionMapInput {{
 		EditorGUI.indentLevel = 0;
 
 		var scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
-        var deviceSlots = scheme.deviceSlots;
+		var deviceSlots = scheme.deviceSlots;
 		string[] deviceNames = deviceSlots.Select(slot =>
 		{
-		    if (slot.type == null)
+			if (slot.type == null)
                 return string.Empty;
 
-		    return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(slot), GetDeviceInstanceString(scheme, slot));
+			return string.Format("{0} {1}", InputDeviceUtility.GetDeviceNameWithTag(slot), GetDeviceInstanceString(scheme, slot));
 		}).ToArray();
 
 		EditorGUI.BeginChangeCheck();
 		int deviceIndex = EditorGUI.Popup(rect, deviceSlots.FindIndex(slot =>
 		{
-		    return source != null && source.deviceKey != DeviceSlot.kInvalidKey && slot.key == source.deviceKey;
+			return source != null && source.deviceKey != DeviceSlot.kInvalidKey && slot.key == source.deviceKey;
 		}), deviceNames);
 		if (EditorGUI.EndChangeCheck())
 			source.deviceKey = deviceSlots[deviceIndex].key;

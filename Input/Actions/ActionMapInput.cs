@@ -389,7 +389,7 @@ namespace UnityEngine.InputNew
 				Debug.LogError(string.Format("Could not find key for InputDevice type {0}", inputDevice.GetType()));
 				return false;
 			}
-            descriptor.deviceKey = key;
+			descriptor.deviceKey = key;
 
 			m_ControlScheme.customized = true;
 			
@@ -401,7 +401,7 @@ namespace UnityEngine.InputNew
 
 		public void RevertCustomizations()
 		{
-		    ////FIXME: doesn't properly reset control scheme
+			////FIXME: doesn't properly reset control scheme
 			m_ActionMap.RevertCustomizations();
 			RefreshBindings();
 		}
