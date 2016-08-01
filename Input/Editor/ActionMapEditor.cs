@@ -265,13 +265,6 @@ public class ActionMapEditor : Editor
 		{
 			var deviceSlot = scheme.deviceSlots[i];
 
-			// This will fix up any missing keys on older action maps
-			if (deviceSlot.key == DeviceSlot.kInvalidKey)
-			{
-				deviceSlot.key = GetNextDeviceKey();
-				SetActionMapDirty();
-			}
-
 			Rect rect = EditorGUILayout.GetControlRect();
             if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
             {
