@@ -162,6 +162,9 @@ public class ActionMapEditor : Editor
 	{
 		EditorGUI.BeginChangeCheck();
 
+		DrawCustomNamespaceGUI();
+
+		EditorGUILayout.Space();
 		DrawControlSchemeSelection();
 
 		if (m_ActionMapEditCopy.controlSchemes.Count > 0)
@@ -189,11 +192,19 @@ public class ActionMapEditor : Editor
 		ApplyRevertGUI();
 	}
 
+	void DrawCustomNamespaceGUI()
+	{
+		EditorGUI.BeginChangeCheck();
+		string customNamespace = EditorGUILayout.TextField("Custom Namespace", m_ActionMapEditCopy.customNamespace);
+		if (EditorGUI.EndChangeCheck())
+			m_ActionMapEditCopy.customNamespace = customNamespace;
+	}
+
 	void DrawControlSchemeSelection()
 	{
 		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
-			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
-		
+			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;		
+
 		// Show schemes
 		EditorGUILayout.LabelField("Control Schemes");
 
@@ -598,24 +609,31 @@ public class ActionMapEditor : Editor
 		ActionMap original = (ActionMap)serializedObject.targetObject;
 		string className = GetCamelCaseString(original.name, true);
 		StringBuilder str = new StringBuilder();
-		
+
+		string actionMapNamespace = m_ActionMapEditCopy.customNamespace;
+		if (string.IsNullOrEmpty(actionMapNamespace))
+			actionMapNamespace = ActionMap.kDefaultNamespace;
+
 		str.AppendFormat(@"using UnityEngine;
 using UnityEngine.InputNew;
 
 // GENERATED FILE - DO NOT EDIT MANUALLY
-public class {0} : ActionMapInput {{
-	public {0} (ActionMap actionMap) : base (actionMap) {{ }}
-	
-", className);
+namespace {0}
+{{
+	public class {1} : ActionMapInput {{
+		public {1} (ActionMap actionMap) : base (actionMap) {{ }}
+		
+", actionMapNamespace, className);
 		
 		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 		{
 			Type controlType = m_ActionMapEditCopy.actions[i].controlData.controlType;
 			string typeStr = controlType.Name;
-			str.AppendFormat("	public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);
+			str.AppendFormat("		public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);
 		}
 		
-		str.AppendLine(@"}");
+		str.AppendLine(@"	}
+}");
 		
 		string path = AssetDatabase.GetAssetPath(original);
 		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
