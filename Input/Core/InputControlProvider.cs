@@ -8,12 +8,6 @@ namespace UnityEngine.InputNew
 	{
 		public List<InputControlData> controlDataList { get { return m_ControlDataList; } }
 		public InputState state { get { return m_State; } }
-        
-        // Some input providers need an identifier tag when there are multiple devices of the same type. Eg. Left and Right hands
-        public virtual int TagIndex
-        {
-            get { return -1; } // -1 tag means unset or "Any"
-        }
 
 		private List<InputControlData> m_ControlDataList;
 		private List<InputControl> m_Controls;
