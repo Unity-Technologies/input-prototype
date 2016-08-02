@@ -49,6 +49,11 @@ namespace UnityEngine.InputNew
 			}
 		}
 
+		/// <summary>
+		/// Control whether this ActionMapInput will attempt to reinitialize with applicable devices in order to process events
+		/// </summary>
+		public bool autoReinitialize { get; set; }
+
 		public bool blockSubsequent { get; set; }
 
 		public delegate void ChangeEvent();
@@ -58,11 +63,13 @@ namespace UnityEngine.InputNew
 		{
 			ActionMapInput map =
 				(ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
+			map.autoReinitialize = true;
 			return map;
 		}
 
 		protected ActionMapInput(ActionMap actionMap)
 		{
+			autoReinitialize = true;
 			m_ActionMap = actionMap;
 
 			// Create list of controls from ActionMap.

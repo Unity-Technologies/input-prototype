@@ -139,7 +139,7 @@ namespace UnityEngine.InputNew
 
             // If this event uses a different device than the current control scheme then try and initialize a control scheme that has that device.
             // Otherwise, leave the current current control scheme state alone as a re-initialization of the same control scheme will cause a reset in the process.
-	        if (!map.TryInitializeWithDevices(GetApplicableDevices(), new List<InputDevice>() { inputEvent.device }))
+	        if (!map.autoReinitialize || !map.TryInitializeWithDevices(GetApplicableDevices(), new List<InputDevice>() { inputEvent.device }))
 	            return false;
 
             // When changing control scheme, we do not want to init control scheme to device states
