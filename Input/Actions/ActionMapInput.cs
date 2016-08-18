@@ -49,6 +49,11 @@ namespace UnityEngine.InputNew
 			}
 		}
 
+		/// <summary>
+		/// Control whether this ActionMapInput will attempt to reinitialize with applicable devices in order to process events
+		/// </summary>
+		public bool autoReinitialize { get; set; }
+
 		public bool blockSubsequent { get; set; }
 
 		public delegate void ChangeEvent();
@@ -58,11 +63,13 @@ namespace UnityEngine.InputNew
 		{
 			ActionMapInput map =
 				(ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
+			map.autoReinitialize = true;
 			return map;
 		}
 
 		protected ActionMapInput(ActionMap actionMap)
 		{
+			autoReinitialize = true;
 			m_ActionMap = actionMap;
 
 			// Create list of controls from ActionMap.
@@ -73,12 +80,21 @@ namespace UnityEngine.InputNew
 			SetControls(controls);
 		}
 
-        /// <summary>
-        /// Find the best scheme for the available devices and initialize the action map input
-        /// </summary>
-        /// <param name="availableDevices">Available devices in the system</param>
-        /// <param name="requiredDevice">Required device for scheme</param>
-        /// <returns></returns>
+		/// <summary>
+		/// Find the best control scheme for the available devices and initialize the action map input.
+		/// 
+		/// It's important to note that an action map that can use either of two devices should have two of the same device
+		/// listed in the control scheme. Otherwise, if the ActionMapInput is initialized with those two devices, the first
+		/// device state found will override the other's device state. This becomes apparent when GetDeviceStateForDeviceSlot
+		/// is called. 
+		///
+		/// Ex. Having a left and right VR controller where the action map can accept either controller's trigger button 
+		/// would cause issues if only one device was listed in the action map. Usually, this shows up as a ping-ponging
+		/// issue where the ActionMapInput keeps getting re-initialized and binds different devices.
+		/// </summary>
+		/// <param name="availableDevices">Available devices in the system</param>
+		/// <param name="requiredDevice">Required device for scheme</param>
+		/// <returns></returns>
 		public bool TryInitializeWithDevices(IEnumerable<InputDevice> availableDevices, IEnumerable<InputDevice> requiredDevices = null)
 		{
 			int bestScheme = -1;
@@ -90,17 +106,17 @@ namespace UnityEngine.InputNew
 			{
 				float timeForScheme = -1;
 				foundDevices.Clear();
-				var serializedTypes = actionMap.controlSchemes[scheme].serializableDeviceTypes;
+				var deviceSlots = actionMap.controlSchemes[scheme].deviceSlots;
 				bool matchesAll = true;
-				foreach (var serializedType in serializedTypes)
+				foreach (var deviceSlot in deviceSlots)
 				{
 					InputDevice foundDevice = null;
 					float foundDeviceTime = -1;
 					foreach (var device in availableDevices)
 					{
-						if (serializedType.value.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime
-                            && (serializedType.TagIndex == -1 || serializedType.TagIndex == device.TagIndex)
-                            )
+						if (deviceSlot.type.value.IsInstanceOfType(device) && device.lastEventTime > foundDeviceTime
+							&& (deviceSlot.tagIndex == -1 || deviceSlot.tagIndex == device.tagIndex)
+							)
 						{
 							foundDevice = device;
 							foundDeviceTime = device.lastEventTime;
@@ -118,24 +134,24 @@ namespace UnityEngine.InputNew
 					}
 				}
 
-                // Don't switch schemes in the case where we require a specific device for an event that is getting processed.
-                if (matchesAll && requiredDevices != null && requiredDevices.Any())
-                {
-                    foreach (var device in requiredDevices)
-                    {
-                        if (!foundDevices.Contains(device))
-                        {
-                            matchesAll = false;
-                            break;
-                        }
-                    }
-                }
+				// Don't switch schemes in the case where we require a specific device for an event that is getting processed.
+				if (matchesAll && requiredDevices != null && requiredDevices.Any())
+				{
+					foreach (var device in requiredDevices)
+					{
+						if (!foundDevices.Contains(device))
+						{
+							matchesAll = false;
+							break;
+						}
+					}
+				}
 
-                if (!matchesAll)
+				if (!matchesAll)
 					continue;
 
-                // If we reach this point we know that control scheme both matches required and matches all.
-                if (timeForScheme > mostRecentTime)
+				// If we reach this point we know that control scheme both matches required and matches all.
+				if (timeForScheme > mostRecentTime)
 				{
 					bestScheme = scheme;
 					bestFoundDevices = new List<InputDevice>(foundDevices);
@@ -262,27 +278,19 @@ namespace UnityEngine.InputNew
 			return list;
 		}
 
-		private List<InputState> GetDeviceStatesForDeviceType(SerializableType deviceType)
+		private InputState GetDeviceStateForDeviceSlot(DeviceSlot deviceSlot)
 		{
-            var list = new List<InputState>();
-		    bool deviceTypeFound = false;
-
 			foreach (var deviceState in deviceStates)
 			{
-			    if (deviceType.value.IsInstanceOfType(deviceState.controlProvider))
-			        deviceTypeFound = true;
-			    else
-			        continue;
-                
-                // An action may care about input from a specific device or any device, so check the tag
-			    if (deviceType.TagIndex == -1 || deviceType.TagIndex == deviceState.controlProvider.TagIndex)
-			        list.Add(deviceState);
-			}
-            
-            if (!deviceTypeFound)
-			    throw new ArgumentException("deviceType");
+				var inputDevice = deviceState.controlProvider as InputDevice;
+				// If this isn't an input device, simply make sure that the types match
+				if (inputDevice == null && deviceSlot.type.value.IsInstanceOfType(deviceState.controlProvider))
+					return deviceState;
 
-		    return list;
+				if (inputDevice != null && (deviceSlot.tagIndex == -1 || inputDevice.tagIndex == deviceSlot.tagIndex))
+					return deviceState;
+			}
+			throw new ArgumentException("deviceType");
 		}
 
 		public void BeginFrame()
@@ -306,18 +314,18 @@ namespace UnityEngine.InputNew
 				var controlValue = 0.0f;
 				foreach (var source in binding.sources)
 				{
-					var sourceValue = GetSourceValue(source);
-				    if (Mathf.Abs(sourceValue) > Mathf.Abs(controlValue))
-                        controlValue = sourceValue;
-                }
+					var value = GetSourceValue(source);
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
+						controlValue = value;
+				}
 				
 				foreach (var axis in binding.buttonAxisSources)
 				{
 					var negativeValue = GetSourceValue(axis.negative);
 					var positiveValue = GetSourceValue(axis.positive);
-				    var value = positiveValue - negativeValue;
-                    if (Mathf.Abs(value) > Mathf.Abs(controlValue))
-                        controlValue = value;
+					var value = positiveValue - negativeValue;
+					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
+						controlValue = value;
 				}
 				
 				state.SetCurrentValue(entryIndex, controlValue);
@@ -326,16 +334,8 @@ namespace UnityEngine.InputNew
 
 		private float GetSourceValue(InputControlDescriptor source)
 		{
-		    float controlValue = 0f;
-			var states = GetDeviceStatesForDeviceType(source.deviceType);
-		    foreach (var s in states)
-		    {
-                float sourceValue = s.GetCurrentValue(source.controlIndex);
-		        if (Mathf.Abs(sourceValue) > Mathf.Abs(controlValue))
-		            controlValue = sourceValue;
-		    }
-		        
-		    return controlValue;
+			var deviceState = GetDeviceStateForDeviceSlot(m_ControlScheme.GetDeviceSlot(source.deviceKey));
+			return deviceState.GetCurrentValue(source.controlIndex);
 		}
 
 		public override string GetPrimarySourceName(int controlIndex, string buttonAxisFormattingString = "{0} & {1}")
@@ -357,16 +357,8 @@ namespace UnityEngine.InputNew
 
 		private string GetSourceName(InputControlDescriptor source)
 		{
-			var states = GetDeviceStatesForDeviceType(source.deviceType);
-            // FIXME: Not sure what to do with returning a source name where we might have multiple device states that could satisfy that
-		    foreach (var s in states)
-		    {
-                string name = s.controlProvider.GetControlData(source.controlIndex).name;
-		        if (!string.IsNullOrEmpty(name))
-		            return name;
-		    }
-
-		    return null;
+			var deviceState = GetDeviceStateForDeviceSlot(m_ControlScheme.GetDeviceSlot(source.deviceKey));
+			return deviceState.controlProvider.GetControlData(source.controlIndex).name;
 		}
 
 		////REVIEW: the descriptor may come from anywhere; method assumes we get passed some state we actually own
@@ -392,7 +384,19 @@ namespace UnityEngine.InputNew
 			}
 			
 			descriptor.controlIndex = control.index;
-			descriptor.deviceType = control.provider.GetType();
+			var inputDevice = control.provider as InputDevice;
+			if (inputDevice == null)
+			{
+				Debug.LogError(string.Format("The InputControlProvider must be an InputDevice, but it is a {0}", control.provider.GetType()));
+				return false;
+			}
+			int key = m_ControlScheme.GetDeviceKey(inputDevice);
+			if (key == DeviceSlot.kInvalidKey)
+			{
+				Debug.LogError(string.Format("Could not find key for InputDevice type {0}", inputDevice.GetType()));
+				return false;
+			}
+			descriptor.deviceKey = key;
 
 			m_ControlScheme.customized = true;
 			
@@ -404,7 +408,7 @@ namespace UnityEngine.InputNew
 
 		public void RevertCustomizations()
 		{
-		    ////FIXME: doesn't properly reset control scheme
+			////FIXME: doesn't properly reset control scheme
 			m_ActionMap.RevertCustomizations();
 			RefreshBindings();
 		}
@@ -412,20 +416,17 @@ namespace UnityEngine.InputNew
 		private void RefreshBindings()
 		{
 			// Gather a mapping of device types to list of bindings that use the given type.
-			var perDeviceTypeUsedControlIndices = new Dictionary<Type, List<int>>();
+			var perDeviceTypeUsedControlIndices = new Dictionary<int, List<int>>();
 			controlScheme.ExtractDeviceTypesAndControlIndices(perDeviceTypeUsedControlIndices);
 			
-			foreach (var deviceType in controlScheme.serializableDeviceTypes)
+			foreach (var deviceSlot in controlScheme.deviceSlots)
 			{
-				var states = GetDeviceStatesForDeviceType(deviceType);
-			    foreach (var s in states)
-			    {
-                    List<int> indices;
-                    if (perDeviceTypeUsedControlIndices.TryGetValue(deviceType, out indices))
-                        s.SetUsedControls(indices);
-                    else
-                        s.SetAllControlsEnabled(false);
-                }				
+				InputState state = GetDeviceStateForDeviceSlot(deviceSlot);
+				List<int> indices;
+				if (perDeviceTypeUsedControlIndices.TryGetValue(deviceSlot.key, out indices))
+					state.SetUsedControls(indices);
+				else
+					state.SetAllControlsEnabled(false);
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -29,7 +28,7 @@ namespace UnityEngine.InputNew
 			return clone;
 		}
 
-		public void ExtractDeviceTypesAndControlIndices(Dictionary<Type, List<int>> controlIndicesPerDeviceType)
+		public void ExtractDeviceTypesAndControlIndices(Dictionary<int, List<int>> controlIndicesPerDeviceType)
 		{
 			foreach (var control in sources)
 			{
