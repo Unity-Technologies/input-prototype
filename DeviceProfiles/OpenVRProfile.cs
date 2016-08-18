@@ -7,7 +7,7 @@ namespace UnityEngine.InputNew
 {
 	public class OpenVRProfile : InputDeviceProfile
 	{
-		public const int k_viveAxisCount = 10; // 5 axes in openVR, each with X and Y.
+		public const int kViveAxisCount = 10; // 5 axes in openVR, each with X and Y.
 		public OpenVRProfile()
 		{
 			AddDeviceName("VRInputDevice");
@@ -36,16 +36,16 @@ namespace UnityEngine.InputNew
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
                         break;
                     // Buttons
-                    case k_viveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
+                    case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
                         break;
-                    case k_viveAxisCount + (int)EVRButtonId.k_EButton_Grip:
+                    case kViveAxisCount + (int)EVRButtonId.k_EButton_Grip:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger2;
                         break;
-                    case k_viveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Touchpad:
+                    case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Touchpad:
                         controlEvent.controlIndex = (int) VRInputDevice.VRControl.Action1;
                         break;
-                    case k_viveAxisCount + (int)EVRButtonId.k_EButton_ApplicationMenu:
+                    case kViveAxisCount + (int)EVRButtonId.k_EButton_ApplicationMenu:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Action2;
                         break;
                 }
