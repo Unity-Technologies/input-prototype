@@ -43,7 +43,7 @@ namespace UnityEngine.InputNew
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger2;
                         break;
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Touchpad:
-                        controlEvent.controlIndex = (int) VRInputDevice.VRControl.Action1;
+                        controlEvent.controlIndex = (int) VRInputDevice.VRControl.LeftStickButton;
                         break;
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_ApplicationMenu:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Action2;
