@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -38,8 +37,6 @@ namespace UnityEngine.InputNew
 			set {
 				if (m_Active == value)
 					return;
-
-				ResetControlsForCurrentReceivers();
 
 				m_Active = value;
 				Reset(value);
