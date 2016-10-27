@@ -35,6 +35,27 @@ namespace UnityEngine.InputNew
                     case 2: // Trigger (Axis 1.X)
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
                         break;
+                    case 3:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog4;
+                        break;
+                    case 4:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog5;
+                        break;
+                    case 5:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog6;
+                        break;
+                    case 6:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog7;
+                        break;
+                    case 7:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog8;
+                        break;
+                    case 8:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog9;
+                        break;
+                    case 9:
+                        controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog9;
+                        break;
                     // Buttons
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
