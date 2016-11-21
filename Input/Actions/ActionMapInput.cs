@@ -211,6 +211,26 @@ namespace UnityEngine.InputNew
 			m_Active = oldActiveState;
 		}
 
+		public void ResetControl(int deviceStateIndex, DeviceSlot deviceSlot)
+		{
+			var deviceState = GetDeviceStateForDeviceSlot(deviceSlot);
+			if (deviceState != null)
+			{
+				deviceState.ResetStateForControl(deviceStateIndex);
+				foreach (var binding in controlScheme.bindings)
+				{
+					// Bindings use local indices instead of the actual device state index, so 
+					// we have to look those up in order to clear the state
+					for (int index = 0; index < binding.sources.Count; index++)
+					{
+						var source = binding.sources[index];
+						if (source.controlIndex == deviceStateIndex)
+							state.ResetStateForControl(index);
+					}
+				}
+			}
+		}
+
 		public bool CurrentlyUsesDevice(InputDevice device)
 		{
 			foreach (var deviceState in deviceStates)
