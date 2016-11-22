@@ -12,6 +12,8 @@ namespace UnityEngine.InputNew
 
 		private bool m_Global = false;
 
+		public bool processAll { get; set; }
+		
 		public delegate void ChangeEvent();
 		public static ChangeEvent onChange;
 
@@ -120,9 +122,8 @@ namespace UnityEngine.InputNew
 			{
 				if (maps[i].active && (global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
 				{
-				    if (ProcessEventInMap(maps[i], inputEvent) || maps[i].blockSubsequent) { 
-                        //return true;
-                    }
+					if (ProcessEventInMap(maps[i], inputEvent) || maps[i].blockSubsequent || !processAll)
+						return true;
 				}
 			}
 
