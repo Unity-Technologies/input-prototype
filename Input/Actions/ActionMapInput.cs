@@ -211,21 +211,44 @@ namespace UnityEngine.InputNew
 			m_Active = oldActiveState;
 		}
 
-		public void ResetControl(int deviceStateIndex, DeviceSlot deviceSlot)
+		/// <summary>
+		/// Reset controls that share the same source (potentially from another AMI)
+		/// </summary>
+		/// <param name="control"></param>
+		public void ResetControl(InputControl control)
 		{
-			var deviceState = GetDeviceStateForDeviceSlot(deviceSlot);
-			if (deviceState != null)
+			var otherAMI = control.provider as ActionMapInput;
+			var otherControlScheme = otherAMI.controlScheme;
+			var otherBinding = otherControlScheme.bindings[control.index];
+			foreach (var otherSource in otherBinding.sources)
 			{
-				deviceState.ResetStateForControl(deviceStateIndex);
-				foreach (var binding in controlScheme.bindings)
+				var deviceStateIndex = otherSource.controlIndex;
+				var otherDeviceState = otherAMI.GetDeviceStateForDeviceSlot(otherControlScheme.GetDeviceSlot(otherSource.deviceKey));
+				if (otherDeviceState != null)
 				{
-					// Bindings use local indices instead of the actual device state index, so 
-					// we have to look those up in order to clear the state
-					for (int index = 0; index < binding.sources.Count; index++)
+					foreach (var deviceState in deviceStates)
 					{
-						var source = binding.sources[index];
-						if (source.controlIndex == deviceStateIndex)
-							state.ResetStateForControl(index);
+						var inputDevice = deviceState.controlProvider as InputDevice;
+						if (inputDevice == otherDeviceState.controlProvider)
+						{
+							deviceState.ResetStateForControl(deviceStateIndex);
+
+							var bindings = controlScheme.bindings;
+							for (var bindingIndex = 0; bindingIndex < bindings.Count; bindingIndex++)
+							{
+								var binding = bindings[bindingIndex];
+
+								// Bindings use local indices instead of the actual device state index, so 
+								// we have to look those up in order to clear the state
+								for (int index = 0; index < binding.sources.Count; index++)
+								{
+									var source = binding.sources[index];
+									var sourceDeviceState = GetDeviceStateForDeviceSlot(controlScheme.GetDeviceSlot(source.deviceKey));
+									if (sourceDeviceState == deviceState && source.controlIndex == deviceStateIndex)
+										state.ResetStateForControl(bindingIndex);
+								}
+							}
+						}
 					}
 				}
 			}

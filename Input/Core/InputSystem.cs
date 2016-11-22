@@ -81,9 +81,6 @@ namespace UnityEngine.InputNew
 
 		public static void QueueEvent(InputEvent inputEvent)
 		{
-			var evt = inputEvent as GenericControlEvent;
-			if(evt != null)
-				Debug.Log(evt + ", " + Time.frameCount);
 			s_EventQueue.Queue(inputEvent);
 		}
 
