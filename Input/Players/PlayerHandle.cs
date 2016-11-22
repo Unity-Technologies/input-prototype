@@ -122,7 +122,7 @@ namespace UnityEngine.InputNew
 			{
 				if (maps[i].active && (global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
 				{
-					if (ProcessEventInMap(maps[i], inputEvent) || maps[i].blockSubsequent || !processAll)
+					if ((ProcessEventInMap(maps[i], inputEvent) && !processAll) || maps[i].blockSubsequent)
 						return true;
 				}
 			}
