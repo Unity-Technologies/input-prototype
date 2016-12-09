@@ -120,7 +120,7 @@ namespace UnityEngine.InputNew
 		        return false;
 			for (int i = 0; i < maps.Count; i++)
 			{
-				if (maps[i].active && (global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
+				if ((global || maps[i].CurrentlyUsesDevice(inputEvent.device)))
 				{
 					if ((ProcessEventInMap(maps[i], inputEvent) && !processAll) || maps[i].blockSubsequent)
 						return true;
@@ -162,8 +162,7 @@ namespace UnityEngine.InputNew
 		{
 			for (int i = 0; i < maps.Count; i++)
 			{
-				if (maps[i].active)
-					maps[i].BeginFrame();
+				maps[i].BeginFrame();
 			}
 		}
 		
@@ -171,8 +170,7 @@ namespace UnityEngine.InputNew
 		{
 			for (int i = 0; i < maps.Count; i++)
 			{
-				if (maps[i].active)
-					maps[i].EndFrame();
+				maps[i].EndFrame();
 			}
 		}
 	}

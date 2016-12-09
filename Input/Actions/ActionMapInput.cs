@@ -30,7 +30,7 @@ namespace UnityEngine.InputNew
 		private List<InputState> deviceStates { get { return m_DeviceStates; } }
 
 		bool m_Active;
-		public bool active {
+		public override bool active {
 			get {
 				return m_Active;
 			}
@@ -39,7 +39,6 @@ namespace UnityEngine.InputNew
 					return;
 
 				m_Active = value;
-				Reset(value);
 
 				if (onStatusChange != null)
 					onStatusChange.Invoke();
