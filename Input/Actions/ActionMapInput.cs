@@ -263,9 +263,12 @@ namespace UnityEngine.InputNew
 
 		public bool CurrentlyUsesDevice(InputDevice device)
 		{
-			foreach (var deviceState in deviceStates)
+			for (int i = 0; i < deviceStates.Count; i++)
+			{
+				var deviceState = deviceStates[i];
 				if (deviceState.controlProvider == device)
 					return true;
+			}
 			return false;
 		}
 
@@ -274,8 +277,9 @@ namespace UnityEngine.InputNew
 			var consumed = false;
 			
 			// Update device state (if event actually goes to one of the devices we talk to).
-			foreach (var deviceState in deviceStates)
+			for (int i = 0; i < deviceStates.Count; i++)
 			{
+				var deviceState = deviceStates[i];
 				////FIXME: should refer to proper type
 				var device = (InputDevice)deviceState.controlProvider;
 				
@@ -327,8 +331,9 @@ namespace UnityEngine.InputNew
 
 		private InputState GetDeviceStateForDeviceSlot(DeviceSlot deviceSlot)
 		{
-			foreach (var deviceState in deviceStates)
+			for (int i = 0; i < deviceStates.Count; i++)
 			{
+				var deviceState = deviceStates[i];
 				var inputDevice = deviceState.controlProvider as InputDevice;
 				// If this isn't an input device, simply make sure that the types match
 				if (inputDevice == null && deviceSlot.type.value.IsInstanceOfType(deviceState.controlProvider))
@@ -359,15 +364,20 @@ namespace UnityEngine.InputNew
 				var binding = controlScheme.bindings[entryIndex];
 				
 				var controlValue = 0.0f;
-				foreach (var source in binding.sources)
+
+				var bindingSources = binding.sources;
+				for (int i = 0; i < bindingSources.Count; i++)
 				{
+					var source = bindingSources[i];
 					var value = GetSourceValue(source);
 					if (Mathf.Abs(value) > Mathf.Abs(controlValue))
 						controlValue = value;
 				}
-				
-				foreach (var axis in binding.buttonAxisSources)
+
+				var bindingButtonAxisSources = binding.buttonAxisSources;
+				for (int i = 0; i < bindingButtonAxisSources.Count; i++)
 				{
+					var axis = bindingButtonAxisSources[i];
 					var negativeValue = GetSourceValue(axis.negative);
 					var positiveValue = GetSourceValue(axis.positive);
 					var value = positiveValue - negativeValue;

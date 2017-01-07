@@ -50,8 +50,9 @@ namespace UnityEngine.InputNew
 
 		public int GetDeviceKey(InputDevice device)
 		{
-			foreach (var deviceSlot in m_DeviceSlots)
+			for (int i = 0; i < m_DeviceSlots.Count; i++)
 			{
+				var deviceSlot = m_DeviceSlots[i];
 				if (device.GetType().IsInstanceOfType(deviceSlot.type.value) &&
 					(device.tagIndex == -1 || device.tagIndex == deviceSlot.tagIndex))
 					return deviceSlot.key;
@@ -62,8 +63,9 @@ namespace UnityEngine.InputNew
 
 		public DeviceSlot GetDeviceSlot(int key)
 		{
-			foreach (var deviceSlot in m_DeviceSlots)
+			for (int i = 0; i < m_DeviceSlots.Count; i++)
 			{
+				var deviceSlot = m_DeviceSlots[i];
 				if (deviceSlot.key == key)
 					return deviceSlot;
 			}
