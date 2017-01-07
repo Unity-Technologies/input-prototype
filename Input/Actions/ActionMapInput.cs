@@ -38,7 +38,13 @@ namespace UnityEngine.InputNew
 				if (m_Active == value)
 					return;
 
+				if (resetOnActiveChanged)
+					ResetControlsForCurrentReceivers();
+
 				m_Active = value;
+
+				if (resetOnActiveChanged)
+					Reset(value);
 
 				if (onStatusChange != null)
 					onStatusChange.Invoke();
@@ -52,6 +58,8 @@ namespace UnityEngine.InputNew
 
 		public bool blockSubsequent { get; set; }
 
+		public bool resetOnActiveChanged { get; set; }
+
 		public delegate void ChangeEvent();
 		public static ChangeEvent onStatusChange;
 
@@ -59,13 +67,13 @@ namespace UnityEngine.InputNew
 		{
 			ActionMapInput map =
 				(ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
-			map.autoReinitialize = true;
 			return map;
 		}
 
 		protected ActionMapInput(ActionMap actionMap)
 		{
 			autoReinitialize = true;
+			resetOnActiveChanged = true;
 			m_ActionMap = actionMap;
 
 			// Create list of controls from ActionMap.
