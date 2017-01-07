@@ -9,6 +9,8 @@ namespace UnityEngine.InputNew
 		public List<InputControlData> controlDataList { get { return m_ControlDataList; } }
 		public InputState state { get { return m_State; } }
 
+		public virtual bool active { get; set; }
+
 		private List<InputControlData> m_ControlDataList;
 		private List<InputControl> m_Controls;
 		private InputState m_State;

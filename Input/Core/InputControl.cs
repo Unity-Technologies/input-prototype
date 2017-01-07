@@ -84,17 +84,17 @@ namespace UnityEngine.InputNew
 
 		public bool isHeld
 		{
-			get { return m_State.GetCurrentValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold; }
+			get { return provider.active && m_State.GetCurrentValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold; }
 		}
 
 		public bool wasJustPressed
 		{
-			get { return isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
+			get { return provider.active && isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
 		}
 
 		public bool wasJustReleased
 		{
-			get { return !isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
+			get { return provider.active && !isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
 		}
 
 		public void SetValueMultiplier(float multiplier)

@@ -1,7 +1,9 @@
 ﻿using UnityEngine.InputNew;
 using System.Collections;
 using Assets.Utilities;
+#if ENABLE_STEAMVR_INPUT
 using Valve.VR;
+#endif
 
 namespace UnityEngine.InputNew
 {
@@ -56,8 +58,9 @@ namespace UnityEngine.InputNew
                     case 9:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Analog9;
                         break;
-                    // Buttons
-                    case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
+#if ENABLE_STEAMVR_INPUT
+					// Buttons
+					case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
                         break;
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_Grip:
@@ -69,6 +72,7 @@ namespace UnityEngine.InputNew
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_ApplicationMenu:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Action2;
                         break;
+#endif
                 }
             }
 		}

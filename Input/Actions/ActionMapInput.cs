@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
@@ -31,7 +30,7 @@ namespace UnityEngine.InputNew
 		private List<InputState> deviceStates { get { return m_DeviceStates; } }
 
 		bool m_Active;
-		public bool active {
+		public override bool active {
 			get {
 				return m_Active;
 			}
@@ -39,10 +38,13 @@ namespace UnityEngine.InputNew
 				if (m_Active == value)
 					return;
 
-				ResetControlsForCurrentReceivers();
+				if (resetOnActiveChanged)
+					ResetControlsForCurrentReceivers();
 
 				m_Active = value;
-				Reset(value);
+
+				if (resetOnActiveChanged)
+					Reset(value);
 
 				if (onStatusChange != null)
 					onStatusChange.Invoke();
@@ -56,6 +58,8 @@ namespace UnityEngine.InputNew
 
 		public bool blockSubsequent { get; set; }
 
+		public bool resetOnActiveChanged { get; set; }
+
 		public delegate void ChangeEvent();
 		public static ChangeEvent onStatusChange;
 
@@ -63,13 +67,13 @@ namespace UnityEngine.InputNew
 		{
 			ActionMapInput map =
 				(ActionMapInput)Activator.CreateInstance(actionMap.customActionMapType, new object[] { actionMap });
-			map.autoReinitialize = true;
 			return map;
 		}
 
 		protected ActionMapInput(ActionMap actionMap)
 		{
 			autoReinitialize = true;
+			resetOnActiveChanged = true;
 			m_ActionMap = actionMap;
 
 			// Create list of controls from ActionMap.
@@ -212,6 +216,49 @@ namespace UnityEngine.InputNew
 			}
 
 			m_Active = oldActiveState;
+		}
+
+		/// <summary>
+		/// Reset controls that share the same source (potentially from another AMI)
+		/// </summary>
+		/// <param name="control"></param>
+		public void ResetControl(InputControl control)
+		{
+			var otherAMI = control.provider as ActionMapInput;
+			var otherControlScheme = otherAMI.controlScheme;
+			var otherBinding = otherControlScheme.bindings[control.index];
+			foreach (var otherSource in otherBinding.sources)
+			{
+				var deviceStateIndex = otherSource.controlIndex;
+				var otherDeviceState = otherAMI.GetDeviceStateForDeviceSlot(otherControlScheme.GetDeviceSlot(otherSource.deviceKey));
+				if (otherDeviceState != null)
+				{
+					foreach (var deviceState in deviceStates)
+					{
+						var inputDevice = deviceState.controlProvider as InputDevice;
+						if (inputDevice == otherDeviceState.controlProvider)
+						{
+							deviceState.ResetStateForControl(deviceStateIndex);
+
+							var bindings = controlScheme.bindings;
+							for (var bindingIndex = 0; bindingIndex < bindings.Count; bindingIndex++)
+							{
+								var binding = bindings[bindingIndex];
+
+								// Bindings use local indices instead of the actual device state index, so 
+								// we have to look those up in order to clear the state
+								for (int index = 0; index < binding.sources.Count; index++)
+								{
+									var source = binding.sources[index];
+									var sourceDeviceState = GetDeviceStateForDeviceSlot(controlScheme.GetDeviceSlot(source.deviceKey));
+									if (sourceDeviceState == deviceState && source.controlIndex == deviceStateIndex)
+										state.ResetStateForControl(bindingIndex);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 		public bool CurrentlyUsesDevice(InputDevice device)
