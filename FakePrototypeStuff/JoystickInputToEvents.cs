@@ -21,6 +21,23 @@ public class JoystickInputToEvents
 	public const int buttonCount = 20;
 	public const int joystickCount = 10;
 	private float[,] m_LastValues = new float[joystickCount, axisCount + buttonCount];
+
+	static string[] s_Axes;
+
+	static JoystickInputToEvents()
+	{
+		int first = 1;
+		int last = 10;
+		s_Axes = new string[(last - first) * joystickCount];
+		for (int device = 0; device < joystickCount; device++)
+		{
+			for (int i = 0; i <= last - first; i++)
+			{
+				var index = i * (last - first) * joystickCount + device;
+				s_Axes[index] = "Analog" + (i + first) + "_Joy" + (device + 1);
+			}
+		}
+	}
 	
 	private void SendAxisEvents()
 	{
@@ -30,7 +47,8 @@ public class JoystickInputToEvents
 		{
 			for (int i = 0; i <= last - first; i++)
 			{
-				var value = Input.GetAxis("Analog" + (i + first) + "_Joy" + (device + 1));
+				var index = i * (last - first) * joystickCount + device;
+				var value = Input.GetAxis(s_Axes[index]);
 				SendEvent(device, i, value);
 			}
 		}
