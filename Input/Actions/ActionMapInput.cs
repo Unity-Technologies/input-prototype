@@ -227,14 +227,16 @@ namespace UnityEngine.InputNew
 			var otherAMI = control.provider as ActionMapInput;
 			var otherControlScheme = otherAMI.controlScheme;
 			var otherBinding = otherControlScheme.bindings[control.index];
-			foreach (var otherSource in otherBinding.sources)
+			for (int i = 0; i < otherBinding.sources.Count; i++)
 			{
+				var otherSource = otherBinding.sources[i];
 				var deviceStateIndex = otherSource.controlIndex;
 				var otherDeviceState = otherAMI.GetDeviceStateForDeviceSlot(otherControlScheme.GetDeviceSlot(otherSource.deviceKey));
 				if (otherDeviceState != null)
 				{
-					foreach (var deviceState in deviceStates)
+					for (int j = 0; i < deviceStates.Count; i++)
 					{
+						var deviceState = deviceStates[j];
 						var inputDevice = deviceState.controlProvider as InputDevice;
 						if (inputDevice == otherDeviceState.controlProvider)
 						{
@@ -348,8 +350,8 @@ namespace UnityEngine.InputNew
 		public void BeginFrame()
 		{
 			state.BeginFrame();
-			foreach (var deviceState in deviceStates)
-				deviceState.BeginFrame();
+			for (int i = 0; i < deviceStates.Count; i++)
+				deviceStates[i].BeginFrame();
 		}
 		
 		public void EndFrame()
