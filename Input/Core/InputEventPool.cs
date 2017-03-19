@@ -7,12 +7,7 @@ namespace UnityEngine.InputNew
 	class InputEventPool
 	{
 		readonly Dictionary<Type, List<InputEvent>> m_Pools = new Dictionary<Type, List<InputEvent>>();
-		readonly Func<KeyValuePair<Type, List<InputEvent>>, Type, bool> m_GetPool;
-
-		public InputEventPool()
-		{
-			m_GetPool = GetPool;
-		}
+		static readonly Func<KeyValuePair<Type, List<InputEvent>>, Type, bool> k_GetPool = GetPool;
 
 		static bool GetPool(KeyValuePair<Type, List<InputEvent>> kvp, Type eventType)
 		{
@@ -23,7 +18,7 @@ namespace UnityEngine.InputNew
 		public TEvent ReuseOrCreate<TEvent>()
 			where TEvent : InputEvent, new()
 		{
-			var pool = ObjectUtils.ForEachInDictionary(m_Pools, m_GetPool, typeof(TEvent));
+			var pool = ObjectUtils.ForEachInDictionary(m_Pools, k_GetPool, typeof(TEvent));
 			if (pool.HasValue)
 			{
 				var list = pool.Value.Value;
@@ -45,7 +40,7 @@ namespace UnityEngine.InputNew
 			var type = inputEvent.GetType();
 			List<InputEvent> list = null;
 
-			var pool = ObjectUtils.ForEachInDictionary(m_Pools, m_GetPool, type);
+			var pool = ObjectUtils.ForEachInDictionary(m_Pools, k_GetPool, type);
 			if (pool.HasValue)
 				list = pool.Value.Value;
 
