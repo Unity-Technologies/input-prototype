@@ -227,9 +227,10 @@ namespace UnityEngine.InputNew
 			var otherAMI = control.provider as ActionMapInput;
 			var otherControlScheme = otherAMI.controlScheme;
 			var otherBinding = otherControlScheme.bindings[control.index];
-			for (int i = 0; i < otherBinding.sources.Count; i++)
+			var sources = otherBinding.sources;
+			for (int i = 0; i < sources.Count; i++)
 			{
-				var otherSource = otherBinding.sources[i];
+				var otherSource = sources[i];
 				var deviceStateIndex = otherSource.controlIndex;
 				var otherDeviceState = otherAMI.GetDeviceStateForDeviceSlot(otherControlScheme.GetDeviceSlot(otherSource.deviceKey));
 				if (otherDeviceState != null)
