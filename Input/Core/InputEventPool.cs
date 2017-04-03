@@ -1,36 +1,34 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.EditorVR.Utilities;
 
 namespace UnityEngine.InputNew
 {
 	class InputEventPool
 	{
 		readonly Dictionary<Type, List<InputEvent>> m_Pools = new Dictionary<Type, List<InputEvent>>();
-		static readonly Func<KeyValuePair<Type, List<InputEvent>>, Type, bool> k_GetPool = GetPool;
-
-		static bool GetPool(KeyValuePair<Type, List<InputEvent>> kvp, Type eventType)
-		{
-			return kvp.Key == eventType;
-		}
 
 		#region Public Methods
 		public TEvent ReuseOrCreate<TEvent>()
 			where TEvent : InputEvent, new()
 		{
-			var pool = ObjectUtils.ForEachInDictionary(m_Pools, k_GetPool, typeof(TEvent));
-			if (pool.HasValue)
+			var enumerator = m_Pools.GetEnumerator();
+			while (enumerator.MoveNext())
 			{
-				var list = pool.Value.Value;
-				if (list.Count > 0)
+				var kvp = enumerator.Current;
+				if (kvp.Key == typeof(TEvent))
 				{
-					var last = list.Count - 1;
-					var inputEvent = list[last];
-					list.RemoveAt(last);
-					inputEvent.Reset();
-					return (TEvent)inputEvent;
+					var pool = kvp.Value;
+					if (pool.Count > 0)
+					{
+						var last = pool.Count - 1;
+						var inputEvent = pool[last];
+						pool.RemoveAt(last);
+						inputEvent.Reset();
+						return (TEvent)inputEvent;
+					}
 				}
 			}
+			enumerator.Dispose();
 
 			return new TEvent();
 		}
@@ -38,19 +36,24 @@ namespace UnityEngine.InputNew
 		public void Return(InputEvent inputEvent)
 		{
 			var type = inputEvent.GetType();
-			List<InputEvent> list = null;
 
-			var pool = ObjectUtils.ForEachInDictionary(m_Pools, k_GetPool, type);
-			if (pool.HasValue)
-				list = pool.Value.Value;
-
-			if (list == null)
+			List<InputEvent> pool = null;
+			var enumerator = m_Pools.GetEnumerator();
+			while (enumerator.MoveNext())
 			{
-				list = new List<InputEvent>();
-				m_Pools.Add(type, list);
+				var kvp = enumerator.Current;
+				if (kvp.Key == type)
+					pool = kvp.Value;
+			}
+			enumerator.Dispose();
+
+			if (pool == null)
+			{
+				pool = new List<InputEvent>();
+				m_Pools.Add(type, pool);
 			}
 
-			list.Add(inputEvent);
+			pool.Add(inputEvent);
 		}
 		#endregion
 	}
