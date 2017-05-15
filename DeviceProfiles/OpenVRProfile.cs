@@ -63,7 +63,8 @@ namespace UnityEngine.InputNew
 					case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Trigger:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger1;
                         break;
-                    case kViveAxisCount + (int)EVRButtonId.k_EButton_Grip:
+	                case kViveAxisCount + (int)EVRButtonId.k_EButton_Axis2: // Grip on Oculus Touch
+					case kViveAxisCount + (int)EVRButtonId.k_EButton_Grip:
                         controlEvent.controlIndex = (int)VRInputDevice.VRControl.Trigger2;
                         break;
                     case kViveAxisCount + (int)EVRButtonId.k_EButton_SteamVR_Touchpad:
