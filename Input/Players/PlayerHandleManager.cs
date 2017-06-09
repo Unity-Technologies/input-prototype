@@ -19,7 +19,7 @@ namespace UnityEngine.InputNew
 			Reset();
 
 			#if UNITY_EDITOR
-			EditorApplication.playmodeStateChanged += OnPlaymodeChanged;
+			EditorApplication.playModeStateChanged += OnPlaymodeChanged;
 			#endif
 		}
 
@@ -45,7 +45,7 @@ namespace UnityEngine.InputNew
 		}
 
 		#if UNITY_EDITOR
-		static void OnPlaymodeChanged()
+		static void OnPlaymodeChanged(PlayModeStateChange stateChange)
 		{
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
 				return;

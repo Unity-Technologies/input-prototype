@@ -56,28 +56,25 @@ namespace UnityEngine.InputNew
 
 		// In the editor, throw away all customizations when exiting playmode.
 #if UNITY_EDITOR
-		private static List<ActionMap> s_ActionMapsToCleanUpAfterPlayMode = new List<ActionMap>();
-		private static bool s_IsInPlayMode;
+		static List<ActionMap> s_ActionMapsToCleanUpAfterPlayMode = new List<ActionMap>();
+		static bool s_IsInPlayMode;
 
 		static ActionMap()
 		{
-			EditorApplication.delayCall += HandlePlayModeCustomizations;
-			EditorApplication.playmodeStateChanged += HandlePlayModeCustomizations;
+			EditorApplication.delayCall += () => HandlePlayModeCustomizations(PlayModeStateChange.EnteredEditMode);
+			EditorApplication.playModeStateChanged += HandlePlayModeCustomizations;
 		}
 
-		private static void HandlePlayModeCustomizations()
+		static void HandlePlayModeCustomizations(PlayModeStateChange stateChange)
 		{
-			// TODO: Fix error.
-			// get_isPlayingOrWillChangePlaymode is not allowed to be called from a MonoBehaviour constructor,
-			// call it in Awake or Start instead. Called from script 'ActionMap' on game object 'MenuActions'.
-			// See "Script Serialization" page in the Unity Manual for further details.
-			if (EditorApplication.isPlayingOrWillChangePlaymode)
+			if (stateChange == PlayModeStateChange.EnteredPlayMode)
 			{
 				s_IsInPlayMode = true;
 			}
-			else if (!EditorApplication.isPlaying)
+			else if (stateChange == PlayModeStateChange.ExitingPlayMode || stateChange == PlayModeStateChange.EnteredEditMode)
 			{
 				s_IsInPlayMode = false;
+
 				// Throw away all the copies of ControlSchemes we made in play mode.
 				foreach (var actionMap in s_ActionMapsToCleanUpAfterPlayMode)
 				{
