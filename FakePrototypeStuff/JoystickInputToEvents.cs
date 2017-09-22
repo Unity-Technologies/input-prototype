@@ -17,7 +17,7 @@ public class JoystickInputToEvents
 	#region Non-Public Methods
 
 	// Fake gamepad has 10 axes (index 0 - 9) and 20 buttons (index 10 - 29).
-	public const int axisCount = 10;
+	public const int axisCount = 16;
 	public const int buttonCount = 20;
 	public const int joystickCount = 10;
 	private float[,] m_LastValues = new float[joystickCount, axisCount + buttonCount];
@@ -38,7 +38,6 @@ public class JoystickInputToEvents
 
 	private void SendButtonEvents()
 	{
-		
 		for (int device = 0; device < joystickCount; device++)
 		{
 			int first = (int)KeyCode.Joystick1Button0 + device * 20;
