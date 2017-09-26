@@ -12,23 +12,6 @@ namespace UnityEngine.Experimental.Input
 			NativeInputSystem.onEvents += OnEvent;
 		}
 
-		public static readonly Dictionary<int, Dictionary<int, float>> values = new Dictionary<int, Dictionary<int, float>>();
-
-		void OnGUI()
-		{
-			GUILayout.BeginHorizontal();
-			foreach (var kvp in values)
-			{
-				GUILayout.BeginVertical();
-				foreach (var val in kvp.Value)
-				{
-					GUILayout.Label(string.Format("Device {0} Control {1}: {2:f2}", kvp.Key, val.Key, val.Value));
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-		}
-
 		internal void OnEvent(int eventCount, IntPtr eventData)
 		{
 			var currentDataPtr = eventData;
@@ -37,6 +20,8 @@ namespace UnityEngine.Experimental.Input
 				unsafe
 				{
 					var eventPtr = (NativeInputEvent*)currentDataPtr;
+					var time = (float)eventPtr->time;
+					var device = eventPtr->deviceId + 1;
 
 					switch (eventPtr->type)
 					{
@@ -45,16 +30,6 @@ namespace UnityEngine.Experimental.Input
 							var nativeGenericEvent = (NativeGenericEvent*)eventPtr;
 
 							var controlIndex = ControlIndexToVRIndex(nativeGenericEvent->controlIndex);
-							var device = eventPtr->deviceId + 1;
-							Dictionary<int, float> vals;
-							if (!values.TryGetValue(device, out vals))
-							{
-								vals = new Dictionary<int, float>();
-								values[device] = vals;
-							}
-
-							vals[nativeGenericEvent->controlIndex] = (float)nativeGenericEvent->scaledValue;
-
 							if (controlIndex == -1)
 							{
 								currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
@@ -65,10 +40,33 @@ namespace UnityEngine.Experimental.Input
 							inputEvent.deviceType = typeof(VRInputDevice);
 							inputEvent.deviceIndex = device;
 							inputEvent.controlIndex = controlIndex;
+							//inputEvent.time = time;
 							inputEvent.value = (float)nativeGenericEvent->scaledValue;
 
 							InputSystem.QueueEvent(inputEvent);
 						}
+							break;
+						case NativeInputEventType.Tracking:
+						{
+							NativeTrackingEvent* nativeTrackingEvent = (NativeTrackingEvent*)eventPtr;
+							var localPosition = nativeTrackingEvent->localPosition;
+							var localRotation = nativeTrackingEvent->localRotation;
+
+							//if (localPosition == m_LastPositionValues[controller] && localRotation == m_LastRotationValues[controller])
+							//	return;
+
+							var inputEvent = InputSystem.CreateEvent<VREvent>();
+							inputEvent.deviceType = typeof(VRInputDevice);
+							inputEvent.deviceIndex = device;
+							//inputEvent.time = time;
+							inputEvent.localPosition = localPosition;
+							inputEvent.localRotation = localRotation;
+
+							//m_LastPositionValues[controller] = inputEvent.localPosition;
+							//m_LastRotationValues[controller] = inputEvent.localRotation;
+
+							InputSystem.QueueEvent(inputEvent);
+							}
 							break;
 					}
 					currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
