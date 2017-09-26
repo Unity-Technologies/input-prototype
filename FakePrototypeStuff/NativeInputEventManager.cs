@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine.InputNew;
 using UnityEngineInternal.Input;
 namespace UnityEngine.Experimental.Input
@@ -7,6 +6,10 @@ namespace UnityEngine.Experimental.Input
 	// Listens for native events and converts them into managed InputEvent instances.
 	class NativeInputEventManager : MonoBehaviour
 	{
+		const uint k_ControllerCount = 2;
+		Vector3[] m_LastPositionValues = new Vector3[k_ControllerCount];
+		Quaternion[] m_LastRotationValues = new Quaternion[k_ControllerCount];
+
 		void Start()
 		{
 			NativeInputSystem.onEvents += OnEvent;
@@ -20,7 +23,6 @@ namespace UnityEngine.Experimental.Input
 				unsafe
 				{
 					var eventPtr = (NativeInputEvent*)currentDataPtr;
-					var time = (float)eventPtr->time;
 					var device = eventPtr->deviceId + 1;
 
 					switch (eventPtr->type)
@@ -40,7 +42,6 @@ namespace UnityEngine.Experimental.Input
 							inputEvent.deviceType = typeof(VRInputDevice);
 							inputEvent.deviceIndex = device;
 							inputEvent.controlIndex = controlIndex;
-							//inputEvent.time = time;
 							inputEvent.value = (float)nativeGenericEvent->scaledValue;
 
 							InputSystem.QueueEvent(inputEvent);
@@ -48,25 +49,32 @@ namespace UnityEngine.Experimental.Input
 							break;
 						case NativeInputEventType.Tracking:
 						{
-							NativeTrackingEvent* nativeTrackingEvent = (NativeTrackingEvent*)eventPtr;
+							var nativeTrackingEvent = (NativeTrackingEvent*)eventPtr;
 							var localPosition = nativeTrackingEvent->localPosition;
 							var localRotation = nativeTrackingEvent->localRotation;
 
-							//if (localPosition == m_LastPositionValues[controller] && localRotation == m_LastRotationValues[controller])
-							//	return;
+							var skip = device != 3 && device != 4;
+							var controller = device - 3;
+							if (!skip && localPosition == m_LastPositionValues[controller] && localRotation == m_LastRotationValues[controller])
+								skip = true;
+
+							if (skip)
+							{
+								currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
+								continue;
+							}
 
 							var inputEvent = InputSystem.CreateEvent<VREvent>();
 							inputEvent.deviceType = typeof(VRInputDevice);
 							inputEvent.deviceIndex = device;
-							//inputEvent.time = time;
 							inputEvent.localPosition = localPosition;
 							inputEvent.localRotation = localRotation;
 
-							//m_LastPositionValues[controller] = inputEvent.localPosition;
-							//m_LastRotationValues[controller] = inputEvent.localRotation;
+							m_LastPositionValues[controller] = inputEvent.localPosition;
+							m_LastRotationValues[controller] = inputEvent.localRotation;
 
 							InputSystem.QueueEvent(inputEvent);
-							}
+						}
 							break;
 					}
 					currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
