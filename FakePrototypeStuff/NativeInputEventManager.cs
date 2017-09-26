@@ -2,50 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine.InputNew;
 using UnityEngineInternal.Input;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace UnityEngine.Experimental.Input
 {
 	// Listens for native events and converts them into managed InputEvent instances.
-	internal class NativeInputEventManager : MonoBehaviour
+	class NativeInputEventManager : MonoBehaviour
 	{
-		//internal IInputEventManager m_EventManager;
-		//internal INativeInputDeviceManager m_NativeDeviceManager;
-		//bool m_IsInitialized;
-
-		//public Action onReceivedEvents { get; set; }
-
-		//internal void Initialize(IInputEventManager eventManager, INativeInputDeviceManager nativeDeviceManager)
-		//{
-		//	if (m_IsInitialized)
-		//		return;
-
-		//	m_EventManager = eventManager;
-		//	m_NativeDeviceManager = nativeDeviceManager;
-
-		//	NativeInputSystem.onEvents += OnReceiveEvents;
-
-		//	m_IsInitialized = true;
-		//}
-
-		//internal void Uninitialize()
-		//{
-		//	if (!m_IsInitialized)
-		//		return;
-
-		//	m_EventManager = null;
-		//	m_NativeDeviceManager = null;
-		//	NativeInputSystem.onEvents -= OnReceiveEvents;
-
-		//	m_IsInitialized = false;
-		//}
-
 		void Start()
 		{
-			NativeInputSystem.onEvents += OnReceiveEvents;
+			NativeInputSystem.onEvents += OnEvent;
 		}
 
 		public static readonly Dictionary<int, Dictionary<int, float>> values = new Dictionary<int, Dictionary<int, float>>();
@@ -65,80 +29,48 @@ namespace UnityEngine.Experimental.Input
 			GUILayout.EndHorizontal();
 		}
 
-		// This method reads out NativeInputEvents directly from unmanaged memory
-		// and turns them into InputEvent instances and puts them on the InputEventQueue.
-		internal void OnReceiveEvents(int eventCount, IntPtr eventData)
+		internal void OnEvent(int eventCount, IntPtr eventData)
 		{
-			//var queue = m_EventManager.queue;
-			//var pool = m_EventManager.pool;
-			var zeroTime = NativeInputSystem.zeroEventTime;
-			var currentTime = Time.time;
-#if UNITY_EDITOR
-			var currentRealTime = EditorApplication.timeSinceStartup;
-#else
-            var currentRealTime = Time.realtimeSinceStartup;
-#endif
-
-			////TODO: disconnect/reconnect events
-			////TODO: text events
-
 			var currentDataPtr = eventData;
-			for (var i = 0; i < eventCount; ++i)
+			for (var i = 0; i < eventCount; i++)
 			{
 				unsafe
 				{
-					NativeInputEvent* eventPtr = (NativeInputEvent*)currentDataPtr;
+					var eventPtr = (NativeInputEvent*)currentDataPtr;
 
-					// In the editor, we have jumps in time progression as time will reset when going in and out of play mode.
-					// This means that when adjusting from real time to game time here, we may end up with events that have happened
-					// "before time started." We simply discard those events.
-
-					var eventTime = eventPtr->time;
-					var time = eventTime - zeroTime;
-					var device = eventPtr->deviceId + 1;
-					if (time >= 0.0)
+					switch (eventPtr->type)
 					{
-						switch (eventPtr->type)
+						case NativeInputEventType.Generic:
 						{
-							case NativeInputEventType.Generic:
-								{
-									NativeGenericEvent* nativeGenericEvent = (NativeGenericEvent*)eventPtr;
+							var nativeGenericEvent = (NativeGenericEvent*)eventPtr;
 
-									if (nativeGenericEvent->controlIndex == 8)
-										Debug.Log(nativeGenericEvent->scaledValue);
+							var controlIndex = ControlIndexToVRIndex(nativeGenericEvent->controlIndex);
+							var device = eventPtr->deviceId + 1;
+							Dictionary<int, float> vals;
+							if (!values.TryGetValue(device, out vals))
+							{
+								vals = new Dictionary<int, float>();
+								values[device] = vals;
+							}
 
-									//Debug.Log(nativeGenericEvent->controlIndex);
-									var controlIndex = ControlIndexToVRIndex(nativeGenericEvent->controlIndex);
+							vals[nativeGenericEvent->controlIndex] = (float)nativeGenericEvent->scaledValue;
 
-									Dictionary<int, float> vals;
-									if (!values.TryGetValue(device, out vals))
-									{
-										vals = new Dictionary<int, float>();
-										values[device] = vals;
-									}
+							if (controlIndex == -1)
+							{
+								currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
+								continue;
+							}
 
-									var inputEvent = InputSystem.CreateEvent<InputNew.GenericControlEvent>();
-									//inputEvent.time = (float)time;
-									inputEvent.deviceType = typeof(VRInputDevice);
-									inputEvent.deviceIndex = device;
-									inputEvent.controlIndex = controlIndex;
-									inputEvent.value = (float)nativeGenericEvent->scaledValue;
-									//inputEvent.rawValue = nativeGenericEvent->rawValue;
-									vals[nativeGenericEvent->controlIndex] = inputEvent.value;
+							var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
+							inputEvent.deviceType = typeof(VRInputDevice);
+							inputEvent.deviceIndex = device;
+							inputEvent.controlIndex = controlIndex;
+							inputEvent.value = (float)nativeGenericEvent->scaledValue;
 
-									if (controlIndex == -1)
-										continue;
-
-									//Debug.Log(inputEvent);
-									InputSystem.QueueEvent(inputEvent);
-								}
-								break;
-							default:
-								//Debug.Log(eventPtr->type);
-								break;
+							InputSystem.QueueEvent(inputEvent);
 						}
+							break;
 					}
-
 					currentDataPtr = new IntPtr(currentDataPtr.ToInt64() + eventPtr->sizeInBytes);
 				}
 			}
@@ -161,9 +93,9 @@ namespace UnityEngine.Experimental.Input
 					return (int)VRInputDevice.VRControl.Trigger1;
 				case 9:
 					return (int)VRInputDevice.VRControl.Trigger1;
-				case 11:
+				case 10:
 					return (int)VRInputDevice.VRControl.Trigger2;
-				case 12:
+				case 11:
 					return (int)VRInputDevice.VRControl.Trigger2;
 
 				case 28:
