@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Input;
 
 //// - solve mapping of device type names from control maps to device types at runtime
 
@@ -24,6 +25,7 @@ namespace UnityEngine.InputNew
 			go.AddComponent<KeyboardInputToEvents>();
 			go.AddComponent<TouchInputToEvents>();
 			go.AddComponent<VRInputToEvents>();
+			go.AddComponent<NativeInputEventManager>();
 			go.AddComponent<ExecuteAllEvents>();
 
 			InputDeviceProfile[] profiles = new InputDeviceProfile[]
