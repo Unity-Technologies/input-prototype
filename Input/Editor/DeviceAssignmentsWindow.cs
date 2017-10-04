@@ -59,14 +59,18 @@ namespace UnityEngine.InputNew
 		{
 			PlayerHandle.onChange += Repaint;
 			ActionMapInput.onStatusChange += Repaint;
+#if UNITY_2017_2_OR_NEWER
 			EditorApplication.playModeStateChanged += stateChange => Repaint();
+#endif
 		}
 
 		void OnDisable()
 		{
 			PlayerHandle.onChange -= Repaint;
 			ActionMapInput.onStatusChange -= Repaint;
+#if UNITY_2017_2_OR_NEWER
 			EditorApplication.playModeStateChanged -= stateChange => Repaint();
+#endif
 		}
 		
 		void OnGUI()

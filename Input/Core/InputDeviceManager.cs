@@ -204,7 +204,8 @@ namespace UnityEngine.InputNew
 		{
 			if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
 				return true;
-			
+
+#if UNITY_2017_2_OR_NEWER
 			foreach (var platform in profile.supportedPlatforms)
 			{
 				// VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).
@@ -213,7 +214,8 @@ namespace UnityEngine.InputNew
 				if (m_Platform.Contains(platform.ToUpper()) || vrPlatform.Contains(platform.ToUpper()))
 					return true;
 			}
-			
+#endif
+
 			return false;
 		}
 
@@ -264,8 +266,10 @@ namespace UnityEngine.InputNew
 		readonly List<InputDevice> m_Devices = new List<InputDevice>();
 		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
 
+#if UNITY_2017_2_OR_NEWER
 		// PJK: SystemInfo.deviceModel returns the name of my motherboard.  Is this useful?
 		readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
+#endif
 
 		#endregion
 	}

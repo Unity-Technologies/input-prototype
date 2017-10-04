@@ -18,7 +18,7 @@ namespace UnityEngine.InputNew
 		{
 			Reset();
 
-			#if UNITY_EDITOR
+			#if UNITY_EDITOR && UNITY_2017_2_OR_NEWER
 			EditorApplication.playModeStateChanged += OnPlaymodeChanged;
 			#endif
 		}
@@ -44,7 +44,7 @@ namespace UnityEngine.InputNew
 			s_Players.Remove(handle.index);
 		}
 
-		#if UNITY_EDITOR
+		#if UNITY_EDITOR && UNITY_2017_2_OR_NEWER
 		static void OnPlaymodeChanged(PlayModeStateChange stateChange)
 		{
 			if (EditorApplication.isPlayingOrWillChangePlaymode)
