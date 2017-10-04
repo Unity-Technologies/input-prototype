@@ -39,7 +39,7 @@ namespace UnityEngine.Experimental.Input
 							}
 
 							var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
-							inputEvent.deviceType = typeof(VRInputDevice);
+							inputEvent.deviceType = typeof(XRInputDevice);
 							inputEvent.deviceIndex = device;
 							inputEvent.controlIndex = controlIndex;
 							inputEvent.value = (float)nativeGenericEvent->scaledValue;
@@ -64,8 +64,8 @@ namespace UnityEngine.Experimental.Input
 								continue;
 							}
 
-							var inputEvent = InputSystem.CreateEvent<VREvent>();
-							inputEvent.deviceType = typeof(VRInputDevice);
+							var inputEvent = InputSystem.CreateEvent<TrackingEvent>();
+							inputEvent.deviceType = typeof(XRInputDevice);
 							inputEvent.deviceIndex = device;
 							inputEvent.localPosition = localPosition;
 							inputEvent.localRotation = localRotation;
@@ -87,36 +87,36 @@ namespace UnityEngine.Experimental.Input
 			switch (axisIndex)
 			{
 				case 0:
-					return (int)VRInputDevice.VRControl.LeftStickX;
+					return (int)XRInputDevice.XRControl.LeftStickX;
 				case 1:
-					return (int)VRInputDevice.VRControl.LeftStickY;
+					return (int)XRInputDevice.XRControl.LeftStickY;
 				case 3:
-					return (int)VRInputDevice.VRControl.LeftStickX;
+					return (int)XRInputDevice.XRControl.LeftStickX;
 				case 4:
-					return (int)VRInputDevice.VRControl.LeftStickY;
+					return (int)XRInputDevice.XRControl.LeftStickY;
 
 				case 8:
-					return (int)VRInputDevice.VRControl.Trigger1;
+					return (int)XRInputDevice.XRControl.Trigger1;
 				case 9:
-					return (int)VRInputDevice.VRControl.Trigger1;
+					return (int)XRInputDevice.XRControl.Trigger1;
 				case 10:
-					return (int)VRInputDevice.VRControl.Trigger2;
+					return (int)XRInputDevice.XRControl.Trigger2;
 				case 11:
-					return (int)VRInputDevice.VRControl.Trigger2;
+					return (int)XRInputDevice.XRControl.Trigger2;
 
 				case 28:
-					return (int)VRInputDevice.VRControl.Action1;
+					return (int)XRInputDevice.XRControl.Action1;
 				case 29:
-					return (int)VRInputDevice.VRControl.Action2;
+					return (int)XRInputDevice.XRControl.Action2;
 				case 30:
-					return (int)VRInputDevice.VRControl.Action1;
+					return (int)XRInputDevice.XRControl.Action1;
 				case 31:
-					return (int)VRInputDevice.VRControl.Action2;
+					return (int)XRInputDevice.XRControl.Action2;
 
 				case 36:
-					return (int)VRInputDevice.VRControl.LeftStickButton;
+					return (int)XRInputDevice.XRControl.LeftStickButton;
 				case 37:
-					return (int)VRInputDevice.VRControl.LeftStickButton;
+					return (int)XRInputDevice.XRControl.LeftStickButton;
 				default:
 					return -1;
 			}

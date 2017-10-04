@@ -48,22 +48,22 @@ namespace UnityEngine.InputNew
 			RegisterDevice(virtualJoystickDevice);
 
 			// TODO: do we want to expose HMDs like this?
-			var vrDeviceHMDLeftEye = new VRInputDevice();
+			var vrDeviceHMDLeftEye = new XRInputDevice();
 			RegisterDevice(vrDeviceHMDLeftEye);
 
-			var vrDeviceHMDRightEye = new VRInputDevice();
+			var vrDeviceHMDRightEye = new XRInputDevice();
 			RegisterDevice(vrDeviceHMDRightEye);
 
-			var vrDeviceHMDCenterEye = new VRInputDevice();
+			var vrDeviceHMDCenterEye = new XRInputDevice();
 			RegisterDevice(vrDeviceHMDCenterEye);
 
-			var vrDeviceHMDController1 = new VRInputDevice();
+			var vrDeviceHMDController1 = new XRInputDevice();
 			RegisterDevice(vrDeviceHMDController1);
-		    vrDeviceHMDController1.Hand = VRInputDevice.Handedness.Left;
+		    vrDeviceHMDController1.Hand = XRInputDevice.Handedness.Left;
 
-			var vrDeviceHMDController2 = new VRInputDevice();
+			var vrDeviceHMDController2 = new XRInputDevice();
 			RegisterDevice(vrDeviceHMDController2);
-		    vrDeviceHMDController2.Hand = VRInputDevice.Handedness.Right;
+		    vrDeviceHMDController2.Hand = XRInputDevice.Handedness.Right;
 		}
 
 		#endregion

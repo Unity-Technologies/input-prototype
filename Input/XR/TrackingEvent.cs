@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class VREvent
+	public class TrackingEvent
 		: InputEvent
 	{
 		public Vector3 localPosition { get; set; }

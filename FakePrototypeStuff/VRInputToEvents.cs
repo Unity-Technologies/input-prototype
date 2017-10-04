@@ -31,7 +31,7 @@ public class VRInputToEvents
 			for (int axis = 0; axis < axisCount; ++axis)
 			{
 				var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
-				inputEvent.deviceType = typeof (VRInputDevice);
+				inputEvent.deviceType = typeof (XRInputDevice);
 				inputEvent.deviceIndex = device;
 				inputEvent.controlIndex = axis;
 				inputEvent.value = UnityEngine.VR.InputTracking.GetAxis(device, axis);
@@ -59,7 +59,7 @@ public class VRInputToEvents
 				if (keyDown || keyUp)
 				{
 					var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
-					inputEvent.deviceType = typeof(VRInputDevice);
+					inputEvent.deviceType = typeof(XRInputDevice);
 					inputEvent.deviceIndex = device;
 					inputEvent.controlIndex = axisCount + btn;
 					inputEvent.value = keyDown ? 1.0f : 0.0f;
@@ -72,7 +72,7 @@ public class VRInputToEvents
 				//if (keyDown || keyUp)
 				//{
 				//	var inputEvent = InputSystem.CreateEvent<KeyboardEvent>();
-				//	inputEvent.deviceType = typeof(VRInputDevice);
+				//	inputEvent.deviceType = typeof(XRInputDevice);
 				//	inputEvent.deviceIndex = device;
 				//	inputEvent.key = (UnityEngine.KeyCode)btn;
 				//	inputEvent.isDown = keyDown;
@@ -87,8 +87,8 @@ public class VRInputToEvents
 	{
 		for (int device = 0; device < controllerCount; ++device)
 		{
-			var inputEvent = InputSystem.CreateEvent<VREvent>();
-			inputEvent.deviceType = typeof (VRInputDevice);
+			var inputEvent = InputSystem.CreateEvent<TrackingEvent>();
+			inputEvent.deviceType = typeof (XRInputDevice);
 			inputEvent.deviceIndex = device;
 			inputEvent.localPosition = UnityEngine.VR.InputTracking.GetLocalPosition((VRNode) device);
 			inputEvent.localRotation = UnityEngine.VR.InputTracking.GetLocalRotation((VRNode) device);
