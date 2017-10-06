@@ -719,6 +719,15 @@ namespace {0}
 			data.controlType = type;
 			selectedAction.controlData = data;
 		}
+
+        EditorGUI.BeginChangeCheck();
+	    var invert = EditorGUILayout.Toggle("Invert", selectedAction.controlData.invert);
+	    if (EditorGUI.EndChangeCheck())
+	    {
+	        var data = selectedAction.controlData;
+	        data.invert = invert;
+	        selectedAction.controlData = data;
+	    }
 		
 		EditorGUILayout.Space();
 

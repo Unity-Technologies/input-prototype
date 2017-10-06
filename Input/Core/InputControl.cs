@@ -50,6 +50,20 @@ namespace UnityEngine.InputNew
 			get { return m_State.GetCurrentValue(m_Index); }
 		}
 
+        public float value
+        {
+            get { return data.invert ? -rawValue : rawValue; }
+        }
+
+        public float previousValue
+        {
+            get
+            {
+                var returnValue = m_State.GetPreviousValue(m_Index);
+                return data.invert ? -returnValue : returnValue;
+            }
+        }
+
 		public virtual string[] sourceControlNames { get { return null; } }
 	}
 
@@ -66,11 +80,6 @@ namespace UnityEngine.InputNew
 			negative.SetValueMultiplier(-1);
 			positive = new ButtonInputControl(index, state);
 		}
-
-		public float value
-		{
-			get { return m_State.GetCurrentValue(m_Index); }
-		}
 	}
 
 	[Serializable]
@@ -84,17 +93,17 @@ namespace UnityEngine.InputNew
 
 		public bool isHeld
 		{
-			get { return provider.active && m_State.GetCurrentValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold; }
+			get { return provider.active && value * m_ValueMultiplier > k_ButtonThreshold; }
 		}
 
 		public bool wasJustPressed
 		{
-			get { return provider.active && isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier <= k_ButtonThreshold); }
+			get { return provider.active && isHeld && (previousValue * m_ValueMultiplier <= k_ButtonThreshold); }
 		}
 
 		public bool wasJustReleased
 		{
-			get { return provider.active && !isHeld && (m_State.GetPreviousValue(m_Index) * m_ValueMultiplier > k_ButtonThreshold); }
+			get { return provider.active && !isHeld && (previousValue * m_ValueMultiplier > k_ButtonThreshold); }
 		}
 
 		public void SetValueMultiplier(float multiplier)
@@ -114,10 +123,11 @@ namespace UnityEngine.InputNew
 			get
 			{
 				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				return new Vector2(
+                var returnValue = new Vector2(
 					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[1])
 				);
+			    return data.invert ? -returnValue : returnValue;
 			}
 		}
 
@@ -135,11 +145,12 @@ namespace UnityEngine.InputNew
 			get
 			{
 				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				return new Vector3(
+				var returnValue = new Vector3(
 					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[2])
 				);
+			    return data.invert ? -returnValue : returnValue;
 			}
 		}
 
@@ -157,12 +168,13 @@ namespace UnityEngine.InputNew
 			get
 			{
 				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				return new Quaternion(
+				var returnValue = new Quaternion(
 					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[2]),
 					m_State.GetCurrentValue(controlData.componentControlIndices[3])
 				);
+			    return data.invert ? Quaternion.Inverse(returnValue) : returnValue;
 			}
 		}
 

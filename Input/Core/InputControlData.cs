@@ -11,5 +11,6 @@ namespace UnityEngine.InputNew
 		public SerializableType controlType;
 		public string name;
 		public float defaultValue;
+	    public bool invert;
 	}
 }
