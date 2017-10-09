@@ -27,6 +27,7 @@ namespace UnityEngine.InputNew
 			go.AddComponent<VRInputToEvents>();
 			go.AddComponent<NativeInputEventManager>();
 			go.AddComponent<ExecuteAllEvents>();
+            Debug.Log("InputSystem created object w/components");
 
 			InputDeviceProfile[] profiles = new InputDeviceProfile[]
 			{

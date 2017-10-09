@@ -14,7 +14,8 @@ namespace UnityEngine.Experimental.Input
 		{
 			tempController = new OculusTouchController();
 			NativeInputSystem.onEvents += OnEvent;
-		}
+            Debug.Log("NativeInputEventManager Start");
+        }
 
 		internal void OnEvent(int eventCount, IntPtr eventData)
 		{
@@ -24,7 +25,7 @@ namespace UnityEngine.Experimental.Input
 				unsafe
 				{
 					var eventPtr = (NativeInputEvent*)currentDataPtr;
-					var device = eventPtr->deviceId + 1;
+				    var device = eventPtr->deviceId == 11 ? 3 : 4;
 
 					switch (eventPtr->type)
 					{
