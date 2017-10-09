@@ -27,7 +27,6 @@ namespace UnityEngine.InputNew
 			go.AddComponent<VRInputToEvents>();
 			go.AddComponent<NativeInputEventManager>();
 			go.AddComponent<ExecuteAllEvents>();
-            Debug.Log("InputSystem created object w/components");
 
 			InputDeviceProfile[] profiles = new InputDeviceProfile[]
 			{
@@ -71,6 +70,11 @@ namespace UnityEngine.InputNew
 		public delegate bool BindingListener(InputControl control);
 		
 		#region Public Methods
+
+	    public static void RegisterDevice(InputDevice device)
+	    {
+	        s_Devices.RegisterDevice(device);
+	    }
 
 		public static void RegisterProfile(InputDeviceProfile profile)
 		{

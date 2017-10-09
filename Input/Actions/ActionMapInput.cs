@@ -359,6 +359,9 @@ namespace UnityEngine.InputNew
 
 		private void ExtractCurrentValuesFromSources()
 		{
+            if (controlScheme == null)
+                return;
+
 			for (var entryIndex = 0; entryIndex < actionMap.actions.Count; ++ entryIndex)
 			{
 				var binding = controlScheme.bindings[entryIndex];
