@@ -93,6 +93,7 @@ namespace UnityEngine.Experimental.Input
 
         void RegisterDevice(InputDevice device, NativeInputDeviceInfo deviceInfo)
         {
+            device.nativeID = deviceInfo.deviceId;
             m_DeviceRecords.Add(deviceInfo);
             m_NativeIDsToDevices[deviceInfo.deviceId] = device;
             InputSystem.RegisterDevice(device);

@@ -86,6 +86,7 @@ namespace UnityEngine.InputNew
 
 		public string deviceName { get; protected set; }
 		public int deviceIndex { get; private set; }
+        public int nativeID { get; internal set; }
 
 		public PlayerDeviceAssignment assignment
 		{
