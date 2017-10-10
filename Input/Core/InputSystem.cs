@@ -110,6 +110,12 @@ namespace UnityEngine.InputNew
 
 		public delegate bool BindingListener(InputControl control);
 
+	    public static event Action<InputDevice> onDeviceRegistered
+	    {
+            add { s_Devices.onDeviceRegistered += value; }
+            remove { s_Devices.onDeviceRegistered -= value; }
+	    }
+
         #region Public Methods
 
         /// <summary>

@@ -57,6 +57,8 @@ namespace UnityEngine.InputNew
 			AssignDeviceProfile(device);
 			RegisterDeviceInternal(device.GetType(), device);
 			HandleDeviceConnectDisconnect(device, true);
+		    if (onDeviceRegistered != null)
+		        onDeviceRegistered(device);
 		}
 
 		public void RegisterProfile(InputDeviceProfile profile)
@@ -232,6 +234,8 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Properties
+
+	    public event Action<InputDevice> onDeviceRegistered;
 		
 		public List<InputDevice> devices
 		{
