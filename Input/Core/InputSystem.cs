@@ -85,6 +85,7 @@ namespace UnityEngine.InputNew
 
 	    internal static void RegisterDevice(NativeInputDeviceInfo deviceInfo)
 	    {
+            // TODO: Use regexes here
             var descriptor = JsonUtility.FromJson<NativeDeviceDescriptor>(deviceInfo.deviceDescriptor);
             if (descriptor.product.Contains("Oculus") && descriptor.product.Contains("Touch"))
             {
@@ -98,6 +99,19 @@ namespace UnityEngine.InputNew
                     touchController.hand = TrackedController.Handedness.Right;
                 }
                 RegisterDevice(touchController, deviceInfo.deviceId);
+            }
+            else if (descriptor.product.Contains("OpenVR"))
+            {
+                var openVRController = new OpenVRController();
+                if (descriptor.product.Contains("Left"))
+                {
+                    openVRController.hand = TrackedController.Handedness.Left;
+                }
+                else if (descriptor.product.Contains("Right"))
+                {
+                    openVRController.hand = TrackedController.Handedness.Right;
+                }
+                RegisterDevice(openVRController, deviceInfo.deviceId);
             }
         }
 

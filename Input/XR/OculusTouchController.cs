@@ -197,7 +197,6 @@ namespace UnityEngine.InputNew
             var numControls = EnumHelpers.GetValueCount<OculusTouchControllerControl>();
             var controls = Enumerable.Repeat(new InputControlData(), numControls).ToList();
 
-            // TODO: Better solution than subtracting lowest enum value
             controls[IndexInControlEnum(OculusTouchControllerControl.Action1Touch)] = new InputControlData { name = "Action 1 Touch", controlType = typeof(ButtonInputControl) };
             controls[IndexInControlEnum(OculusTouchControllerControl.Action2)] = new InputControlData { name = "Action 2", controlType = typeof(ButtonInputControl) };
             controls[IndexInControlEnum(OculusTouchControllerControl.Action2Touch)] = new InputControlData { name = "Action 2 Touch", controlType = typeof(ButtonInputControl) };
