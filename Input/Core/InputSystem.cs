@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Input;
+using UnityEngineInternal.Input;
 
 //// - solve mapping of device type names from control maps to device types at runtime
 
@@ -9,9 +10,19 @@ namespace UnityEngine.InputNew
 {
 	public static class InputSystem
 	{
-		// For now, initialize prototype stuff here.
-		// This should not be included here in final code.
-		static InputSystem()
+        struct NativeDeviceDescriptor
+        {
+            public string @interface;
+            public string type;
+            public string product;
+            public string manufacturer;
+            public string version;
+            public string serial;
+        }
+
+        // For now, initialize prototype stuff here.
+        // This should not be included here in final code.
+        static InputSystem()
 		{
 			s_Devices = new InputDeviceManager();
 
@@ -43,6 +54,11 @@ namespace UnityEngine.InputNew
 			}
 
 			s_Devices.InitAfterProfiles();
+		    NativeInputDeviceManager.onDeviceDiscovered += RegisterDevice;
+
+            // We could still have device records retained through serialization, even though we lost the
+            // managed device references.
+            NativeInputDeviceManager.ReregisterDevices();
 
 			// Set up event tree.
 			s_EventTree = new InputConsumerNode();
@@ -67,16 +83,45 @@ namespace UnityEngine.InputNew
 			simulateMouseWithTouches = true;
 		}
 
-		public delegate bool BindingListener(InputControl control);
-		
-		#region Public Methods
-
-	    public static void RegisterDevice(InputDevice device)
+	    internal static void RegisterDevice(NativeInputDeviceInfo deviceInfo)
 	    {
-	        s_Devices.RegisterDevice(device);
+            var descriptor = JsonUtility.FromJson<NativeDeviceDescriptor>(deviceInfo.deviceDescriptor);
+            if (descriptor.product.Contains("Oculus") && descriptor.product.Contains("Touch"))
+            {
+                var touchController = new OculusTouchController();
+                if (descriptor.product.Contains("Left"))
+                {
+                    touchController.Hand = TrackedController.Handedness.Left;
+                }
+                else if (descriptor.product.Contains("Right"))
+                {
+                    touchController.Hand = TrackedController.Handedness.Right;
+                }
+                RegisterDevice(touchController, deviceInfo.deviceId);
+            }
+        }
+
+	    static void RegisterDevice(InputDevice device, int nativeDeviceID)
+	    {
+	        device.nativeID = nativeDeviceID;
+	        s_NativeIDsToDevices[nativeDeviceID] = device;
+            s_Devices.RegisterDevice(device);
 	    }
 
-		public static void RegisterProfile(InputDeviceProfile profile)
+		public delegate bool BindingListener(InputControl control);
+
+        #region Public Methods
+
+        /// <summary>
+        /// Returns the InputDevice with the given native ID.
+        /// </summary>
+        /// <param name="nativeDeviceID">Native device integer ID</param>
+        public static InputDevice GetDeviceFromNativeID(int nativeDeviceID)
+        {
+            return s_NativeIDsToDevices.ContainsKey(nativeDeviceID) ? s_NativeIDsToDevices[nativeDeviceID] : null;
+        }
+
+        public static void RegisterProfile(InputDeviceProfile profile)
 		{
 			s_Devices.RegisterProfile(profile);
 		}
@@ -236,7 +281,8 @@ namespace UnityEngine.InputNew
 		static bool s_SimulateMouseWithTouches;
 		static IInputConsumer s_SimulateMouseWithTouchesProcess;
 		static List<BindingListener> s_BindingListeners = new List<BindingListener>();
+        static Dictionary<int, InputDevice> s_NativeIDsToDevices = new Dictionary<int, InputDevice>();
 
-		#endregion
-	}
+        #endregion
+    }
 }

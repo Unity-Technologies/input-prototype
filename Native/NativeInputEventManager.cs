@@ -20,7 +20,7 @@ namespace UnityEngine.Experimental.Input
 				unsafe
 				{
 					var eventPtr = (NativeInputEvent*)currentDataPtr;
-				    var device = NativeInputDeviceManager.GetDeviceFromNativeID(eventPtr->deviceId);
+				    var device = InputSystem.GetDeviceFromNativeID(eventPtr->deviceId);
 
 				    if (device != null)
 				    {
