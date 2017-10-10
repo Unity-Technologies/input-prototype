@@ -20,6 +20,8 @@ namespace UnityEngine.InputNew
             // Compound controls
             Position,
             Rotation,
+
+            Max = Rotation
         }
 
         public AxisInputControl positionX { get { return (AxisInputControl)this[(int)TrackedInputDeviceControl.PositionX]; } }

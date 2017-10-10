@@ -8,7 +8,9 @@ namespace UnityEngine.InputNew
     {
         public enum OculusTouchControllerControl
         {
-            Action1Touch = TrackedControllerControl.Action1 + 1,
+            Min = Action1Touch,
+
+            Action1Touch = TrackedControllerControl.Max + 1,
             Action2,
             Action2Touch,
 
@@ -46,16 +48,8 @@ namespace UnityEngine.InputNew
             AngularAcceleration,
             Velocity,
             AngularVelocity,
-        }
 
-        // TODO: Inherit tags
-        private static readonly string[] kTags = { "Left", "Right" };
-        public new static string[] Tags
-        {
-            get
-            {
-                return kTags;
-            }
+            Max = AngularVelocity
         }
 
         public ButtonInputControl action1Touch { get { return (ButtonInputControl)this[(int)OculusTouchControllerControl.Action1Touch]; } }
@@ -204,73 +198,78 @@ namespace UnityEngine.InputNew
             var controls = Enumerable.Repeat(new InputControlData(), numControls).ToList();
 
             // TODO: Better solution than subtracting lowest enum value
-            controls[(int)OculusTouchControllerControl.Action1Touch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Action 1 Touch", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.Action2 - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Action 2", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.Action2Touch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Action 2 Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.Action1Touch)] = new InputControlData { name = "Action 1 Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.Action2)] = new InputControlData { name = "Action 2", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.Action2Touch)] = new InputControlData { name = "Action 2 Touch", controlType = typeof(ButtonInputControl) };
 
-            controls[(int)OculusTouchControllerControl.Trigger - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Trigger", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.TriggerTouch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Trigger Touch", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.TriggerNearTouch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Trigger Near Touch", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.HandTrigger - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Hand Trigger", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.Trigger)] = new InputControlData { name = "Trigger", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.TriggerTouch)] = new InputControlData { name = "Trigger Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.TriggerNearTouch)] = new InputControlData { name = "Trigger Near Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.HandTrigger)] = new InputControlData { name = "Hand Trigger", controlType = typeof(ButtonInputControl) };
 
-            controls[(int)OculusTouchControllerControl.ThumbRestTouch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Thumb Rest Touch", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.ThumbNearTouch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Thumb Near Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.ThumbRestTouch)] = new InputControlData { name = "Thumb Rest Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.ThumbNearTouch)] = new InputControlData { name = "Thumb Near Touch", controlType = typeof(ButtonInputControl) };
 
-            controls[(int)OculusTouchControllerControl.Start - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Start", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.Start)] = new InputControlData { name = "Start", controlType = typeof(ButtonInputControl) };
 
-            controls[(int)OculusTouchControllerControl.StickPress - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Stick Press", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.StickTouch - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Stick Touch", controlType = typeof(ButtonInputControl) };
-            controls[(int)OculusTouchControllerControl.StickX - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Stick X", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.StickY - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Stick Y", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.StickPress)] = new InputControlData { name = "Stick Press", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.StickTouch)] = new InputControlData { name = "Stick Touch", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.StickX)] = new InputControlData { name = "Stick X", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.StickY)] = new InputControlData { name = "Stick Y", controlType = typeof(AxisInputControl) };
 
-            controls[(int)OculusTouchControllerControl.AccelerationX - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Acceleration X", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AccelerationY - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Acceleration Y", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AccelerationZ - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Acceleration Z", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularAccelerationX - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Acceleration X", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularAccelerationY - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Acceleration Y", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularAccelerationZ - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Acceleration Z", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.VelocityX - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Velocity X", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.VelocityY - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Velocity Y", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.VelocityZ - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Velocity Z", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularVelocityX - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Velocity X", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularVelocityY - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Velocity Y", controlType = typeof(AxisInputControl) };
-            controls[(int)OculusTouchControllerControl.AngularVelocityZ - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData { name = "Angular Velocity Z", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AccelerationX)] = new InputControlData { name = "Acceleration X", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AccelerationY)] = new InputControlData { name = "Acceleration Y", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AccelerationZ)] = new InputControlData { name = "Acceleration Z", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationX)] = new InputControlData { name = "Angular Acceleration X", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationY)] = new InputControlData { name = "Angular Acceleration Y", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationZ)] = new InputControlData { name = "Angular Acceleration Z", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.VelocityX)] = new InputControlData { name = "Velocity X", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.VelocityY)] = new InputControlData { name = "Velocity Y", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.VelocityZ)] = new InputControlData { name = "Velocity Z", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularVelocityX)] = new InputControlData { name = "Angular Velocity X", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularVelocityY)] = new InputControlData { name = "Angular Velocity Y", controlType = typeof(AxisInputControl) };
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularVelocityZ)] = new InputControlData { name = "Angular Velocity Z", controlType = typeof(AxisInputControl) };
 
-            controls[(int)OculusTouchControllerControl.Stick - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData
+            controls[IndexInControlEnum(OculusTouchControllerControl.Stick)] = new InputControlData
             {
                 name = "Stick",
                 controlType = typeof(Vector2InputControl),
-                componentControlIndices = new[] { (int)OculusTouchControllerControl.StickX, (int)OculusTouchControllerControl.StickY }
+                componentControlIndices = new[] { IndexInControlEnum(OculusTouchControllerControl.StickX), IndexInControlEnum(OculusTouchControllerControl.StickY) }
             };
-            controls[(int)OculusTouchControllerControl.Acceleration - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData
+            controls[IndexInControlEnum(OculusTouchControllerControl.Acceleration)] = new InputControlData
             {
                 name = "Acceleration",
                 controlType = typeof(Vector3InputControl),
-                componentControlIndices = new[] { (int)OculusTouchControllerControl.AccelerationX, (int)OculusTouchControllerControl.AccelerationY, (int)OculusTouchControllerControl.AccelerationZ }
+                componentControlIndices = new[] { IndexInControlEnum(OculusTouchControllerControl.AccelerationX), IndexInControlEnum(OculusTouchControllerControl.AccelerationY), IndexInControlEnum(OculusTouchControllerControl.AccelerationZ) }
             };
-            controls[(int)OculusTouchControllerControl.AngularAcceleration - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularAcceleration)] = new InputControlData
             {
                 name = "Angular Acceleration",
                 controlType = typeof(Vector3InputControl),
-                componentControlIndices = new[] { (int)OculusTouchControllerControl.AngularAccelerationX, (int)OculusTouchControllerControl.AngularAccelerationY, (int)OculusTouchControllerControl.AngularAccelerationZ }
+                componentControlIndices = new[] { IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationX), IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationY), IndexInControlEnum(OculusTouchControllerControl.AngularAccelerationZ) }
             };
-            controls[(int)OculusTouchControllerControl.Velocity - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData
+            controls[IndexInControlEnum(OculusTouchControllerControl.Velocity)] = new InputControlData
             {
                 name = "Velocity",
                 controlType = typeof(Vector3InputControl),
-                componentControlIndices = new[] { (int)OculusTouchControllerControl.VelocityX, (int)OculusTouchControllerControl.VelocityY, (int)OculusTouchControllerControl.VelocityZ }
+                componentControlIndices = new[] { IndexInControlEnum(OculusTouchControllerControl.VelocityX), IndexInControlEnum(OculusTouchControllerControl.VelocityY), IndexInControlEnum(OculusTouchControllerControl.VelocityZ) }
             };
-            controls[(int)OculusTouchControllerControl.AngularVelocity - (int)OculusTouchControllerControl.Action1Touch] = new InputControlData
+            controls[IndexInControlEnum(OculusTouchControllerControl.AngularVelocity)] = new InputControlData
             {
                 name = "Angular Velocity",
                 controlType = typeof(Vector3InputControl),
-                componentControlIndices = new[] { (int)OculusTouchControllerControl.AngularVelocityX, (int)OculusTouchControllerControl.AngularVelocityY, (int)OculusTouchControllerControl.AngularVelocityZ }
+                componentControlIndices = new[] { IndexInControlEnum(OculusTouchControllerControl.AngularVelocityX), IndexInControlEnum(OculusTouchControllerControl.AngularVelocityY), IndexInControlEnum(OculusTouchControllerControl.AngularVelocityZ) }
             };
 
             if (additionalControls != null)
                 controls.AddRange(additionalControls);
 
             return controls;
+        }
+
+        static int IndexInControlEnum(OculusTouchControllerControl control)
+        {
+            return (int)control - (int)OculusTouchControllerControl.Min;
         }
     }
 }

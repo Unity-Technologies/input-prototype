@@ -91,11 +91,11 @@ namespace UnityEngine.InputNew
                 var touchController = new OculusTouchController();
                 if (descriptor.product.Contains("Left"))
                 {
-                    touchController.Hand = TrackedController.Handedness.Left;
+                    touchController.hand = TrackedController.Handedness.Left;
                 }
                 else if (descriptor.product.Contains("Right"))
                 {
-                    touchController.Hand = TrackedController.Handedness.Right;
+                    touchController.hand = TrackedController.Handedness.Right;
                 }
                 RegisterDevice(touchController, deviceInfo.deviceId);
             }

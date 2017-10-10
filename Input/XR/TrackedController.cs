@@ -8,26 +8,30 @@ namespace UnityEngine.InputNew
     {
         public enum TrackedControllerControl
         {
-            Action1 = TrackedInputDeviceControl.Rotation + 1,
+            Min = Action1,
+
+            Action1 = TrackedInputDeviceControl.Max + 1,
+
+            Max = Action1
         }
 
-        private static readonly string[] kTags = { "Left", "Right" };
-        public static string[] Tags
+        public enum Handedness
+        {
+            Left,
+            Right
+        }
+
+        static readonly string[] k_Tags = { "Left", "Right" };
+
+        public static string[] tags
         {
             get
             {
-                return kTags;
+                return k_Tags;
             }
         }
 
-        public enum Handedness { Left, Right }
-
-        private Handedness? hand = null;
-        public Handedness? Hand
-        {
-            get { return hand; }
-            set { hand = value; }
-        }
+        public Handedness? hand { get; set; }
 
         public override int tagIndex
         {
@@ -64,12 +68,17 @@ namespace UnityEngine.InputNew
             var numControls = EnumHelpers.GetValueCount<TrackedControllerControl>();
             var controls = Enumerable.Repeat(new InputControlData(), numControls).ToList();
 
-            controls[(int)TrackedControllerControl.Action1 - (int)TrackedControllerControl.Action1] = new InputControlData { name = "Action 1", controlType = typeof(ButtonInputControl) };
+            controls[IndexInControlEnum(TrackedControllerControl.Action1)] = new InputControlData { name = "Action 1", controlType = typeof(ButtonInputControl) };
 
             if (additionalControls != null)
                 controls.AddRange(additionalControls);
 
             return controls;
+        }
+
+        static int IndexInControlEnum(TrackedControllerControl control)
+        {
+            return (int)control - (int)TrackedControllerControl.Min;
         }
     }
 }

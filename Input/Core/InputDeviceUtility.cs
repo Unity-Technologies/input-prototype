@@ -125,7 +125,7 @@ namespace UnityEngine.InputNew
 	    public static string[] GetDeviceTags(Type type)
 	    {
 	        string[] tags = null;
-            PropertyInfo info = type.GetProperty("Tags", BindingFlags.Static | BindingFlags.Public);
+            PropertyInfo info = type.GetProperty("tags", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 	        if (info != null)
 	        {
                 tags = (string[])info.GetValue(null, null);
