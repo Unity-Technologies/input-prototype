@@ -31,7 +31,7 @@ namespace UnityEngine.InputNew
 		{
 			get
 			{
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2017_2_OR_NEWER
 				if (!s_IsInPlayMode)
 				{
 					return m_ControlSchemes; // ActionMapEditor modifies this directly.
@@ -40,7 +40,7 @@ namespace UnityEngine.InputNew
 				if (m_ControlSchemeCopies == null || m_ControlSchemeCopies.Count == 0)
 				{
 					m_ControlSchemeCopies = m_ControlSchemes.Select(x => x.Clone()).ToList();
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2017_2_OR_NEWER
 					s_ActionMapsToCleanUpAfterPlayMode.Add(this);
 #endif
 				}
@@ -55,7 +55,7 @@ namespace UnityEngine.InputNew
 		}
 
 		// In the editor, throw away all customizations when exiting playmode.
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2017_2_OR_NEWER
 		static List<ActionMap> s_ActionMapsToCleanUpAfterPlayMode = new List<ActionMap>();
 		static bool s_IsInPlayMode;
 
