@@ -28,7 +28,7 @@ namespace UnityEngine.Experimental.Input
                         {
                             case NativeInputEventType.Generic:
                             {
-                                var xrDevice = device as XRInputDevice;
+                                var xrDevice = device as TrackedInputDevice;
                                 if (xrDevice == null)
                                 {
                                     break;

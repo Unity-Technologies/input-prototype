@@ -4,7 +4,7 @@ using Assets.Utilities;
 
 namespace UnityEngine.InputNew
 {
-    public abstract class TrackedInputDevice : XRInputDevice
+    public abstract class TrackedInputDevice : InputDevice
     {
         public enum TrackedInputDeviceControl
         {
@@ -102,5 +102,7 @@ namespace UnityEngine.InputNew
 
             return consumed;
         }
+
+        public abstract int GenericControlIndexFromNative(int nativeControlIndex);
     }
 }
