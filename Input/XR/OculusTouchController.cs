@@ -99,6 +99,14 @@ namespace UnityEngine.InputNew
 
         public override bool ProcessEventIntoState(InputEvent inputEvent, InputState intoState)
         {
+            var genericEvent = inputEvent as GenericControlEvent;
+            if (genericEvent != null && genericEvent.controlIndex == (int)OculusTouchControllerControl.StickY)
+            {
+                // Invert stick y so that up is positive and down is negative.
+                if (intoState.SetCurrentValue(genericEvent.controlIndex, -genericEvent.value))
+                    return true;
+            }
+
             var consumed = false;
 
             var trackingEvent = inputEvent as TrackingEvent;
