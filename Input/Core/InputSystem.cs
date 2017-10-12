@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Experimental.Input;
 using UnityEngineInternal.Input;
@@ -85,32 +86,23 @@ namespace UnityEngine.InputNew
 
 	    internal static void RegisterDevice(NativeInputDeviceInfo deviceInfo)
 	    {
-            // TODO: Use regexes here
             var descriptor = JsonUtility.FromJson<NativeDeviceDescriptor>(deviceInfo.deviceDescriptor);
-            if (descriptor.product.Contains("Oculus") && descriptor.product.Contains("Touch"))
+            var deviceString = string.Format("product:[{0}] manufacturer:[{1}] interface:[{2}] type:[{3}] version:[{4}]",
+                    descriptor.product, descriptor.manufacturer, descriptor.@interface, descriptor.type, descriptor.version);
+
+            if (Regex.IsMatch(deviceString, ".*Oculus.*Touch.*Controller.*", RegexOptions.IgnoreCase | RegexOptions.Singleline))
             {
                 var touchController = new OculusTouchController();
-                if (descriptor.product.Contains("Left"))
-                {
-                    touchController.hand = TrackedController.Handedness.Left;
-                }
-                else if (descriptor.product.Contains("Right"))
-                {
-                    touchController.hand = TrackedController.Handedness.Right;
-                }
+                touchController.DeriveHandednessFromDescriptor(deviceInfo.deviceDescriptor);
                 RegisterDevice(touchController, deviceInfo.deviceId);
             }
-            else if (descriptor.product.Contains("OpenVR"))
+            else if (Regex.IsMatch(
+                deviceString,
+                "^(?=.*product:(?=.*OpenVR.*Controller))(?=.*interface:.*\\[VR\\])(?=.*type:.*Controller.*).*$",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline))
             {
                 var openVRController = new OpenVRController();
-                if (descriptor.product.Contains("Left"))
-                {
-                    openVRController.hand = TrackedController.Handedness.Left;
-                }
-                else if (descriptor.product.Contains("Right"))
-                {
-                    openVRController.hand = TrackedController.Handedness.Right;
-                }
+                openVRController.DeriveHandednessFromDescriptor(deviceInfo.deviceDescriptor);
                 RegisterDevice(openVRController, deviceInfo.deviceId);
             }
         }

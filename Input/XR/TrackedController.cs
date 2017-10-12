@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Utilities;
 
@@ -60,6 +61,21 @@ namespace UnityEngine.InputNew
                     return (int)TrackedControllerControl.Action1;
                 default:
                     return -1;
+            }
+        }
+
+        public void DeriveHandednessFromDescriptor(string deviceDescriptor)
+        {
+            if (deviceDescriptor != null)
+            {
+                if (deviceDescriptor.IndexOf("Left", StringComparison.InvariantCultureIgnoreCase) != -1)
+                {
+                    hand = Handedness.Left;
+                }
+                else if (deviceDescriptor.IndexOf("Right", StringComparison.InvariantCultureIgnoreCase) != -1)
+                {
+                    hand = Handedness.Right;
+                }
             }
         }
 
