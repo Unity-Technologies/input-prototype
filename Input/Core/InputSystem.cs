@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Experimental.Input;
@@ -54,7 +55,10 @@ namespace UnityEngine.InputNew
 			}
 
 			s_Devices.InitAfterProfiles();
+		    NativeInputDeviceManager.onDeviceDiscovered -= RegisterDevice;
+		    NativeInputDeviceManager.onDeviceConnectedDisconnected -= OnNativeDeviceConnectedDisconnected;
 		    NativeInputDeviceManager.onDeviceDiscovered += RegisterDevice;
+		    NativeInputDeviceManager.onDeviceConnectedDisconnected += OnNativeDeviceConnectedDisconnected;
 
             // We could still have device records retained through serialization, even though we lost the
             // managed device references.
@@ -83,8 +87,9 @@ namespace UnityEngine.InputNew
 			simulateMouseWithTouches = true;
 		}
 
-	    internal static void RegisterDevice(NativeInputDeviceInfo deviceInfo)
-	    {
+	    internal static void RegisterDevice(NativeInputDeviceManager.NativeDeviceRecord deviceRecord)
+        {
+            var deviceInfo = deviceRecord.deviceInfo;
             var descriptor = JsonUtility.FromJson<NativeDeviceDescriptor>(deviceInfo.deviceDescriptor);
             var deviceString = string.Format("product:[{0}] manufacturer:[{1}] interface:[{2}] type:[{3}] version:[{4}]",
                     descriptor.product, descriptor.manufacturer, descriptor.@interface, descriptor.type, descriptor.version);
@@ -93,7 +98,7 @@ namespace UnityEngine.InputNew
             {
                 var touchController = new OculusTouchController();
                 touchController.DeriveHandednessFromDescriptor(deviceInfo.deviceDescriptor);
-                RegisterDevice(touchController, deviceInfo.deviceId);
+                RegisterDevice(touchController, deviceInfo.deviceId, deviceRecord.deviceConnected);
             }
             else if (Regex.IsMatch(
                 deviceString,
@@ -102,24 +107,43 @@ namespace UnityEngine.InputNew
             {
                 var openVRController = new OpenVRController();
                 openVRController.DeriveHandednessFromDescriptor(deviceInfo.deviceDescriptor);
-                RegisterDevice(openVRController, deviceInfo.deviceId);
+                RegisterDevice(openVRController, deviceInfo.deviceId, deviceRecord.deviceConnected);
             }
         }
 
-	    static void RegisterDevice(InputDevice device, int nativeDeviceID)
+	    static void RegisterDevice(InputDevice device, int nativeDeviceID, bool connected)
 	    {
 	        device.nativeID = nativeDeviceID;
 	        s_NativeIDsToDevices[nativeDeviceID] = device;
             s_Devices.RegisterDevice(device);
+	        if (connected)
+            {
+                s_Devices.ConnectDisconnectDevice(device, true);
+	        }
+        }
+
+	    static void OnNativeDeviceConnectedDisconnected(int nativeDeviceID, bool connected)
+	    {
+	        var device = GetDeviceFromNativeID(nativeDeviceID);
+	        if (device == null)
+	            return;
+
+            s_Devices.ConnectDisconnectDevice(device, connected);
 	    }
 
-		public delegate bool BindingListener(InputControl control);
+        public delegate bool BindingListener(InputControl control);
 
 	    public static event Action<InputDevice> onDeviceRegistered
 	    {
             add { s_Devices.onDeviceRegistered += value; }
             remove { s_Devices.onDeviceRegistered -= value; }
 	    }
+
+        public static event Action<InputDevice, bool> onDeviceConnectedDisconnected
+        {
+            add { s_Devices.onDeviceConnectedDisconnected += value; }
+            remove { s_Devices.onDeviceConnectedDisconnected -= value; }
+        }
 
         #region Public Methods
 
@@ -139,8 +163,19 @@ namespace UnityEngine.InputNew
 
 		public static InputDevice LookupDevice(Type deviceType, int deviceIndex)
 		{
-			return s_Devices.LookupDevice(deviceType, deviceIndex);
+            var list = s_Devices.LookupDevices(deviceType);
+            if (list == null || deviceIndex >= list.Count)
+                return null;
+
+            return list[deviceIndex];
 		}
+
+	    public static InputDevice LookupDeviceWithTagIndex(Type deviceType, int tagIndex, bool checkConnected = false)
+	    {
+	        var list = s_Devices.LookupDevices(deviceType);
+	        return list == null ? null : list.FirstOrDefault(
+                device => device.tagIndex == tagIndex && (!checkConnected || device.connected));
+	    }
 
 		public static void QueueEvent(InputEvent inputEvent)
 		{

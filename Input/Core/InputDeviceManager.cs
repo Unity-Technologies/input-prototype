@@ -6,21 +6,16 @@ namespace UnityEngine.InputNew
 {
 	class InputDeviceManager : IInputConsumer
 	{
-		#region Inner Types
+        #region Public Events
 
-		public delegate void DeviceConnectDisconnectEvent(InputDevice device, bool connected);
+        public event Action<InputDevice> onDeviceRegistered;
+        public event Action<InputDevice, bool> onDeviceConnectedDisconnected;
 
-		#endregion
+        #endregion
 
-		#region Public Events
+        #region Constructors
 
-		public DeviceConnectDisconnectEvent deviceConnectedDisconnected = null;
-
-		#endregion
-
-		#region Constructors
-
-		public InputDeviceManager()
+        public InputDeviceManager()
 		{
 		}
 		
@@ -31,22 +26,28 @@ namespace UnityEngine.InputNew
 
 			var mouseDevice = new Mouse();
 			RegisterDevice(mouseDevice);
+            HandleDeviceConnectDisconnect(mouseDevice, true);
 
 			var touchscreenDevice = new Touchscreen();
 			RegisterDevice(touchscreenDevice); // Register after mouse; multiplayer code will pick the first applicable device. It doesn't use MRU.
+            HandleDeviceConnectDisconnect(touchscreenDevice, true);
 
-			var keyboardDevice = new Keyboard();
+            var keyboardDevice = new Keyboard();
 			RegisterDevice(keyboardDevice);
+            HandleDeviceConnectDisconnect(keyboardDevice, true);
 
-			var gamepadDevice1 = new Gamepad();
+            var gamepadDevice1 = new Gamepad();
 			RegisterDevice(gamepadDevice1);
+            HandleDeviceConnectDisconnect(gamepadDevice1, true);
 
-			var gamepadDevice2 = new Gamepad();
+            var gamepadDevice2 = new Gamepad();
 			RegisterDevice(gamepadDevice2);
+            HandleDeviceConnectDisconnect(gamepadDevice2, true);
 
-			var virtualJoystickDevice = new VirtualJoystick();
+            var virtualJoystickDevice = new VirtualJoystick();
 			RegisterDevice(virtualJoystickDevice);
-		}
+            HandleDeviceConnectDisconnect(virtualJoystickDevice, true);
+        }
 
 		#endregion
 
@@ -56,7 +57,6 @@ namespace UnityEngine.InputNew
 		{
 			AssignDeviceProfile(device);
 			RegisterDeviceInternal(device.GetType(), device);
-			HandleDeviceConnectDisconnect(device, true);
 		    if (onDeviceRegistered != null)
 		        onDeviceRegistered(device);
 		}
@@ -92,16 +92,13 @@ namespace UnityEngine.InputNew
 				if (devices[i].GetType() == t)
 					count++;
 			return count;
-		}
+        }
 
-		public InputDevice LookupDevice(Type deviceType, int deviceIndex)
-		{
-			List<InputDevice> list;
-			if (!m_DevicesByType.TryGetValue(deviceType, out list) || deviceIndex >= list.Count)
-				return null;
-
-			return list[deviceIndex];
-		}
+        public List<InputDevice> LookupDevices(Type deviceType)
+        {
+            List<InputDevice> list;
+            return !m_DevicesByType.TryGetValue(deviceType, out list) ? null : list;
+        }
 
 		////REVIEW: an alternative to these two methods is to hook every single device into the event tree independently; may be better
 
@@ -142,21 +139,13 @@ namespace UnityEngine.InputNew
 			return device.RemapEvent(inputEvent);
 		}
 
-		public void DisconnectDevice(InputDevice device)
-		{
-			if (!device.connected)
-				return;
+	    public void ConnectDisconnectDevice(InputDevice device, bool connect)
+	    {
+	        if (device.connected == connect)
+	            return;
 
-			HandleDeviceConnectDisconnect(device, false);
-		}
-
-		public void ReconnectDevice(InputDevice device)
-		{
-			if (device.connected)
-				return;
-
-			HandleDeviceConnectDisconnect(device, true);
-		}
+            HandleDeviceConnectDisconnect(device, connect);
+	    }
 
 		#endregion
 
@@ -228,7 +217,7 @@ namespace UnityEngine.InputNew
 			device.connected = connected;
 
 			// Fire event.
-			var handler = deviceConnectedDisconnected;
+			var handler = onDeviceConnectedDisconnected;
 			if (handler != null)
 				handler(device, connected);
 		}
@@ -236,8 +225,6 @@ namespace UnityEngine.InputNew
 		#endregion
 
 		#region Public Properties
-
-	    public event Action<InputDevice> onDeviceRegistered;
 		
 		public List<InputDevice> devices
 		{
