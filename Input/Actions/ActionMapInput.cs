@@ -70,6 +70,32 @@ namespace UnityEngine.InputNew
 			return map;
 		}
 
+        /// <summary>
+        /// Finds or adds an ActionMapInput on a PlayerInput singleton and returns it.
+        /// </summary>
+        /// <param name="map">The type of action map to return.</param>
+        public static ActionMapInput GetSingletonInstance(ActionMap map)
+        {
+            var playerInput = PlayerInput.singleton;
+            var actionMapInput = playerInput.handle.GetActions(map);
+            if (actionMapInput == null)
+            {
+                playerInput.actionMaps.Insert(0, new ActionMapSlot
+                {
+                    actionMap = map,
+                    active = true,
+                    blockSubsequent = false
+                });
+                var actionMapSlot = playerInput.actionMaps[0];
+                actionMapInput = Create(actionMapSlot.actionMap);
+                actionMapInput.TryInitializeWithDevices(playerInput.handle.GetApplicableDevices());
+                actionMapInput.active = actionMapSlot.active;
+                actionMapInput.blockSubsequent = actionMapSlot.blockSubsequent;
+                playerInput.handle.maps.Insert(0, actionMapInput);
+            }
+            return actionMapInput;
+        }
+
 		protected ActionMapInput(ActionMap actionMap)
 		{
 			autoReinitialize = true;
