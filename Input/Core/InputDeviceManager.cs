@@ -138,8 +138,8 @@ namespace UnityEngine.InputNew
 
 		public void BeginFrame()
 		{
-			foreach (var device in devices)
-				device.state.BeginFrame();
+			for (int i = 0; i < devices.Count; i++)
+				devices[i].state.BeginFrame();
 		}
 
 		public void EndFrame()

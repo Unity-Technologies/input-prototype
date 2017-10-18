@@ -8,7 +8,8 @@ namespace UnityEngine.InputNew
 	{
 		#region Fields
 
-		readonly SortedList<float, InputEvent> m_List = new SortedList<float, InputEvent>(new SortInputEventsByTime());
+		//readonly SortedList<float, InputEvent> m_List = new SortedList<float, InputEvent>(new SortInputEventsByTime());
+		readonly List<InputEvent> m_List = new List<InputEvent>();
 
 		#endregion
 
@@ -32,7 +33,7 @@ namespace UnityEngine.InputNew
 
 		public void Queue(InputEvent inputEvent)
 		{
-			m_List.Add(inputEvent.time, inputEvent);
+			m_List.Add(inputEvent);
 		}
 
 		public bool Dequeue(float targetTime, out InputEvent inputEvent)
@@ -43,7 +44,7 @@ namespace UnityEngine.InputNew
 				return false;
 			}
 
-			var nextEvent = m_List.Values[0];
+			var nextEvent = m_List[0];
 			if (nextEvent.time > targetTime)
 			{
 				inputEvent = null;
@@ -56,5 +57,10 @@ namespace UnityEngine.InputNew
 		}
 
 		#endregion
+
+		public void Sort()
+		{
+			m_List.Sort((a, b) => a.time.CompareTo(b.time));
+		}
 	}
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-
-namespace UnityEngine.InputNew
+﻿namespace UnityEngine.InputNew
 {
 	public class VREvent
 		: InputEvent
