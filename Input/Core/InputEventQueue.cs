@@ -8,7 +8,6 @@ namespace UnityEngine.InputNew
 	{
 		#region Fields
 
-		//readonly SortedList<float, InputEvent> m_List = new SortedList<float, InputEvent>(new SortInputEventsByTime());
 		readonly List<InputEvent> m_List = new List<InputEvent>();
 
 		#endregion
