@@ -11,24 +11,18 @@ namespace UnityEngine.InputNew
 		public TEvent ReuseOrCreate<TEvent>()
 			where TEvent : InputEvent, new()
 		{
-			var enumerator = m_Pools.GetEnumerator();
-			while (enumerator.MoveNext())
+			List<InputEvent> pool;
+			if (m_Pools.TryGetValue(typeof(TEvent), out pool))
 			{
-				var kvp = enumerator.Current;
-				if (kvp.Key == typeof(TEvent))
+				if (pool.Count > 0)
 				{
-					var pool = kvp.Value;
-					if (pool.Count > 0)
-					{
-						var last = pool.Count - 1;
-						var inputEvent = pool[last];
-						pool.RemoveAt(last);
-						inputEvent.Reset();
-						return (TEvent)inputEvent;
-					}
+					var last = pool.Count - 1;
+					var inputEvent = pool[last];
+					pool.RemoveAt(last);
+					inputEvent.Reset();
+					return (TEvent)inputEvent;
 				}
 			}
-			enumerator.Dispose();
 
 			return new TEvent();
 		}
@@ -37,17 +31,8 @@ namespace UnityEngine.InputNew
 		{
 			var type = inputEvent.GetType();
 
-			List<InputEvent> pool = null;
-			var enumerator = m_Pools.GetEnumerator();
-			while (enumerator.MoveNext())
-			{
-				var kvp = enumerator.Current;
-				if (kvp.Key == type)
-					pool = kvp.Value;
-			}
-			enumerator.Dispose();
-
-			if (pool == null)
+			List<InputEvent> pool;
+			if (!m_Pools.TryGetValue(type, out pool))
 			{
 				pool = new List<InputEvent>();
 				m_Pools.Add(type, pool);
