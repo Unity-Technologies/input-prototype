@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine.Experimental.Input.Utilities;
+using System.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine.InputNew;
 using UnityEngineInternal.Input;
 
 namespace UnityEngine.Experimental.Input
 {
-    class NativeInputDeviceManager : ScriptableSettings<NativeInputDeviceManager>
+    class NativeInputDeviceManager : ScriptableObject
     {
         [Serializable]
         public class NativeDeviceRecord
@@ -15,10 +18,29 @@ namespace UnityEngine.Experimental.Input
             public bool deviceConnected;
         }
 
+        static NativeInputDeviceManager s_Instance;
+
         [SerializeField]
         List<NativeDeviceRecord> m_DeviceRecords = new List<NativeDeviceRecord>();
 
         Dictionary<int, NativeDeviceRecord> m_DeviceRecordsByID = new Dictionary<int, NativeDeviceRecord>();
+
+        static NativeInputDeviceManager instance
+        {
+            get
+            {
+                if (s_Instance == null)
+                {
+                    s_Instance = Resources.FindObjectsOfTypeAll<NativeInputDeviceManager>().FirstOrDefault();
+                    if (s_Instance == null)
+                    {
+                        s_Instance = CreateInstance<NativeInputDeviceManager>();
+                        s_Instance.hideFlags = HideFlags.HideAndDontSave;
+                    }
+                }
+                return s_Instance;
+            }
+        }
 
         public static event Action<NativeDeviceRecord> onDeviceDiscovered;
         public static event Action<int, bool> onDeviceConnectedDisconnected;
@@ -48,6 +70,9 @@ namespace UnityEngine.Experimental.Input
             }
         }
 
+#if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+#endif
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void InitializeInstanceOnRuntimeLoad()
         {
