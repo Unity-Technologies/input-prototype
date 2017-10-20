@@ -78,7 +78,7 @@ namespace UnityEngine.InputNew
 	}
 
 	[Serializable]
-	public class AxisControlHandle : ControlHandle<AxisInputControl> {}
+	public class AxisAction : ActionSlot<AxisInputControl> {}
 	public class AxisInputControl : InputControl
 	{
 		public readonly ButtonInputControl negative;
@@ -93,7 +93,7 @@ namespace UnityEngine.InputNew
 	}
 
 	[Serializable]
-	public class ButtonControlHandle : ControlHandle<ButtonInputControl> {}
+	public class ButtonAction : ActionSlot<ButtonInputControl> {}
 	public class ButtonInputControl : InputControl
 	{
 		private const float k_ButtonThreshold = 0.5f;
@@ -123,7 +123,7 @@ namespace UnityEngine.InputNew
 	}
 
 	[Serializable]
-	public class Vector2ControlHandle : ControlHandle<Vector2InputControl> {}
+	public class Vector2Action : ActionSlot<Vector2InputControl> {}
 	public class Vector2InputControl : InputControl
 	{
 		public Vector2InputControl(int index, InputState state) : base(index, state) {}
@@ -145,7 +145,7 @@ namespace UnityEngine.InputNew
 	}
 
 	[Serializable]
-	public class Vector3ControlHandle : ControlHandle<Vector3InputControl> {}
+	public class Vector3Action : ActionSlot<Vector3InputControl> {}
 	public class Vector3InputControl : InputControl
 	{
 		public Vector3InputControl(int index, InputState state) : base(index, state) {}
@@ -168,7 +168,7 @@ namespace UnityEngine.InputNew
 	}
 
 	[Serializable]
-	public class QuaternionControlHandle : ControlHandle<QuaternionInputControl> { }
+	public class QuaternionAction : ActionSlot<QuaternionInputControl> { }
 	public class QuaternionInputControl : InputControl
 	{
 		public QuaternionInputControl(int index, InputState state) : base(index, state) { }

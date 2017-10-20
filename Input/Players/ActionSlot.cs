@@ -4,9 +4,9 @@ using UnityEngine;
 namespace UnityEngine.InputNew
 {
 	// We need a non-generic base class so that we can create a PropertyDrawer for it.
-	public abstract class ControlHandle {}
+	public abstract class ActionSlot {}
 
-	public class ControlHandle<T> : ControlHandle where T : InputControl
+	public class ActionSlot<T> : ActionSlot where T : InputControl
 	{
 	    T m_Control;
 
