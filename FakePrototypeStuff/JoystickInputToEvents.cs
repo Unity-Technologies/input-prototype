@@ -18,53 +18,57 @@ public class JoystickInputToEvents
 
 	#region Non-Public Methods
 
+	const string k_AxisFormatString = "Analog{0}_Joy{1}";
+	const int k_FirstAxis = 1;
+	const int k_LastAxis = axisCount;
+	const int k_NumAxes = k_LastAxis - k_FirstAxis;
+	const int k_FirstButton = (int)KeyCode.Joystick1Button0;
+	const int k_LastButton = (int)KeyCode.Joystick1Button19;
+	const int k_NumButtons = k_LastButton - k_FirstButton;
+
 	// Fake gamepad has 10 axes (index 0 - 9) and 20 buttons (index 10 - 29).
 	public const int axisCount = 10;
 	public const int buttonCount = 20;
 	public const int joystickCount = 10;
-	private float[,] m_LastValues = new float[joystickCount, axisCount + buttonCount];
+	float[,] m_LastValues = new float[joystickCount, axisCount + buttonCount];
 
 	static string[] s_Axes;
 
 	static JoystickInputToEvents()
 	{
-		int first = 1;
-		int last = 10;
-		s_Axes = new string[(last - first) * joystickCount + 1];
-		for (int device = 0; device < joystickCount; device++)
+		s_Axes = new string[k_NumAxes * joystickCount + 1];
+		for (var device = 0; device < joystickCount; device++)
 		{
-			for (int i = 0; i <= last - first; i++)
+			var deviceIndex = device + 1;
+			for (var i = 0; i <= k_NumAxes; i++)
 			{
-				var index = device * (last - first) + i;
-				s_Axes[index] = "Analog" + (i + first) + "_Joy" + (device + 1);
+				var index = device * k_NumAxes + i;
+				s_Axes[index] = string.Format(k_AxisFormatString, i + k_FirstAxis, deviceIndex);
 			}
 		}
 	}
 	
-	private void SendAxisEvents()
+	void SendAxisEvents()
 	{
-		int first = 1;
-		int last = 10;
-		for (int device = 0; device < joystickCount; device++)
+		for (var device = 0; device < joystickCount; device++)
 		{
-			for (int i = 0; i <= last - first; i++)
+			var deviceIndex = device * k_NumAxes;
+			for (var i = 0; i <= k_NumAxes; i++)
 			{
-				var index = device * (last - first) + i;
+				var index = deviceIndex + i;
 				var value = Input.GetAxis(s_Axes[index]);
 				SendEvent(device, i, value);
 			}
 		}
 	}
 
-	private void SendButtonEvents()
+	void SendButtonEvents()
 	{
-		
 		for (int device = 0; device < joystickCount; device++)
 		{
-			int first = (int)KeyCode.Joystick1Button0 + device * 20;
-			int last = (int)KeyCode.Joystick1Button19 + device * 20;
-			
-			for (int i = 0; i <= last - first; i++)
+			var first = k_FirstButton + device * 20;
+
+			for (var i = 0; i <= k_NumButtons; i++)
 			{
 				if (Input.GetKeyDown((KeyCode)(i + first)))
 					SendEvent(device, axisCount + i, 1.0f);
@@ -74,10 +78,11 @@ public class JoystickInputToEvents
 		}
 	}
 
-	private void SendEvent(int deviceIndex, int controlIndex, float value)
+	void SendEvent(int deviceIndex, int controlIndex, float value)
 	{
 		if (value == m_LastValues[deviceIndex, controlIndex])
 			return;
+
 		m_LastValues[deviceIndex, controlIndex] = value;
 		
 		var inputEvent = InputSystem.CreateEvent<GenericControlEvent>();
