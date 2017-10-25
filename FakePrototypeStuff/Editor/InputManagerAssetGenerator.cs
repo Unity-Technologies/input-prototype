@@ -76,14 +76,6 @@ internal class InputManagerAssetGenerator
 
 	static void CreateRequiredAxisPresets()
 	{
-		for (int device = 1; device <= JoystickInputToEvents.joystickCount; device++)
-		{
-			for (int analog = 1; analog <= JoystickInputToEvents.axisCount; analog++)
-			{
-				axisPresets.Add(new AxisPreset(device, analog));
-			}
-		}
-
 		axisPresets.Add(new AxisPreset("Mouse X", 1, 0, 1.0f));
 		axisPresets.Add(new AxisPreset("Mouse Y", 1, 1, 1.0f));
 		axisPresets.Add(new AxisPreset("Mouse Z", 1, 2, 1.0f));

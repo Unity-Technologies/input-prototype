@@ -33,9 +33,7 @@ namespace UnityEngine.InputNew
 
 			go.AddComponent<InputManager>();
 			go.AddComponent<InputManagerEndFrame>();
-			go.AddComponent<JoystickInputToEvents>();
 			go.AddComponent<MouseInputToEvents>();
-			go.AddComponent<KeyboardInputToEvents>();
 			go.AddComponent<TouchInputToEvents>();
 			go.AddComponent<NativeInputEventManager>();
 			go.AddComponent<ExecuteAllEvents>();
