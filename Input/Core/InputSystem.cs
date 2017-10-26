@@ -208,6 +208,7 @@ namespace UnityEngine.InputNew
         {
             var currentTime = Time.time;
             InputEvent nextEvent;
+            s_EventQueue.Sort();
             while (s_EventQueue.Dequeue(currentTime, out nextEvent))
             {
                 ExecuteEvent(nextEvent);
