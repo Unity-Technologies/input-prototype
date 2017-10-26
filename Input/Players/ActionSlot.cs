@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	// We need a non-generic base class so that we can create a PropertyDrawer for it.
-	public abstract class ActionSlot {}
+    // We need a non-generic base class so that we can create a PropertyDrawer for it.
+    public abstract class ActionSlot { }
 
-	public class ActionSlot<T> : ActionSlot where T : InputControl
-	{
-	    T m_Control;
+    public class ActionSlot<T> : ActionSlot where T : InputControl
+    {
+        T m_Control;
 
-		public InputAction action;
+        public InputAction action;
         public T control
         {
             get
@@ -24,9 +24,9 @@ namespace UnityEngine.InputNew
         }
 
         public void Bind(PlayerHandle player)
-		{
-			var map = player.GetActions(action.actionMap);
+        {
+            var map = player.GetActions(action.actionMap);
             m_Control = map[action.actionIndex] as T;
-		}
-	}
+        }
+    }
 }

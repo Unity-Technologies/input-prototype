@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	[Serializable]
-	public struct InputControlData
-	{
-		public int[] componentControlIndices;
-		public SerializableType controlType;
-		public string name;
-		public float defaultValue;
-	    public bool invert;
-	}
+    [Serializable]
+    public struct InputControlData
+    {
+        public int[] componentControlIndices;
+        public SerializableType controlType;
+        public string name;
+        public float defaultValue;
+        public bool invert;
+    }
 }

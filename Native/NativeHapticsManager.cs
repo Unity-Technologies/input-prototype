@@ -30,7 +30,7 @@ namespace UnityEngine.Experimental.Input
             }
         }
 
-        static readonly FourCC k_OutputVRConstantRumble = new FourCC("0VCR");
+        static readonly FourCharacterCode k_OutputVRConstantRumble = new FourCharacterCode("0VCR");
 
         /// <summary>
         /// Sets haptic output to the device with the given native ID.

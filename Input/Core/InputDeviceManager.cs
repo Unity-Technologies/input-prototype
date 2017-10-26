@@ -4,8 +4,8 @@ using UnityEngine.XR;
 
 namespace UnityEngine.InputNew
 {
-	class InputDeviceManager : IInputConsumer
-	{
+    class InputDeviceManager : IInputConsumer
+    {
         #region Public Events
 
         public event Action<InputDevice> onDeviceRegistered;
@@ -16,82 +16,82 @@ namespace UnityEngine.InputNew
         #region Constructors
 
         public InputDeviceManager()
-		{
-		}
-		
-		public void InitAfterProfiles()
-		{
-			// In the prototype, just create a set of default devices. In the real thing, these would be registered
-			// and configured by the platform layer according to what's really available on the system.
+        {
+        }
 
-			var mouseDevice = new Mouse();
-			RegisterDevice(mouseDevice);
+        public void InitAfterProfiles()
+        {
+            // In the prototype, just create a set of default devices. In the real thing, these would be registered
+            // and configured by the platform layer according to what's really available on the system.
+
+            var mouseDevice = new Mouse();
+            RegisterDevice(mouseDevice);
             HandleDeviceConnectDisconnect(mouseDevice, true);
 
-			var touchscreenDevice = new Touchscreen();
-			RegisterDevice(touchscreenDevice); // Register after mouse; multiplayer code will pick the first applicable device. It doesn't use MRU.
+            var touchscreenDevice = new Touchscreen();
+            RegisterDevice(touchscreenDevice); // Register after mouse; multiplayer code will pick the first applicable device. It doesn't use MRU.
             HandleDeviceConnectDisconnect(touchscreenDevice, true);
 
             var keyboardDevice = new Keyboard();
-			RegisterDevice(keyboardDevice);
+            RegisterDevice(keyboardDevice);
             HandleDeviceConnectDisconnect(keyboardDevice, true);
 
             var gamepadDevice1 = new Gamepad();
-			RegisterDevice(gamepadDevice1);
+            RegisterDevice(gamepadDevice1);
             HandleDeviceConnectDisconnect(gamepadDevice1, true);
 
             var gamepadDevice2 = new Gamepad();
-			RegisterDevice(gamepadDevice2);
+            RegisterDevice(gamepadDevice2);
             HandleDeviceConnectDisconnect(gamepadDevice2, true);
 
             var virtualJoystickDevice = new VirtualJoystick();
-			RegisterDevice(virtualJoystickDevice);
+            RegisterDevice(virtualJoystickDevice);
             HandleDeviceConnectDisconnect(virtualJoystickDevice, true);
         }
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public void RegisterDevice(InputDevice device)
-		{
-			AssignDeviceProfile(device);
-			RegisterDeviceInternal(device.GetType(), device);
-		    if (onDeviceRegistered != null)
-		        onDeviceRegistered(device);
-		}
+        public void RegisterDevice(InputDevice device)
+        {
+            AssignDeviceProfile(device);
+            RegisterDeviceInternal(device.GetType(), device);
+            if (onDeviceRegistered != null)
+                onDeviceRegistered(device);
+        }
 
-		public void RegisterProfile(InputDeviceProfile profile)
-		{
-			m_Profiles.Add(profile);
-		}
+        public void RegisterProfile(InputDeviceProfile profile)
+        {
+            m_Profiles.Add(profile);
+        }
 
-		public InputDevice GetMostRecentlyUsedDevice(Type deviceType)
-		{
-			InputDevice mostRecentDevice = null;
-			for (var i = m_Devices.Count - 1; i >= 0; -- i)
-			{
-				var device = m_Devices[i];
-				if (deviceType.IsInstanceOfType(device) && (mostRecentDevice == null || device.lastEventTime > mostRecentDevice.lastEventTime))
-					mostRecentDevice = device;
-			}
-			return mostRecentDevice;
-		}
+        public InputDevice GetMostRecentlyUsedDevice(Type deviceType)
+        {
+            InputDevice mostRecentDevice = null;
+            for (var i = m_Devices.Count - 1; i >= 0; --i)
+            {
+                var device = m_Devices[i];
+                if (deviceType.IsInstanceOfType(device) && (mostRecentDevice == null || device.lastEventTime > mostRecentDevice.lastEventTime))
+                    mostRecentDevice = device;
+            }
+            return mostRecentDevice;
+        }
 
-		public TDevice GetMostRecentlyUsedDevice<TDevice>()
-			where TDevice : InputDevice
-		{
-			return (TDevice)GetMostRecentlyUsedDevice(typeof(TDevice));
-		}
+        public TDevice GetMostRecentlyUsedDevice<TDevice>()
+            where TDevice : InputDevice
+        {
+            return (TDevice)GetMostRecentlyUsedDevice(typeof(TDevice));
+        }
 
-		internal int GetNewDeviceIndex(InputDevice device)
-		{
-			Type t = device.GetType();
-			int count = 0;
-			for (int i = 0; i < devices.Count; i++)
-				if (devices[i].GetType() == t)
-					count++;
-			return count;
+        internal int GetNewDeviceIndex(InputDevice device)
+        {
+            Type t = device.GetType();
+            int count = 0;
+            for (int i = 0; i < devices.Count; i++)
+                if (devices[i].GetType() == t)
+                    count++;
+            return count;
         }
 
         public List<InputDevice> LookupDevices(Type deviceType)
@@ -100,150 +100,150 @@ namespace UnityEngine.InputNew
             return !m_DevicesByType.TryGetValue(deviceType, out list) ? null : list;
         }
 
-		////REVIEW: an alternative to these two methods is to hook every single device into the event tree independently; may be better
+        ////REVIEW: an alternative to these two methods is to hook every single device into the event tree independently; may be better
 
-		public bool ProcessEvent(InputEvent inputEvent)
-		{
-			// Look up device.
-			var device = inputEvent.device;
+        public bool ProcessEvent(InputEvent inputEvent)
+        {
+            // Look up device.
+            var device = inputEvent.device;
 
-			// Ignore event on device if device is absent or disconnected.
-			if (device == null || !device.connected)
-				return false;
+            // Ignore event on device if device is absent or disconnected.
+            if (device == null || !device.connected)
+                return false;
 
-			//fire event
+            //fire event
 
-			// Let device process event.
-			return device.ProcessEvent(inputEvent);
-		}
+            // Let device process event.
+            return device.ProcessEvent(inputEvent);
+        }
 
-		public void BeginFrame()
-		{
-			foreach (var device in devices)
-				device.state.BeginFrame();
-		}
+        public void BeginFrame()
+        {
+            foreach (var device in devices)
+                device.state.BeginFrame();
+        }
 
-		public void EndFrame()
-		{
+        public void EndFrame()
+        {
 
-		}
+        }
 
-		public bool RemapEvent(InputEvent inputEvent)
-		{
-			// Look up device.
-			var device = inputEvent.device;
-			if (device == null)
-				return false;
+        public bool RemapEvent(InputEvent inputEvent)
+        {
+            // Look up device.
+            var device = inputEvent.device;
+            if (device == null)
+                return false;
 
-			// Let device remap event.
-			return device.RemapEvent(inputEvent);
-		}
+            // Let device remap event.
+            return device.RemapEvent(inputEvent);
+        }
 
-	    public void ConnectDisconnectDevice(InputDevice device, bool connect)
-	    {
-	        if (device.connected == connect)
-	            return;
+        public void ConnectDisconnectDevice(InputDevice device, bool connect)
+        {
+            if (device.connected == connect)
+                return;
 
             HandleDeviceConnectDisconnect(device, connect);
-	    }
+        }
 
-		#endregion
+        #endregion
 
-		#region Non-Public Methods
+        #region Non-Public Methods
 
-		void AssignDeviceProfile(InputDevice device)
-		{
-			device.profile = FindDeviceProfile(device);
-		}
+        void AssignDeviceProfile(InputDevice device)
+        {
+            device.profile = FindDeviceProfile(device);
+        }
 
-		InputDeviceProfile FindDeviceProfile(InputDevice device)
-		{
-			foreach (var profile in m_Profiles)
-			{
-				if (profile.deviceNames != null)
-				{
-					foreach (var deviceName in profile.deviceNames)
-					{
-						if (string.Compare(deviceName, device.deviceName, StringComparison.InvariantCulture) == 0 &&
-							IsProfileSupportedOnThisPlatform(profile))
-							return profile;
-					}
-				}
-			}
-			return null;
-		}
+        InputDeviceProfile FindDeviceProfile(InputDevice device)
+        {
+            foreach (var profile in m_Profiles)
+            {
+                if (profile.deviceNames != null)
+                {
+                    foreach (var deviceName in profile.deviceNames)
+                    {
+                        if (string.Compare(deviceName, device.deviceName, StringComparison.InvariantCulture) == 0 &&
+                            IsProfileSupportedOnThisPlatform(profile))
+                            return profile;
+                    }
+                }
+            }
+            return null;
+        }
 
-		public bool IsProfileSupportedOnThisPlatform(InputDeviceProfile profile)
-		{
-			if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
-				return true;
-
-#if UNITY_2017_2_OR_NEWER
-			foreach (var platform in profile.supportedPlatforms)
-			{
-				// VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).
-				var vrPlatform = (XRSettings.loadedDeviceName + " " + XRDevice.model).ToUpper();
-
-				if (m_Platform.Contains(platform.ToUpper()) || vrPlatform.Contains(platform.ToUpper()))
-					return true;
-			}
-#endif
-
-			return false;
-		}
-
-		void RegisterDeviceInternal(Type deviceType, InputDevice device)
-		{
-			List<InputDevice> list;
-			if (!m_DevicesByType.TryGetValue(deviceType, out list))
-			{
-				list = new List<InputDevice>();
-				m_DevicesByType[deviceType] = list;
-			}
-
-			list.Add(device);
-			// Called recorsively for base types so remove first to make sure it's only added once.
-			m_Devices.Remove(device);
-			m_Devices.Add(device);
-
-			var baseType = deviceType.BaseType;
-			if (baseType != typeof(InputDevice))
-				RegisterDeviceInternal(baseType, device);
-		}
-
-		void HandleDeviceConnectDisconnect(InputDevice device, bool connected)
-		{
-			// Sync state.
-			device.connected = connected;
-
-			// Fire event.
-			var handler = onDeviceConnectedDisconnected;
-			if (handler != null)
-				handler(device, connected);
-		}
-
-		#endregion
-
-		#region Public Properties
-		
-		public List<InputDevice> devices
-		{
-			get { return m_Devices; }
-		}
-
-		#endregion
-
-		#region Fields
-
-		readonly Dictionary<Type, List<InputDevice>> m_DevicesByType = new Dictionary<Type, List<InputDevice>>();
-		readonly List<InputDevice> m_Devices = new List<InputDevice>();
-		readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
+        public bool IsProfileSupportedOnThisPlatform(InputDeviceProfile profile)
+        {
+            if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
+                return true;
 
 #if UNITY_2017_2_OR_NEWER
-		// PJK: SystemInfo.deviceModel returns the name of my motherboard.  Is this useful?
-		readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
+            foreach (var platform in profile.supportedPlatforms)
+            {
+                // VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).
+                var vrPlatform = (XRSettings.loadedDeviceName + " " + XRDevice.model).ToUpper();
+
+                if (m_Platform.Contains(platform.ToUpper()) || vrPlatform.Contains(platform.ToUpper()))
+                    return true;
+            }
 #endif
 
-		#endregion
-	}
+            return false;
+        }
+
+        void RegisterDeviceInternal(Type deviceType, InputDevice device)
+        {
+            List<InputDevice> list;
+            if (!m_DevicesByType.TryGetValue(deviceType, out list))
+            {
+                list = new List<InputDevice>();
+                m_DevicesByType[deviceType] = list;
+            }
+
+            list.Add(device);
+            // Called recorsively for base types so remove first to make sure it's only added once.
+            m_Devices.Remove(device);
+            m_Devices.Add(device);
+
+            var baseType = deviceType.BaseType;
+            if (baseType != typeof(InputDevice))
+                RegisterDeviceInternal(baseType, device);
+        }
+
+        void HandleDeviceConnectDisconnect(InputDevice device, bool connected)
+        {
+            // Sync state.
+            device.connected = connected;
+
+            // Fire event.
+            var handler = onDeviceConnectedDisconnected;
+            if (handler != null)
+                handler(device, connected);
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public List<InputDevice> devices
+        {
+            get { return m_Devices; }
+        }
+
+        #endregion
+
+        #region Fields
+
+        readonly Dictionary<Type, List<InputDevice>> m_DevicesByType = new Dictionary<Type, List<InputDevice>>();
+        readonly List<InputDevice> m_Devices = new List<InputDevice>();
+        readonly List<InputDeviceProfile> m_Profiles = new List<InputDeviceProfile>();
+
+#if UNITY_2017_2_OR_NEWER
+        // PJK: SystemInfo.deviceModel returns the name of my motherboard.  Is this useful?
+        readonly string m_Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
+#endif
+
+        #endregion
+    }
 }

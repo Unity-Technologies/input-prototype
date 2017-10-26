@@ -4,51 +4,51 @@ using UnityEngine;
 
 namespace UnityEngine.InputNew
 {
-	public class InputControl
-	{
-		protected readonly int m_Index;
-		protected readonly InputState m_State;
+    public class InputControl
+    {
+        protected readonly int m_Index;
+        protected readonly InputState m_State;
 
-		public InputControl(int index, InputState state)
-		{
-			m_Index = index;
-			m_State = state;
-		}
+        public InputControl(int index, InputState state)
+        {
+            m_Index = index;
+            m_State = state;
+        }
 
-		public int index
-		{
-			get { return m_Index; }
-		}
-		
-		public InputControlProvider provider
-		{
-			get { return m_State.controlProvider; }
-		}
+        public int index
+        {
+            get { return m_Index; }
+        }
 
-		public bool isEnabled
-		{
-			get { return m_State.IsControlEnabled(m_Index); }
-		}
+        public InputControlProvider provider
+        {
+            get { return m_State.controlProvider; }
+        }
 
-		public InputControlData data
-		{
-			get { return provider.GetControlData(index); }
-		}
+        public bool isEnabled
+        {
+            get { return m_State.IsControlEnabled(m_Index); }
+        }
 
-		public string name
-		{
-			get { return data.name; }
-		}
+        public InputControlData data
+        {
+            get { return provider.GetControlData(index); }
+        }
 
-		public string GetPrimarySourceName(string buttonAxisFormattingString = "{0} & {1}")
-		{
-			return m_State.controlProvider.GetPrimarySourceName(index, buttonAxisFormattingString);
-		}
+        public string name
+        {
+            get { return data.name; }
+        }
 
-		public float rawValue
-		{
-			get { return m_State.GetCurrentValue(m_Index); }
-		}
+        public string GetPrimarySourceName(string buttonAxisFormattingString = "{0} & {1}")
+        {
+            return m_State.controlProvider.GetPrimarySourceName(index, buttonAxisFormattingString);
+        }
+
+        public float rawValue
+        {
+            get { return m_State.GetCurrentValue(m_Index); }
+        }
 
         public float value
         {
@@ -75,119 +75,119 @@ namespace UnityEngine.InputNew
         }
 
         public virtual string[] sourceControlNames { get { return null; } }
-	}
+    }
 
-	[Serializable]
-	public class AxisAction : ActionSlot<AxisInputControl> {}
-	public class AxisInputControl : InputControl
-	{
-		public readonly ButtonInputControl negative;
-		public readonly ButtonInputControl positive;
+    [Serializable]
+    public class AxisAction : ActionSlot<AxisInputControl> { }
+    public class AxisInputControl : InputControl
+    {
+        public readonly ButtonInputControl negative;
+        public readonly ButtonInputControl positive;
 
-		public AxisInputControl(int index, InputState state) : base(index, state)
-		{
-			negative = new ButtonInputControl(index, state);
-			negative.SetValueMultiplier(-1);
-			positive = new ButtonInputControl(index, state);
-		}
-	}
+        public AxisInputControl(int index, InputState state) : base(index, state)
+        {
+            negative = new ButtonInputControl(index, state);
+            negative.SetValueMultiplier(-1);
+            positive = new ButtonInputControl(index, state);
+        }
+    }
 
-	[Serializable]
-	public class ButtonAction : ActionSlot<ButtonInputControl> {}
-	public class ButtonInputControl : InputControl
-	{
-		private const float k_ButtonThreshold = 0.5f;
-		private float m_ValueMultiplier = 1;
+    [Serializable]
+    public class ButtonAction : ActionSlot<ButtonInputControl> { }
+    public class ButtonInputControl : InputControl
+    {
+        private const float k_ButtonThreshold = 0.5f;
+        private float m_ValueMultiplier = 1;
 
-		public ButtonInputControl(int index, InputState state) : base(index, state) {}
+        public ButtonInputControl(int index, InputState state) : base(index, state) { }
 
-		public bool isHeld
-		{
-			get { return provider.active && value * m_ValueMultiplier > k_ButtonThreshold; }
-		}
+        public bool isHeld
+        {
+            get { return provider.active && value * m_ValueMultiplier > k_ButtonThreshold; }
+        }
 
-		public bool wasJustPressed
-		{
-			get { return provider.active && isHeld && (previousValue * m_ValueMultiplier <= k_ButtonThreshold); }
-		}
+        public bool wasJustPressed
+        {
+            get { return provider.active && isHeld && (previousValue * m_ValueMultiplier <= k_ButtonThreshold); }
+        }
 
-		public bool wasJustReleased
-		{
-			get { return provider.active && !isHeld && (previousValue * m_ValueMultiplier > k_ButtonThreshold); }
-		}
+        public bool wasJustReleased
+        {
+            get { return provider.active && !isHeld && (previousValue * m_ValueMultiplier > k_ButtonThreshold); }
+        }
 
-		public void SetValueMultiplier(float multiplier)
-		{
-			m_ValueMultiplier = multiplier;
-		}
-	}
+        public void SetValueMultiplier(float multiplier)
+        {
+            m_ValueMultiplier = multiplier;
+        }
+    }
 
-	[Serializable]
-	public class Vector2Action : ActionSlot<Vector2InputControl> {}
-	public class Vector2InputControl : InputControl
-	{
-		public Vector2InputControl(int index, InputState state) : base(index, state) {}
+    [Serializable]
+    public class Vector2Action : ActionSlot<Vector2InputControl> { }
+    public class Vector2InputControl : InputControl
+    {
+        public Vector2InputControl(int index, InputState state) : base(index, state) { }
 
-		public Vector2 vector2
-		{
-			get
-			{
-				var controlData = m_State.controlProvider.GetControlData(m_Index);
+        public Vector2 vector2
+        {
+            get
+            {
+                var controlData = m_State.controlProvider.GetControlData(m_Index);
                 var returnValue = new Vector2(
-					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[1])
-				);
-			    return data.invert ? -returnValue : returnValue;
-			}
-		}
+                    m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[1])
+                );
+                return data.invert ? -returnValue : returnValue;
+            }
+        }
 
-		public override string[] sourceControlNames { get { return new string[] { "X", "Y" }; } }
-	}
+        public override string[] sourceControlNames { get { return new string[] { "X", "Y" }; } }
+    }
 
-	[Serializable]
-	public class Vector3Action : ActionSlot<Vector3InputControl> {}
-	public class Vector3InputControl : InputControl
-	{
-		public Vector3InputControl(int index, InputState state) : base(index, state) {}
+    [Serializable]
+    public class Vector3Action : ActionSlot<Vector3InputControl> { }
+    public class Vector3InputControl : InputControl
+    {
+        public Vector3InputControl(int index, InputState state) : base(index, state) { }
 
-		public Vector3 vector3
-		{
-			get
-			{
-				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				var returnValue = new Vector3(
-					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[2])
-				);
-			    return data.invert ? -returnValue : returnValue;
-			}
-		}
+        public Vector3 vector3
+        {
+            get
+            {
+                var controlData = m_State.controlProvider.GetControlData(m_Index);
+                var returnValue = new Vector3(
+                    m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[1]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[2])
+                );
+                return data.invert ? -returnValue : returnValue;
+            }
+        }
 
-		public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z" }; } }
-	}
+        public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z" }; } }
+    }
 
-	[Serializable]
-	public class QuaternionAction : ActionSlot<QuaternionInputControl> { }
-	public class QuaternionInputControl : InputControl
-	{
-		public QuaternionInputControl(int index, InputState state) : base(index, state) { }
+    [Serializable]
+    public class QuaternionAction : ActionSlot<QuaternionInputControl> { }
+    public class QuaternionInputControl : InputControl
+    {
+        public QuaternionInputControl(int index, InputState state) : base(index, state) { }
 
-		public Quaternion quaternion
-		{
-			get
-			{
-				var controlData = m_State.controlProvider.GetControlData(m_Index);
-				var returnValue = new Quaternion(
-					m_State.GetCurrentValue(controlData.componentControlIndices[0]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[1]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[2]),
-					m_State.GetCurrentValue(controlData.componentControlIndices[3])
-				);
-			    return data.invert ? Quaternion.Inverse(returnValue) : returnValue;
-			}
-		}
+        public Quaternion quaternion
+        {
+            get
+            {
+                var controlData = m_State.controlProvider.GetControlData(m_Index);
+                var returnValue = new Quaternion(
+                    m_State.GetCurrentValue(controlData.componentControlIndices[0]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[1]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[2]),
+                    m_State.GetCurrentValue(controlData.componentControlIndices[3])
+                );
+                return data.invert ? Quaternion.Inverse(returnValue) : returnValue;
+            }
+        }
 
-		public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z", "W" }; } }
-	}
+        public override string[] sourceControlNames { get { return new string[] { "X", "Y", "Z", "W" }; } }
+    }
 }
