@@ -211,7 +211,7 @@ namespace UnityEngine.InputNew
                 RegisterDeviceInternal(baseType, device);
         }
 
-        void HandleDeviceConnectDisconnect(InputDevice device, bool connected)
+        internal void HandleDeviceConnectDisconnect(InputDevice device, bool connected)
         {
             // Sync state.
             device.connected = connected;
