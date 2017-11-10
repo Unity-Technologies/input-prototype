@@ -58,7 +58,6 @@ namespace UnityEngine.InputNew
 			inputEvent.deviceIndex = 0; 
 			inputEvent.controlIndex = controlIndex;
 			inputEvent.value = value;
-            //Debug.Log(inputEvent);
 			InputSystem.QueueEvent(inputEvent);
 		}
 	}
