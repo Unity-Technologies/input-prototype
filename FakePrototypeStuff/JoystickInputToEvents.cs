@@ -2,7 +2,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputNew;
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
+#endif
 public class JoystickInputToEvents
 	: MonoBehaviour
 {
