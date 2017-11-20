@@ -104,6 +104,11 @@ namespace UnityEngine.InputNew
 			s_BindingListeners.Add(listener);
 		}
 
+		public static void RegisterDevice(InputDevice device)
+		{
+			s_Devices.RegisterDevice(device);
+		}
+
 		#endregion
 
 		#region Non-Public Methods
