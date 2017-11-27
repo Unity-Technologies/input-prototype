@@ -319,7 +319,7 @@ namespace UnityEngine.InputNew
 
         #region Fields
 
-        static InputDeviceManager s_Devices;
+        internal static InputDeviceManager s_Devices;
         static InputEventQueue s_EventQueue;
         static InputEventPool s_EventPool;
         static InputConsumerNode s_EventTree;
