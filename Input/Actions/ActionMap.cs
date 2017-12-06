@@ -21,7 +21,7 @@ namespace UnityEngine.InputNew
 		[SerializeField]
 		private List<InputAction> m_Actions = new List<InputAction>();
 		public List<InputAction> actions { get { return m_Actions; } set { m_Actions = value; } }
-		
+
 		[SerializeField]
 		private List<ControlScheme> m_ControlSchemes = new List<ControlScheme>();
 		private List<ControlScheme> m_ControlSchemeCopies; // In players or playmode we always hand out copies and retain the originals.
@@ -57,7 +57,7 @@ namespace UnityEngine.InputNew
 		private static List<ActionMap> s_ActionMapsToCleanUpAfterPlayMode = new List<ActionMap>();
 		private static bool s_IsInPlayMode;
 
-		static ActionMap()
+		void OnEnable()
 		{
 			HandlePlayModeCustomizations();
 			EditorApplication.playmodeStateChanged += HandlePlayModeCustomizations;
