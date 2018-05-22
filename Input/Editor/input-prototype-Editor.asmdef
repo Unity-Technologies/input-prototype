@@ -1,0 +1,10 @@
+{
+    "name": "input-prototype-Editor",
+    "references": [
+        "input-prototype"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

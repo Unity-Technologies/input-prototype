@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -122,6 +123,27 @@ namespace UnityEngine.InputNew
 				try
 				{
 					t = Type.GetType(typeString);
+					if (t == null)
+					{
+						typeString = string.Format("{0}.{1}",
+							string.IsNullOrEmpty(m_CustomNamespace) ? kDefaultNamespace : m_CustomNamespace,
+							name);
+
+						var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+						foreach (var assembly in assemblies)
+						{
+							try
+							{
+								t = assembly.GetType(typeString);
+								if (t != null)
+									break;
+							}
+							catch (ReflectionTypeLoadException)
+							{
+								// Skip any assemblies that don't load properly -- suppress errors
+							}
+						}
+					}
 				}
 				catch (Exception e)
 				{

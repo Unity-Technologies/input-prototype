@@ -1,0 +1,8 @@
+{
+    "name": "input-prototype",
+    "references": [
+        "SteamVR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

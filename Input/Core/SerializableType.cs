@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace UnityEngine.InputNew
 {
@@ -24,6 +25,24 @@ namespace UnityEngine.InputNew
 					if (string.IsNullOrEmpty(m_TypeName))
 						return null;
 					m_CachedType = Type.GetType(m_TypeName);
+					if (m_CachedType == null)
+					{
+						var typeName = m_TypeName.Substring(0, m_TypeName.IndexOf(','));
+						var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+						foreach (var assembly in assemblies)
+						{
+							try
+							{
+								m_CachedType = assembly.GetType(typeName);
+								if (m_CachedType != null)
+									break;
+							}
+							catch (ReflectionTypeLoadException)
+							{
+								// Skip any assemblies that don't load properly -- suppress errors
+							}
+						}
+					}
 				}
 				return m_CachedType;
 			}

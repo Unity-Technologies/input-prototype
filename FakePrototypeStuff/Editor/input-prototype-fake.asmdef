@@ -1,0 +1,10 @@
+{
+    "name": "input-prototype-fake",
+    "references": [
+        "input-prototype"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

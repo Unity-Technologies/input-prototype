@@ -15,7 +15,7 @@ namespace UnityEngine.InputNew
 			s_Devices = new InputDeviceManager();
 
 			GameObject go = new GameObject("Input Prototype Controller");
-			go.hideFlags = HideFlags.HideAndDontSave;
+			go.hideFlags = HideFlags.DontSaveInEditor;//HideFlags.HideAndDontSave;
 
 			go.AddComponent<InputManager>();
 			go.AddComponent<InputManagerEndFrame>();
