@@ -19,9 +19,9 @@ public class ActionMapEditor : Editor
 		public static GUIContent iconToolbarMinus =	EditorGUIUtility.IconContent("Toolbar Minus", "Remove from list");
 		public static GUIContent iconToolbarPlusMore =	EditorGUIUtility.IconContent("Toolbar Plus More", "Choose to add to list");
 	}
-	
+
 	ActionMap m_ActionMapEditCopy;
-	
+
 	int m_SelectedScheme = 0;
 	int m_SelectedDeviceIndex = 0;
 	[System.NonSerialized]
@@ -33,7 +33,7 @@ public class ActionMapEditor : Editor
 	ButtonAxisSource m_SelectedButtonAxisSource = null;
 	Dictionary<Type, string[]> s_ControlTypeSourceNameArrays = new Dictionary<Type, string[]>();
 	bool m_Modified = false;
-	
+
 	int selectedScheme
 	{
 		get { return m_SelectedScheme; }
@@ -44,7 +44,7 @@ public class ActionMapEditor : Editor
 			m_SelectedScheme = value;
 		}
 	}
-	
+
 	InputAction selectedAction
 	{
 		get { return m_SelectedAction; }
@@ -55,14 +55,14 @@ public class ActionMapEditor : Editor
 			m_SelectedAction = value;
 		}
 	}
-	
+
 	void OnEnable()
 	{
 		Revert();
 		RefreshPropertyNames();
 		CalculateBlackList();
 	}
-	
+
 	public virtual void OnDisable ()
 	{
 		// When destroying the editor check if we have any unapplied modifications and ask about applying them.
@@ -73,7 +73,7 @@ public class ActionMapEditor : Editor
 				Apply();
 		}
 	}
-	
+
 	void Apply()
 	{
 		EditorGUIUtility.keyboardControl = 0;
@@ -90,7 +90,7 @@ public class ActionMapEditor : Editor
 			serializedObject.FindProperty("m_ControlSchemes")
 				.GetArrayElementAtIndex(i)
 				.FindPropertyRelative("m_ActionMap").objectReferenceValue = target;
-		
+
 		serializedObject.ApplyModifiedProperties();
 
 		var existingAssets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(target));
@@ -110,18 +110,18 @@ public class ActionMapEditor : Editor
 		m_Modified = false;
 		// Reimporting is needed in order for the sub-assets to show up.
 		AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(target));
-		
+
 		UpdateActionMapScript();
 	}
-	
+
 	void Revert ()
 	{
 		EditorGUIUtility.keyboardControl = 0;
-		
+
 		ActionMap original = (ActionMap)serializedObject.targetObject;
 		m_ActionMapEditCopy = Instantiate<ActionMap>(original);
 		m_ActionMapEditCopy.name = original.name;
-		
+
 		m_Modified = false;
 	}
 
@@ -130,17 +130,17 @@ public class ActionMapEditor : Editor
 		EditorUtility.SetDirty(m_ActionMapEditCopy);
 		m_Modified = true;
 	}
-	
+
 	void RefreshPropertyNames()
 	{
 		// Calculate property names.
 		m_PropertyNames.Clear();
 		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 			m_PropertyNames.Add(GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false));
-		
+
 		// Calculate duplicates.
 		HashSet<string> duplicates = new HashSet<string>(m_PropertyNames.GroupBy(x => x).Where(group => group.Count() > 1).Select(group => group.Key));
-		
+
 		// Calculate errors.
 		m_PropertyErrors.Clear();
 		for (int i = 0; i < m_PropertyNames.Count; i++)
@@ -152,12 +152,12 @@ public class ActionMapEditor : Editor
 				m_PropertyErrors[name] = "Duplicate action name: "+name+".";
 		}
 	}
-	
+
 	void CalculateBlackList()
 	{
 		m_PropertyBlacklist = new HashSet<string>(typeof(ActionMapInput).GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static).Select(e => e.Name));
 	}
-	
+
 	public override void OnInspectorGUI()
 	{
 		EditorGUI.BeginChangeCheck();
@@ -174,13 +174,13 @@ public class ActionMapEditor : Editor
 
 			EditorGUILayout.Space();
 			DrawActionList();
-			
+
 			if (selectedAction != null)
 			{
 				EditorGUILayout.Space();
 				DrawActionGUI();
 			}
-			
+
 			EditorGUILayout.Space();
 		}
 
@@ -203,7 +203,7 @@ public class ActionMapEditor : Editor
 	void DrawControlSchemeSelection()
 	{
 		if (selectedScheme >= m_ActionMapEditCopy.controlSchemes.Count)
-			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;		
+			selectedScheme = m_ActionMapEditCopy.controlSchemes.Count - 1;
 
 		// Show schemes
 		EditorGUILayout.LabelField("Control Schemes");
@@ -213,21 +213,21 @@ public class ActionMapEditor : Editor
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 		{
 			Rect rect = EditorGUILayout.GetControlRect();
-			
+
 			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 			{
 				EditorGUIUtility.keyboardControl = 0;
 				selectedScheme = i;
 				Event.current.Use();
 			}
-			
+
 			if (selectedScheme == i)
 				GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
-			
+
 			EditorGUI.LabelField(rect, m_ActionMapEditCopy.controlSchemes[i].name);
 		}
 		EditorGUILayout.EndVertical();
-		
+
 		// Control scheme remove and add buttons
 		EditorGUILayout.BeginHorizontal();
 		{
@@ -235,7 +235,7 @@ public class ActionMapEditor : Editor
 
 			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 				RemoveControlScheme();
-			
+
 			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 				AddControlScheme();
 
@@ -299,7 +299,7 @@ public class ActionMapEditor : Editor
                         Vector2 size = EditorStyles.popup.CalcSize(content);
                         tagMaxSize = Vector2.Max(size, tagMaxSize);
                     }
-                }               
+                }
             }
 
             rect.width -= tagMaxSize.x; // Adjust width to leave room for tag
@@ -398,7 +398,7 @@ public class ActionMapEditor : Editor
 				EditorGUILayout.GetControlRect();
 		}
 		EditorGUILayout.EndVertical();
-		
+
 		// Action remove and add buttons
 		EditorGUILayout.BeginHorizontal();
 		{
@@ -406,10 +406,10 @@ public class ActionMapEditor : Editor
 
 			if (GUILayout.Button(Styles.iconToolbarMinus, GUIStyle.none))
 				RemoveAction();
-			
+
 			if (GUILayout.Button(Styles.iconToolbarPlus, GUIStyle.none))
 				AddAction();
-			
+
 			GUILayout.FlexibleSpace();
 		}
 		EditorGUILayout.EndHorizontal();
@@ -422,9 +422,9 @@ public class ActionMapEditor : Editor
 		m_ActionMapEditCopy.actions.Add(action);
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 			m_ActionMapEditCopy.controlSchemes[i].bindings.Add(new ControlBinding());
-		
+
 		selectedAction = m_ActionMapEditCopy.actions[m_ActionMapEditCopy.actions.Count - 1];
-		
+
 		RefreshPropertyNames();
 	}
 
@@ -435,15 +435,15 @@ public class ActionMapEditor : Editor
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 			m_ActionMapEditCopy.controlSchemes[i].bindings.RemoveAt(actionIndex);
 		ScriptableObject.DestroyImmediate(selectedAction, true);
-		
+
 		if (m_ActionMapEditCopy.actions.Count == 0)
 			selectedAction = null;
 		else
 			selectedAction = m_ActionMapEditCopy.actions[Mathf.Min(actionIndex, m_ActionMapEditCopy.actions.Count - 1)];
-		
+
 		RefreshPropertyNames();
 	}
-	
+
 	void ApplyRevertGUI()
 	{
 		bool valid = true;
@@ -452,30 +452,30 @@ public class ActionMapEditor : Editor
 			valid = false;
 			EditorGUILayout.HelpBox(string.Join("\n", m_PropertyErrors.Values.ToArray()), MessageType.Error);
 		}
-		
+
 		EditorGUI.BeginDisabledGroup(!m_Modified);
-		
+
 		GUILayout.BeginHorizontal();
 		{
 			GUILayout.FlexibleSpace();
-			
+
 			if (GUILayout.Button("Revert"))
 				Revert();
-			
+
 			EditorGUI.BeginDisabledGroup(!valid);
 			if (GUILayout.Button("Apply"))
 				Apply();
 			EditorGUI.EndDisabledGroup();
 		}
 		GUILayout.EndHorizontal();
-		
+
 		EditorGUI.EndDisabledGroup();
 	}
-	
+
 	void DrawActionRow(InputAction action, int selectedScheme)
 	{
 		int actionIndex = m_ActionMapEditCopy.actions.IndexOf(action);
-		
+
 		int sourceCount = 0;
 		for (int i = 0; i < m_ActionMapEditCopy.controlSchemes.Count; i++)
 		{
@@ -484,25 +484,25 @@ public class ActionMapEditor : Editor
 			sourceCount = Mathf.Max(sourceCount, count);
 		}
 		int lines = Mathf.Max(1, sourceCount);
-		
+
 		float height = EditorGUIUtility.singleLineHeight * lines + EditorGUIUtility.standardVerticalSpacing * (lines - 1) + 8;
 		Rect totalRect = GUILayoutUtility.GetRect(1, height);
-		
+
 		Rect baseRect = totalRect;
 		baseRect.yMin += 4;
 		baseRect.yMax -= 4;
-		
+
 		if (selectedAction == action)
 			GUI.DrawTexture(totalRect, EditorGUIUtility.whiteTexture);
-		
+
 		// Show control fields
-		
+
 		Rect rect = baseRect;
 		rect.height = EditorGUIUtility.singleLineHeight;
 		rect.width = EditorGUIUtility.labelWidth - 4;
-		
+
 		EditorGUI.LabelField(rect, action.controlData.name);
-		
+
 		// Show binding fields
 
 		ControlBinding binding = m_ActionMapEditCopy.controlSchemes[selectedScheme].bindings[actionIndex];
@@ -511,7 +511,7 @@ public class ActionMapEditor : Editor
 			rect = baseRect;
 			rect.height = EditorGUIUtility.singleLineHeight;
 			rect.xMin += EditorGUIUtility.labelWidth;
-			
+
 			if (binding.primaryIsButtonAxis)
 			{
 				DrawButtonAxisSources(ref rect, binding);
@@ -523,7 +523,7 @@ public class ActionMapEditor : Editor
 				DrawButtonAxisSources(ref rect, binding);
 			}
 		}
-		
+
 		if (Event.current.type == EventType.MouseDown && totalRect.Contains(Event.current.mousePosition))
 		{
 			EditorGUIUtility.keyboardControl = 0;
@@ -531,7 +531,7 @@ public class ActionMapEditor : Editor
 			Event.current.Use();
 		}
 	}
-	
+
 	void DrawSources(ref Rect rect, ControlBinding binding)
 	{
 		for (int i = 0; i < binding.sources.Count; i++)
@@ -540,7 +540,7 @@ public class ActionMapEditor : Editor
 			rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		}
 	}
-	
+
 	void DrawButtonAxisSources(ref Rect rect, ControlBinding binding)
 	{
 		for (int i = 0; i < binding.buttonAxisSources.Count; i++)
@@ -549,12 +549,12 @@ public class ActionMapEditor : Editor
 			rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		}
 	}
-	
+
 	void DrawSourceSummary(Rect rect, InputControlDescriptor source)
 	{
 		EditorGUI.LabelField(rect, GetSourceString(source));
 	}
-	
+
 	void DrawButtonAxisSourceSummary(Rect rect, ButtonAxisSource source)
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
@@ -578,8 +578,8 @@ public class ActionMapEditor : Editor
 		int instance = 0;
 		int totalInstances = 0;
 		if (deviceSlot != null)
-		{			
-			var deviceSlots = scheme.deviceSlots;		
+		{
+			var deviceSlots = scheme.deviceSlots;
 			for (int i = 0; i < deviceSlots.Count; i++)
 			{
 				var ds = deviceSlots[i];
@@ -597,14 +597,14 @@ public class ActionMapEditor : Editor
 		else
 			return string.Empty;
 	}
-	
+
 	string GetSourceString(InputControlDescriptor source)
 	{
 		ControlScheme scheme = m_ActionMapEditCopy.controlSchemes[selectedScheme];
 		var deviceSlot = scheme.GetDeviceSlot(source.deviceKey);
 		return string.Format("{0} {1} {2}", InputDeviceUtility.GetDeviceNameWithTag(deviceSlot), GetDeviceInstanceString(scheme, deviceSlot), InputDeviceUtility.GetDeviceControlName(deviceSlot, source));
 	}
-	
+
 	void UpdateActionMapScript () {
 		ActionMap original = (ActionMap)serializedObject.targetObject;
 		string className = GetCamelCaseString(original.name, true);
@@ -622,19 +622,19 @@ namespace {0}
 {{
 	public class {1} : ActionMapInput {{
 		public {1} (ActionMap actionMap) : base (actionMap) {{ }}
-		
+
 ", actionMapNamespace, className);
-		
+
 		for (int i = 0; i < m_ActionMapEditCopy.actions.Count; i++)
 		{
 			Type controlType = m_ActionMapEditCopy.actions[i].controlData.controlType;
 			string typeStr = controlType.Name;
 			str.AppendFormat("		public {2} @{0} {{ get {{ return ({2})this[{1}]; }} }}\n", GetCamelCaseString(m_ActionMapEditCopy.actions[i].name, false), i, typeStr);
 		}
-		
+
 		str.AppendLine(@"	}
 }");
-		
+
 		string path = AssetDatabase.GetAssetPath(original);
 		path = path.Substring(0, path.Length - Path.GetExtension(path).Length) + ".cs";
 		File.WriteAllText(path, str.ToString());
@@ -642,7 +642,7 @@ namespace {0}
 
 		original.SetMapTypeName(className+", "+"Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
 	}
-	
+
 	string GetCamelCaseString(string input, bool capitalFirstLetter)
 	{
 		string output = string.Empty;
@@ -684,7 +684,7 @@ namespace {0}
 		}
 		return output;
 	}
-	
+
 	string[] GetSourceControlNames(Type controlType)
 	{
 		string[] names = null;
@@ -719,7 +719,7 @@ namespace {0}
 			data.controlType = type;
 			selectedAction.controlData = data;
 		}
-		
+
 		EditorGUILayout.Space();
 
 		string[] sourceControlNames = GetSourceControlNames(selectedAction.controlData.controlType);
@@ -762,7 +762,7 @@ namespace {0}
 			action.controlData.componentControlIndices[index] = controlIndex;
 		}
 	}
-	
+
 	void DrawBinding(ControlBinding binding)
 	{
 		if (binding.primaryIsButtonAxis)
@@ -775,7 +775,7 @@ namespace {0}
 			DrawSources(binding);
 			DrawButtonAxisSources(binding);
 		}
-		
+
 		// Remove and add buttons
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Space(15 * EditorGUI.indentLevel);
@@ -794,7 +794,7 @@ namespace {0}
 		GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 	}
-	
+
 	void ShowAddOptions(Rect rect, ControlBinding binding)
 	{
 		GenericMenu menu = new GenericMenu();
@@ -802,27 +802,27 @@ namespace {0}
 		menu.AddItem(new GUIContent("Button Axis Source"), false, AddButtonAxisSource, binding);
 		menu.DropDown(rect);
 	}
-	
+
 	void AddSource(object data)
 	{
 		ControlBinding binding = (ControlBinding)data;
 		var source = new InputControlDescriptor();
 		binding.sources.Add(source);
-		
+
 		m_SelectedButtonAxisSource = null;
 		m_SelectedSource = source;
 	}
-	
+
 	void AddButtonAxisSource(object data)
 	{
 		ControlBinding binding = (ControlBinding)data;
 		var source = new ButtonAxisSource(new InputControlDescriptor(), new InputControlDescriptor());
 		binding.buttonAxisSources.Add(source);
-		
+
 		m_SelectedSource = null;
 		m_SelectedButtonAxisSource = source;
 	}
-	
+
 	void DrawSources(ControlBinding binding)
 	{
 		for (int i = 0; i < binding.sources.Count; i++)
@@ -830,7 +830,7 @@ namespace {0}
 			DrawSourceSummary(binding.sources[i]);
 		}
 	}
-	
+
 	void DrawButtonAxisSources(ControlBinding binding)
 	{
 		for (int i = 0; i < binding.buttonAxisSources.Count; i++)
@@ -838,11 +838,11 @@ namespace {0}
 			DrawButtonAxisSourceSummary(binding.buttonAxisSources[i]);
 		}
 	}
-	
+
 	void DrawSourceSummary(InputControlDescriptor source)
 	{
 		Rect rect = EditorGUILayout.GetControlRect();
-		
+
 		if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 		{
 			m_SelectedButtonAxisSource = null;
@@ -851,16 +851,16 @@ namespace {0}
 		}
 		if (m_SelectedSource == source)
 			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
-		
+
 		DrawSourceSummary(rect, "Source", source);
-		
+
 		EditorGUILayout.Space();
 	}
-	
+
 	void DrawButtonAxisSourceSummary(ButtonAxisSource source)
 	{
 		Rect rect = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing);
-		
+
 		if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
 		{
 			m_SelectedSource = null;
@@ -869,23 +869,23 @@ namespace {0}
 		}
 		if (m_SelectedButtonAxisSource == source)
 			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
-		
+
 		rect.height = EditorGUIUtility.singleLineHeight;
 		DrawSourceSummary(rect, "Source (negative)", source.negative);
 		rect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		DrawSourceSummary(rect, "Source (positive)", source.positive);
-		
+
 		EditorGUILayout.Space();
 	}
-	
+
 	void DrawSourceSummary(Rect rect, string label, InputControlDescriptor source)
 	{
 		if (m_SelectedSource == source)
 			GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
-		
+
 		rect = EditorGUI.PrefixLabel(rect, new GUIContent(label));
 		rect.width = (rect.width - 4) * 0.5f;
-		
+
 		int indentLevel = EditorGUI.indentLevel;
 		EditorGUI.indentLevel = 0;
 
@@ -906,7 +906,7 @@ namespace {0}
 		}), deviceNames);
 		if (EditorGUI.EndChangeCheck())
 			source.deviceKey = deviceSlots[deviceIndex].key;
-		
+
 		rect.x += rect.width + 4;
 
 		var deviceSlot = scheme.GetDeviceSlot(source.deviceKey);
@@ -915,7 +915,7 @@ namespace {0}
 		int controlIndex = EditorGUI.Popup(rect, source.controlIndex, controlNames);
 		if (EditorGUI.EndChangeCheck())
 			source.controlIndex = controlIndex;
-		
+
 		EditorGUI.indentLevel = indentLevel;
 	}
 
@@ -941,7 +941,7 @@ namespace {0}
 				return deviceTypes[deviceIndex];
 			return value;
 		}
-		
+
 		static void InitDevices(Type baseType, ref Type[] deviceTypes, ref string[] deviceNames, ref Dictionary<Type, int> indicesOfDevices)
 		{
 			if (deviceTypes != null)
@@ -950,13 +950,14 @@ namespace {0}
 			if (!s_AllBasesDeviceTypes.ContainsKey(baseType)) {
 				deviceTypes = (
 					from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+					where !domainAssembly.IsDynamic
 					from assemblyType in domainAssembly.GetExportedTypes()
 					where assemblyType.IsSubclassOf(baseType)
 					select assemblyType
 				).OrderBy(e => GetInheritancePath(e, baseType)).ToArray();
-				
+
 				deviceNames = deviceTypes.Select(e => string.Empty.PadLeft(GetInheritanceDepth(e, baseType) * 3) + e.Name).ToArray();
-				
+
 				indicesOfDevices = new Dictionary<Type, int>();
 				for (int i = 0; i < deviceTypes.Length; i++)
 					indicesOfDevices[deviceTypes[i]] = i;
@@ -972,19 +973,19 @@ namespace {0}
 				indicesOfDevices = s_AllBasesIndicesOfDevices[baseType];
 			}
 		}
-		
+
 		static int GetDeviceIndex(Type type, Dictionary<Type, int> indicesOfDevices)
 		{
 			return (type == null ? -1 : indicesOfDevices[type]);
 		}
-		
+
 		static string GetInheritancePath(Type type, Type baseType)
 		{
 			if (type.BaseType == baseType)
 				return type.Name;
 			return GetInheritancePath(type.BaseType, baseType) + "/" + type.Name;
 		}
-		
+
 		static int GetInheritanceDepth(Type type, Type baseType)
 		{
 			if (type.BaseType == baseType)

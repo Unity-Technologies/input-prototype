@@ -107,7 +107,14 @@ namespace UnityEngine.InputNew
 	public class Vector2Action : ActionSlot<Vector2InputControl> {}
 	public class Vector2InputControl : InputControl
 	{
-		public Vector2InputControl(int index, InputState state) : base(index, state) {}
+		public readonly ButtonInputControl positiveY;
+		public readonly ButtonInputControl negativeY;
+		public Vector2InputControl(int index, InputState state) : base(index, state)
+		{
+			negativeY = new ButtonInputControl(index, state);
+			negativeY.SetValueMultiplier(-1);
+			positiveY = new ButtonInputControl(index, state);
+		}
 
 		public Vector2 vector2
 		{
