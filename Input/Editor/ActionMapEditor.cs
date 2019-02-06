@@ -950,7 +950,7 @@ namespace {0}
 			if (!s_AllBasesDeviceTypes.ContainsKey(baseType)) {
 				deviceTypes = (
 					from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-#if UNITY_2018_3_OR_NEWER
+#if NET_4_6
 					where !domainAssembly.IsDynamic
 #endif
 					from assemblyType in domainAssembly.GetExportedTypes()
