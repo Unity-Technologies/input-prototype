@@ -30,7 +30,6 @@ namespace UnityEngine.InputNew
 			{
 				new Xbox360MacProfile(),
 				new Xbox360WinProfile(),
-				new OpenVRProfile(), 
 			};
 			s_EventQueue = new InputEventQueue();
 			s_EventPool = new InputEventPool();
@@ -66,7 +65,7 @@ namespace UnityEngine.InputNew
 		}
 
 		public delegate bool BindingListener(InputControl control);
-		
+
 		#region Public Methods
 
 		public static void RegisterProfile(InputDeviceProfile profile)
@@ -142,7 +141,7 @@ namespace UnityEngine.InputNew
 				Touchscreen.current.SendSimulatedPointerEvents(touchEvent, UnityEngine.Cursor.lockState == CursorLockMode.Locked);
 			return false;
 		}
-		
+
 		internal static void RegisterBinding(InputControl control)
 		{
 			for (int i = s_BindingListeners.Count - 1; i >= 0; i--)
@@ -184,7 +183,7 @@ namespace UnityEngine.InputNew
 		{
 			get { return s_Devices.devices; }
 		}
-		
+
 		public static TDevice GetMostRecentlyUsedDevice<TDevice>()
 			where TDevice : InputDevice
 		{
