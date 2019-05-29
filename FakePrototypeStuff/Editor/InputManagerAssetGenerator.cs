@@ -27,6 +27,8 @@ internal class InputManagerAssetGenerator
 		SetupAxisPresets();
 
 		var axisArray = GetInputManagerAxisArray();
+		if (axisArray == null)
+			return false;
 
 		if (axisArray.arraySize != axisPresets.Count)
 			return false;
@@ -45,8 +47,14 @@ internal class InputManagerAssetGenerator
 	static void ApplyAxisPresets()
 	{
 		SetupAxisPresets();
+		var assets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
+		if (assets.Length == 0)
+		{
+			Debug.LogError("Cannot find InputManager asset\n" + Environment.StackTrace);
+			return;
+		}
 
-		var inputManagerAsset = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset")[0];
+		var inputManagerAsset = assets[0];
 		var serializedObject = new SerializedObject(inputManagerAsset);
 		var axisArray = serializedObject.FindProperty("m_Axes");
 
@@ -93,6 +101,9 @@ internal class InputManagerAssetGenerator
 	static void ImportExistingAxisPresets()
 	{
 		var axisArray = GetInputManagerAxisArray();
+		if (axisArray == null)
+			return;
+
 		for (int i = 0; i < axisArray.arraySize; i++)
 		{
 			var axisEntry = axisArray.GetArrayElementAtIndex(i);
@@ -236,7 +247,14 @@ internal class InputManagerAssetGenerator
 
 	static SerializedProperty GetInputManagerAxisArray()
 	{
-		var inputManagerAsset = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset")[0];
+		var assets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
+		if (assets.Length == 0)
+		{
+			Debug.LogError("Cannot find InputManager asset\n" + Environment.StackTrace);
+			return null;
+		}
+
+		var inputManagerAsset = assets[0];
 		var serializedObject = new SerializedObject(inputManagerAsset);
 		return serializedObject.FindProperty("m_Axes");
 	}
