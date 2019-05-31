@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -18,7 +17,7 @@ internal class InputManagerAssetGenerator
 				"The input system prototype needs to patch the InputManager settings.",
 				"Apply", "Cancel")
 			)
-				ApplyAxisPresets();
+				EditorApplication.delayCall += ApplyAxisPresets;
 		}
 	}
 
@@ -50,7 +49,7 @@ internal class InputManagerAssetGenerator
 		var assets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
 		if (assets.Length == 0)
 		{
-			Debug.LogError("Cannot find InputManager asset\n" + Environment.StackTrace);
+			Debug.LogError("Cannot find InputManager asset");
 			return;
 		}
 
@@ -249,10 +248,7 @@ internal class InputManagerAssetGenerator
 	{
 		var assets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
 		if (assets.Length == 0)
-		{
-			Debug.LogError("Cannot find InputManager asset\n" + Environment.StackTrace);
 			return null;
-		}
 
 		var inputManagerAsset = assets[0];
 		var serializedObject = new SerializedObject(inputManagerAsset);
