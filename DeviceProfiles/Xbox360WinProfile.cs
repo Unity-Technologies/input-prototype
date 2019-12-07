@@ -1,4 +1,4 @@
-﻿using UnityEngine.InputNew;
+using UnityEngine.InputNew;
 using System.Collections;
 using Assets.Utilities;
 
