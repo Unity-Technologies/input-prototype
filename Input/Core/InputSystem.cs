@@ -26,18 +26,8 @@ namespace UnityEngine.InputNew
 			go.AddComponent<VRInputToEvents>();
 			go.AddComponent<ExecuteAllEvents>();
 
-			InputDeviceProfile[] profiles = new InputDeviceProfile[]
-			{
-				new Xbox360MacProfile(),
-				new Xbox360WinProfile(),
-			};
 			s_EventQueue = new InputEventQueue();
 			s_EventPool = new InputEventPool();
-
-			foreach (var profile in profiles)
-			{
-				RegisterProfile(profile);
-			}
 
 			s_Devices.InitAfterProfiles();
 
