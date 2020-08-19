@@ -209,7 +209,9 @@ namespace UnityEngine.InputNew
 			foreach (var platform in profile.supportedPlatforms)
 			{
 				// VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).
+#pragma warning disable 618
 				var vrPlatform = (XRSettings.loadedDeviceName + " " + XRDevice.model).ToUpper();
+#pragma warning restore 618
 
 				if (m_Platform.Contains(platform.ToUpper()) || vrPlatform.Contains(platform.ToUpper()))
 					return true;
