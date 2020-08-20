@@ -205,7 +205,7 @@ namespace UnityEngine.InputNew
 			if (profile.supportedPlatforms == null || profile.supportedPlatforms.Length == 0)
 				return true;
 
-#if UNITY_2017_2_OR_NEWER
+#if UNITY_2017_2_OR_NEWER && !UNITY_2020_2_OR_NEWER
 			foreach (var platform in profile.supportedPlatforms)
 			{
 				// VR devices can be hot-swapped -- this can change at any point so we should check it every frame (or provide an event).

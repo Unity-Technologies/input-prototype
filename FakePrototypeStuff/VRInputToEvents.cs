@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.InputNew;
+
+#if !UNITY_2020_2_OR_NEWER
 using UnityEngine.VR;
+#endif
 
 public class VRInputToEvents
 	: MonoBehaviour
